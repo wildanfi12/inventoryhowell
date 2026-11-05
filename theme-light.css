@@ -466,3 +466,17 @@ html,body,button,input,select,textarea,#pageContent *,.sidebar *{
   .sidebar.collapsed .sidebar-toggle{top:66px!important;right:26px!important;width:24px!important;height:24px!important;border-radius:7px!important;background:#F1F3F5!important;color:#58616B!important}
   .sidebar.collapsed .sidebar-toggle:hover{background:#E6E9EC!important;color:#252A30!important}
 }
+
+/* Keep the insight action readable even when broad page text colors are applied. */
+#pageContent .insight-box button.btn-dark,
+#pageContent .insight-box button.btn-dark *{
+  background:#17191C!important;
+  background-color:#17191C!important;
+  border-color:#17191C!important;
+  color:#FFFFFF!important;
+  -webkit-text-fill-color:#FFFFFF!important;
+  font-weight:600!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+#pageContent .insight-box button.btn-dark:hover{background:#303338!important;background-color:#303338!important;border-color:#303338!important}
