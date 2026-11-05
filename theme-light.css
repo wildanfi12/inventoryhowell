@@ -264,3 +264,12 @@ html,body,button,input,select,textarea,#pageContent *,.sidebar *{
   .top-profile{padding-right:6px!important}
   .top-profile>div:last-child{display:none!important}
 }
+
+/* Reduce the desktop gutter between the sidebar and page content. */
+@media(min-width:901px){
+  .sidebar:not(.collapsed)+.main-area,
+  .main-area{margin-left:248px!important;width:calc(100% - 248px)!important}
+  .sidebar.collapsed+.main-area{margin-left:94px!important;width:calc(100% - 94px)!important}
+  .page-content{padding-left:clamp(16px,1.4vw,22px)!important;padding-right:clamp(16px,1.4vw,22px)!important}
+  .topbar{padding-left:clamp(16px,1.4vw,22px)!important;padding-right:clamp(16px,1.4vw,22px)!important}
+}
