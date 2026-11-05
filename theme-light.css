@@ -135,8 +135,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .sidebar .nav-item.active:hover,
 .sidebar.collapsed .nav-item.active,
 .sidebar.collapsed .nav-item.active:hover{
-  background:#EEF0F2!important;
-  border:1px solid #E3E6E9!important;
+  background:#F4C63D!important;
+  border:1px solid #D5A918!important;
   color:#25282C!important;
   box-shadow:none!important;
 }
@@ -148,7 +148,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   border:0!important;
   color:#343A40!important;
 }
-.sidebar .nav-item.active i{background:#E2E5E8!important;color:#25282C!important}
+.sidebar .nav-item.active i{background:#E2B52B!important;color:#25282C!important}
 .sidebar .nav-group-preferences,
 .sidebar .sidebar-bottom{border-color:#E8EAED!important}
 .sidebar .avatar{background:#fff!important;color:#25282C!important;border:1px solid #DDE1E5!important}
