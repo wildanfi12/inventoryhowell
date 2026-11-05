@@ -109,10 +109,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .sidebar:not(.collapsed) .nav-item,
 .sidebar.collapsed .nav-item{
   background:transparent!important;
-  border:1px solid transparent!important;
-  border-color:transparent!important;
+  border:0!important;
+  outline:0!important;
   color:#fff!important;
+  box-shadow:none!important;
 }
+.sidebar .nav-item:before,
+.sidebar .nav-item:after{display:none!important;content:none!important}
 .sidebar .nav-item>span,
 .sidebar .nav-item>svg,
 .sidebar .nav-item:hover:not(.active)>span,
@@ -122,8 +125,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 .sidebar .nav-item>svg{filter:none!important}
 .sidebar .nav-item:hover:not(.active){
-  background:#ffffff35!important;
-  border-color:#ffffff55!important;
+  background:#AD7E0C!important;
   color:#fff!important;
 }
 .sidebar .nav-item.active,
@@ -131,7 +133,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .sidebar.collapsed .nav-item.active,
 .sidebar.collapsed .nav-item.active:hover{
   background:#936A09!important;
-  border-color:#ffffff85!important;
+  border:0!important;
   color:#fff!important;
   box-shadow:none!important;
 }
@@ -139,13 +141,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .sidebar .nav-item.active>svg{color:#fff!important;stroke:#fff!important}
 .sidebar .nav-item i,
 .sidebar .nav-item.active i{
-  background:#936A09!important;
-  border:1px solid #ffffff85!important;
+  background:#805800!important;
+  border:0!important;
   color:#fff!important;
 }
 .sidebar .nav-group-preferences,
 .sidebar .sidebar-bottom{border-color:#ffffff55!important}
-.sidebar .avatar{background:#936A09!important;color:#fff!important;border:1px solid #ffffff85!important}
+.sidebar .avatar{background:#805800!important;color:#fff!important;border:0!important}
 .sidebar .nav-item:focus-visible,
 .sidebar .nav-item.active:focus-visible{outline:2px solid #fff!important;outline-offset:2px!important}
 
