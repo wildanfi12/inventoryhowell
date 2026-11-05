@@ -140,6 +140,16 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   color:#25282C!important;
   box-shadow:none!important;
 }
+.sidebar .nav-group .nav-item.active,
+.sidebar .nav-group .nav-item.active:hover,
+.sidebar:not(.collapsed) .nav-group .nav-item.active,
+.sidebar:not(.collapsed) .nav-group .nav-item.active:hover{
+  background:#F4C63D!important;
+  background-color:#F4C63D!important;
+  border-color:#D5A918!important;
+  color:#25282C!important;
+  box-shadow:none!important;
+}
 .sidebar .nav-item.active>span,
 .sidebar .nav-item.active>svg{color:#25282C!important;stroke:#25282C!important}
 .sidebar .nav-item i,
