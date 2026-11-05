@@ -88,30 +88,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 @media(max-width:900px){.sidebar,.sidebar:not(.collapsed){inset:12px auto 12px 12px!important;width:248px!important;min-width:248px!important;height:auto!important;transform:translateX(calc(-100% - 24px))!important;border-radius:18px!important;background:#F6F3F0!important;box-shadow:0 8px 28px #29231b12!important}.sidebar.open{transform:translateX(0)!important;box-shadow:0 12px 35px #29231b28!important}.sidebar.collapsed{width:248px!important;min-width:248px!important}.sidebar.collapsed .brand{width:auto!important;height:54px!important;flex-basis:54px!important;justify-content:flex-start!important;margin:0 2px 18px!important;padding:0 7px 10px!important;border-bottom:1px solid #E9E4DE!important}.sidebar.collapsed .brand-name,.sidebar.collapsed .nav-label,.sidebar.collapsed .profile-info{display:block!important}.sidebar .sidebar-toggle,.sidebar.collapsed .sidebar-toggle{display:none!important}.sidebar.collapsed .nav{gap:18px!important}.sidebar.collapsed .nav-group-items{align-items:stretch!important}.sidebar.collapsed .nav-item,.sidebar.collapsed .nav-item.active{width:100%!important;height:42px!important;min-height:42px!important;padding:0 10px!important;grid-template-columns:22px minmax(0,1fr) auto!important;place-items:center start!important;border-radius:9px!important;font-size:12px!important}.sidebar.collapsed .nav-item>span{display:block!important;grid-column:2!important;position:static!important;width:auto!important;height:auto!important;clip:auto!important;visibility:visible!important;opacity:1!important}.sidebar.collapsed .nav-item>svg{grid-column:1!important;width:17px!important;height:17px!important}.sidebar.collapsed .nav-item>i{position:static!important;grid-column:3!important;min-width:20px!important;height:20px!important;border-radius:7px!important;font-size:10px!important}.sidebar.collapsed .nav-item.active{background:#fff!important}.sidebar.collapsed .sidebar-bottom{display:block!important;padding:11px 4px 1px!important}.sidebar.collapsed .profile{justify-content:flex-start!important}.sidebar.collapsed .avatar{width:34px!important;height:34px!important}.main-area,.sidebar.collapsed+.main-area{margin-left:0!important;width:100%!important}.overlay.show{background:#29241f45!important}}
 @media(prefers-reduced-motion:reduce){.sidebar,.sidebar *,.main-area{transition-duration:.01ms!important}}
 
-/* Howell navigation: darker brand gold, clean system typography, and white controls. */
+/* Howell navigation: soft brand-yellow panel with crisp dark labels and icons. */
 .sidebar,
 .sidebar:not(.collapsed),
 .sidebar.collapsed{
-  background:#C39010!important;
-  border-color:#A97A0E!important;
-  color:#fff!important;
+  background:#FFF1BE!important;
+  border-color:#E5D38A!important;
+  color:#29241F!important;
 }
-.sidebar .brand{border-bottom-color:#ffffff55!important}
+.sidebar .brand{border-bottom-color:#E5D995!important}
 .sidebar .brand-name,
 .sidebar .profile-info strong,
-.sidebar .profile-info small{color:#fff!important}
-.sidebar .close-menu{color:#fff!important}
-.sidebar .sidebar-toggle{color:#fff!important}
-.sidebar .sidebar-toggle:hover{background:#ffffff3d!important;color:#fff!important}
+.sidebar .profile-info small{color:#29241F!important}
+.sidebar .close-menu{color:#29241F!important}
+.sidebar .sidebar-toggle{color:#514A3C!important}
+.sidebar .sidebar-toggle:hover{background:#F5E5A8!important;color:#29241F!important}
 .sidebar .sidebar-toggle svg{filter:none!important}
-.sidebar .nav-label{color:#fff!important}
+.sidebar .nav-label{color:#6F6240!important}
 .sidebar .nav-item,
 .sidebar:not(.collapsed) .nav-item,
 .sidebar.collapsed .nav-item{
   background:transparent!important;
   border:0!important;
   outline:0!important;
-  color:#fff!important;
+  color:#40392D!important;
   box-shadow:none!important;
 }
 .sidebar .nav-item:before,
@@ -120,36 +120,40 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .sidebar .nav-item>svg,
 .sidebar .nav-item:hover:not(.active)>span,
 .sidebar .nav-item:hover:not(.active)>svg{
-  color:#fff!important;
-  stroke:#fff!important;
+  color:#40392D!important;
+  stroke:#514A3C!important;
 }
 .sidebar .nav-item>svg{filter:none!important}
+.sidebar .nav-item>svg{color:#514A3C!important;stroke:#514A3C!important}
 .sidebar .nav-item:hover:not(.active){
-  background:#AD7E0C!important;
-  color:#fff!important;
+  background:#F8E7A2!important;
+  color:#29241F!important;
 }
+.sidebar .nav-item:hover:not(.active)>span,
+.sidebar .nav-item:hover:not(.active)>svg{color:#29241F!important;stroke:#29241F!important}
 .sidebar .nav-item.active,
 .sidebar .nav-item.active:hover,
 .sidebar.collapsed .nav-item.active,
 .sidebar.collapsed .nav-item.active:hover{
-  background:#936A09!important;
-  border:0!important;
-  color:#fff!important;
+  background:#F1C43B!important;
+  border:1px solid #D7AD32!important;
+  color:#29241F!important;
   box-shadow:none!important;
 }
 .sidebar .nav-item.active>span,
-.sidebar .nav-item.active>svg{color:#fff!important;stroke:#fff!important}
+.sidebar .nav-item.active>svg{color:#29241F!important;stroke:#29241F!important}
 .sidebar .nav-item i,
 .sidebar .nav-item.active i{
-  background:#805800!important;
+  background:#E5C95D!important;
   border:0!important;
-  color:#fff!important;
+  color:#29241F!important;
 }
+.sidebar .nav-item.active i{background:#D7AD32!important;color:#29241F!important}
 .sidebar .nav-group-preferences,
-.sidebar .sidebar-bottom{border-color:#ffffff55!important}
-.sidebar .avatar{background:#805800!important;color:#fff!important;border:0!important}
+.sidebar .sidebar-bottom{border-color:#E5D995!important}
+.sidebar .avatar{background:#F1C43B!important;color:#29241F!important;border:0!important}
 .sidebar .nav-item:focus-visible,
-.sidebar .nav-item.active:focus-visible{outline:2px solid #fff!important;outline-offset:2px!important}
+.sidebar .nav-item.active:focus-visible{outline:2px solid #29241F!important;outline-offset:2px!important}
 
 /* Keep text crisp and consistent, including search and filter controls. */
 html,body,button,input,select,textarea,#pageContent *,.sidebar *{
