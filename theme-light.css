@@ -268,8 +268,30 @@ html,body,button,input,select,textarea,#pageContent *,.sidebar *{
 /* Reduce the desktop gutter between the sidebar and page content. */
 @media(min-width:901px){
   .sidebar:not(.collapsed)+.main-area,
-  .main-area{margin-left:248px!important;width:calc(100% - 248px)!important}
-  .sidebar.collapsed+.main-area{margin-left:94px!important;width:calc(100% - 94px)!important}
-  .page-content{padding-left:clamp(16px,1.4vw,22px)!important;padding-right:clamp(16px,1.4vw,22px)!important}
-  .topbar{padding-left:clamp(16px,1.4vw,22px)!important;padding-right:clamp(16px,1.4vw,22px)!important}
+  .main-area{margin-left:244px!important;width:calc(100% - 244px)!important}
+  .sidebar.collapsed+.main-area{margin-left:86px!important;width:calc(100% - 86px)!important}
+  .page-content{width:100%!important;max-width:none!important;margin:0!important;padding:24px 12px 32px!important;box-sizing:border-box!important}
+  .topbar{position:sticky!important;top:8px!important;width:calc(100% - 24px)!important;height:56px!important;min-height:56px!important;margin:8px 12px 0!important;padding:0!important;gap:12px!important;box-sizing:border-box!important;border:1px solid #E1E5E9!important;border-radius:10px!important;background:#FFFFFF!important}
+  .footer{padding-left:12px!important;padding-right:12px!important}
+  .ware-dashboard{gap:16px!important}
 }
+
+/* Shared topbar control geometry: aligned heights, corner radius, and spacing. */
+.topbar .global-search,
+.topbar .top-period,
+.topbar .top-icon-button,
+.topbar .top-profile{
+  height:40px!important;
+  min-height:40px!important;
+  box-sizing:border-box!important;
+  border-radius:8px!important;
+}
+.topbar .top-actions{gap:8px!important}
+.topbar .crumb{gap:8px!important}
+.topbar .top-icon-button{width:40px!important;min-width:40px!important;padding:0!important}
+.topbar .top-profile{padding:4px 10px 4px 5px!important}
+.topbar .top-profile .top-avatar{width:30px!important;height:30px!important;border-radius:8px!important}
+.topbar .top-period{appearance:none!important;padding-right:30px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%233C454E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 10px center!important;background-size:12px 12px!important}
+.topbar .global-search input,#globalSearch{appearance:none!important;-webkit-appearance:none!important;border-radius:0!important}
+.topbar .crumb{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;min-height:40px!important;height:40px!important;width:max-content!important;box-sizing:border-box!important;margin-left:8px!important;padding:0 12px!important;border:1px solid #E1E5E9!important;border-radius:10px!important;background:#F7F8F9!important;white-space:nowrap!important;line-height:1!important}
+.topbar .crumb span,.topbar .crumb strong,.topbar .crumb b{display:inline-flex!important;align-items:center!important;line-height:1!important}
