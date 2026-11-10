@@ -1,0 +1,1154 @@
+{
+  "generatedFrom": "assets/Foto Produk",
+  "catalog": "assets/howell-source-data.js",
+  "productsInCatalog": 362,
+  "photosInSource": 137,
+  "matchedSkus": 194,
+  "selectedOptimizedImages": 135,
+  "matched": {
+    "N6101": {
+      "image": "assets/product-images/001-1-Patch-Cable-N6101.jpg",
+      "matchType": "exact",
+      "source": "1. Patch Cable/N6101.png"
+    },
+    "N6201": {
+      "image": "assets/product-images/002-1-Patch-Cable-N6201.jpg",
+      "matchType": "exact",
+      "source": "1. Patch Cable/N6201.png"
+    },
+    "N8C04": {
+      "image": "assets/product-images/003-1-Patch-Cable-N8C04.jpg",
+      "matchType": "exact",
+      "source": "1. Patch Cable/N8C04.png"
+    },
+    "N8D04": {
+      "image": "assets/product-images/004-1-Patch-Cable-N8D04.jpg",
+      "matchType": "exact",
+      "source": "1. Patch Cable/N8D04.png"
+    },
+    "RC01": {
+      "image": "assets/product-images/005-1-Patch-Cable-RC01.jpg",
+      "matchType": "exact",
+      "source": "1. Patch Cable/RC01.png"
+    },
+    "RC02": {
+      "image": "assets/product-images/006-1-Patch-Cable-RC02.jpg",
+      "matchType": "exact",
+      "source": "1. Patch Cable/RC02.png"
+    },
+    "VGA0106": {
+      "image": "assets/product-images/007-10-VGA-Cable-VGA0106.jpg",
+      "matchType": "exact",
+      "source": "10. VGA Cable/VGA0106.png"
+    },
+    "CH0101": {
+      "image": "assets/product-images/008-2-HDMI-Cable-CH0101.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/CH0101.png"
+    },
+    "CH0201": {
+      "image": "assets/product-images/009-2-HDMI-Cable-CH0201.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/CH0201.png"
+    },
+    "CH0301": {
+      "image": "assets/product-images/010-2-HDMI-Cable-CH0301.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/CH0301.png"
+    },
+    "DH0103": {
+      "image": "assets/product-images/011-2-HDMI-Cable-DH0103.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/DH0103.png"
+    },
+    "DH0203": {
+      "image": "assets/product-images/012-2-HDMI-Cable-DH0203.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/DH0203.png"
+    },
+    "DH0301": {
+      "image": "assets/product-images/013-2-HDMI-Cable-DH0301.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/DH0301.png"
+    },
+    "H0703": {
+      "image": "assets/product-images/014-2-HDMI-Cable-H0703.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H0703.png"
+    },
+    "H0803": {
+      "image": "assets/product-images/015-2-HDMI-Cable-H0803.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H0803.png"
+    },
+    "H0903": {
+      "image": "assets/product-images/016-2-HDMI-Cable-H0903.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H0903.png"
+    },
+    "H1003": {
+      "image": "assets/product-images/017-2-HDMI-Cable-H1003.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H1003.png"
+    },
+    "H1103": {
+      "image": "assets/product-images/018-2-HDMI-Cable-H1103.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H1103.png"
+    },
+    "H1303": {
+      "image": "assets/product-images/019-2-HDMI-Cable-H1303.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H1303.png"
+    },
+    "H1401": {
+      "image": "assets/product-images/020-2-HDMI-Cable-H1401.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H1401.png"
+    },
+    "H1603": {
+      "image": "assets/product-images/021-2-HDMI-Cable-H1603.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H1603.png"
+    },
+    "H1703": {
+      "image": "assets/product-images/022-2-HDMI-Cable-H1703.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H1703.png"
+    },
+    "H1803": {
+      "image": "assets/product-images/023-2-HDMI-Cable-H1803.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H1803.png"
+    },
+    "H2001": {
+      "image": "assets/product-images/024-2-HDMI-Cable-H2001.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H2001.png"
+    },
+    "H2103": {
+      "image": "assets/product-images/025-2-HDMI-Cable-H2103.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H2103.png"
+    },
+    "H2303": {
+      "image": "assets/product-images/026-2-HDMI-Cable-H2303.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H2303.png"
+    },
+    "H2403": {
+      "image": "assets/product-images/027-2-HDMI-Cable-H2403.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H2403.png"
+    },
+    "H2503": {
+      "image": "assets/product-images/028-2-HDMI-Cable-H2503.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H2503.png"
+    },
+    "H2603": {
+      "image": "assets/product-images/029-2-HDMI-Cable-H2603.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H2603.png"
+    },
+    "H2703": {
+      "image": "assets/product-images/030-2-HDMI-Cable-H2703.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H2703.png"
+    },
+    "H2803": {
+      "image": "assets/product-images/031-2-HDMI-Cable-H2803.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H2803.png"
+    },
+    "H2903": {
+      "image": "assets/product-images/032-2-HDMI-Cable-H2903.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H2903.png"
+    },
+    "H3003": {
+      "image": "assets/product-images/033-2-HDMI-Cable-H3003.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H3003.png"
+    },
+    "H3103": {
+      "image": "assets/product-images/034-2-HDMI-Cable-H3103.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H3103.png"
+    },
+    "H3203": {
+      "image": "assets/product-images/035-2-HDMI-Cable-H3203.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H3203.png"
+    },
+    "H3303": {
+      "image": "assets/product-images/036-2-HDMI-Cable-H3303.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H3303.png"
+    },
+    "H3403": {
+      "image": "assets/product-images/037-2-HDMI-Cable-H3403.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H3403.png"
+    },
+    "H3503": {
+      "image": "assets/product-images/038-2-HDMI-Cable-H3503.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/H3503.png"
+    },
+    "MH0301": {
+      "image": "assets/product-images/039-2-HDMI-Cable-MH0301.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/MH0301.png"
+    },
+    "USB0206": {
+      "image": "assets/product-images/040-2-HDMI-Cable-USB0206.jpg",
+      "matchType": "exact",
+      "source": "2. HDMI Cable/USB0206.png"
+    },
+    "AU0103": {
+      "image": "assets/product-images/041-3-Audio-Cable-AU0103.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU0103.png"
+    },
+    "AU0203": {
+      "image": "assets/product-images/042-3-Audio-Cable-AU0203.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU0203.png"
+    },
+    "AU0303": {
+      "image": "assets/product-images/043-3-Audio-Cable-AU0303.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU0303.png"
+    },
+    "AU0403": {
+      "image": "assets/product-images/044-3-Audio-Cable-AU0403.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU0403.png"
+    },
+    "AU0503": {
+      "image": "assets/product-images/045-3-Audio-Cable-AU0503.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU0503.png"
+    },
+    "AU0603": {
+      "image": "assets/product-images/046-3-Audio-Cable-AU0603.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU0603.png"
+    },
+    "AU0703": {
+      "image": "assets/product-images/047-3-Audio-Cable-AU0703.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU0703.png"
+    },
+    "AU0803": {
+      "image": "assets/product-images/048-3-Audio-Cable-AU0803.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU0803.png"
+    },
+    "AU0903": {
+      "image": "assets/product-images/049-3-Audio-Cable-AU0903.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU0903.png"
+    },
+    "AU1003": {
+      "image": "assets/product-images/050-3-Audio-Cable-AU1003.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU1003.png"
+    },
+    "AU1103": {
+      "image": "assets/product-images/051-3-Audio-Cable-AU1103.jpg",
+      "matchType": "exact",
+      "source": "3. Audio Cable/AU1103.png"
+    },
+    "AC01": {
+      "image": "assets/product-images/052-4-Acc-Ponsel-AC01.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/AC01.png"
+    },
+    "AC02": {
+      "image": "assets/product-images/053-4-Acc-Ponsel-AC02.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/AC02.png"
+    },
+    "AC03": {
+      "image": "assets/product-images/054-4-Acc-Ponsel-AC03.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/AC03.png"
+    },
+    "AC04": {
+      "image": "assets/product-images/055-4-Acc-Ponsel-AC04.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/AC04.png"
+    },
+    "CC01": {
+      "image": "assets/product-images/056-4-Acc-Ponsel-CC01.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/CC01.png"
+    },
+    "CC02": {
+      "image": "assets/product-images/057-4-Acc-Ponsel-CC02.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/CC02.png"
+    },
+    "HW-C01": {
+      "image": "assets/product-images/058-4-Acc-Ponsel-HW-C01.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/HW-C01.png"
+    },
+    "HW-C02A": {
+      "image": "assets/product-images/059-4-Acc-Ponsel-HW-C02A.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/HW-C02A.png"
+    },
+    "HW-C03": {
+      "image": "assets/product-images/060-4-Acc-Ponsel-HW-C03.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/HW-C03.png"
+    },
+    "HW-C03A": {
+      "image": "assets/product-images/061-4-Acc-Ponsel-HW-C03A.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/HW-C03A.png"
+    },
+    "HW-C04": {
+      "image": "assets/product-images/062-4-Acc-Ponsel-HW-C04.jpg",
+      "matchType": "exact",
+      "source": "4. Acc Ponsel/HW-C04.png"
+    },
+    "HW01": {
+      "image": "assets/product-images/063-6-Earphone-HW01.jpg",
+      "matchType": "exact",
+      "source": "6. Earphone/HW01.png"
+    },
+    "HW02-B": {
+      "image": "assets/product-images/064-6-Earphone-HW02-B.jpg",
+      "matchType": "exact",
+      "source": "6. Earphone/HW02-B.png"
+    },
+    "HW02-W": {
+      "image": "assets/product-images/065-6-Earphone-HW02-W.jpg",
+      "matchType": "exact",
+      "source": "6. Earphone/HW02-W.png"
+    },
+    "HW04": {
+      "image": "assets/product-images/066-6-Earphone-HW04.jpg",
+      "matchType": "exact",
+      "source": "6. Earphone/HW04.png"
+    },
+    "HW05": {
+      "image": "assets/product-images/067-6-Earphone-HW05.jpg",
+      "matchType": "exact",
+      "source": "6. Earphone/HW05.png"
+    },
+    "HW06": {
+      "image": "assets/product-images/068-6-Earphone-HW06.jpg",
+      "matchType": "exact",
+      "source": "6. Earphone/HW06.png"
+    },
+    "HW07": {
+      "image": "assets/product-images/069-6-Earphone-HW07.jpg",
+      "matchType": "exact",
+      "source": "6. Earphone/HW07.png"
+    },
+    "ADP001": {
+      "image": "assets/product-images/070-7-Adapter-ADP001.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP001.png"
+    },
+    "ADP002": {
+      "image": "assets/product-images/071-7-Adapter-ADP002.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP002.png"
+    },
+    "ADP003": {
+      "image": "assets/product-images/072-7-Adapter-ADP003.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP003.png"
+    },
+    "ADP004": {
+      "image": "assets/product-images/073-7-Adapter-ADP004.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP004.png"
+    },
+    "ADP005": {
+      "image": "assets/product-images/074-7-Adapter-ADP005.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP005.png"
+    },
+    "ADP006": {
+      "image": "assets/product-images/075-7-Adapter-ADP006.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP006.png"
+    },
+    "ADP007": {
+      "image": "assets/product-images/076-7-Adapter-ADP007.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP007.png"
+    },
+    "ADP008": {
+      "image": "assets/product-images/077-7-Adapter-ADP008.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP008.png"
+    },
+    "ADP009": {
+      "image": "assets/product-images/078-7-Adapter-ADP009.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP009.png"
+    },
+    "ADP010": {
+      "image": "assets/product-images/079-7-Adapter-ADP010.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP010.png"
+    },
+    "ADP011": {
+      "image": "assets/product-images/080-7-Adapter-ADP011.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP011.png"
+    },
+    "ADP012": {
+      "image": "assets/product-images/081-7-Adapter-ADP012.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP012.png"
+    },
+    "ADP013": {
+      "image": "assets/product-images/082-7-Adapter-ADP013.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP013.png"
+    },
+    "ADP014": {
+      "image": "assets/product-images/083-7-Adapter-ADP014.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP014.png"
+    },
+    "ADP015": {
+      "image": "assets/product-images/084-7-Adapter-ADP015.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP015.png"
+    },
+    "ADP016": {
+      "image": "assets/product-images/085-7-Adapter-ADP016.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP016.png"
+    },
+    "ADP017": {
+      "image": "assets/product-images/086-7-Adapter-ADP017.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP017.png"
+    },
+    "ADP018": {
+      "image": "assets/product-images/087-7-Adapter-ADP018.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP018.png"
+    },
+    "ADP019": {
+      "image": "assets/product-images/088-7-Adapter-ADP019.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP019.png"
+    },
+    "ADP020": {
+      "image": "assets/product-images/089-7-Adapter-ADP020.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP020.png"
+    },
+    "ADP021": {
+      "image": "assets/product-images/090-7-Adapter-ADP021.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP021.png"
+    },
+    "ADP022": {
+      "image": "assets/product-images/091-7-Adapter-ADP022.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP022.png"
+    },
+    "ADP023": {
+      "image": "assets/product-images/092-7-Adapter-ADP023.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP023.png"
+    },
+    "ADP024": {
+      "image": "assets/product-images/093-7-Adapter-ADP024.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP024.png"
+    },
+    "ADP025": {
+      "image": "assets/product-images/094-7-Adapter-ADP025.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP025.png"
+    },
+    "ADP026": {
+      "image": "assets/product-images/095-7-Adapter-ADP026.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP026.png"
+    },
+    "ADP027": {
+      "image": "assets/product-images/096-7-Adapter-ADP027.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP027.png"
+    },
+    "ADP028": {
+      "image": "assets/product-images/097-7-Adapter-ADP028.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP028.png"
+    },
+    "ADP029": {
+      "image": "assets/product-images/098-7-Adapter-ADP029.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP029.png"
+    },
+    "ADP030": {
+      "image": "assets/product-images/099-7-Adapter-ADP030.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP030.png"
+    },
+    "ADP031": {
+      "image": "assets/product-images/100-7-Adapter-ADP031.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP031.png"
+    },
+    "ADP032": {
+      "image": "assets/product-images/101-7-Adapter-ADP032.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP032.png"
+    },
+    "ADP033": {
+      "image": "assets/product-images/102-7-Adapter-ADP033.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP033.png"
+    },
+    "ADP035": {
+      "image": "assets/product-images/103-7-Adapter-ADP035.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP035.png"
+    },
+    "ADP037": {
+      "image": "assets/product-images/104-7-Adapter-ADP037.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP037.png"
+    },
+    "ADP038": {
+      "image": "assets/product-images/105-7-Adapter-ADP038.jpg",
+      "matchType": "exact",
+      "source": "7. Adapter/ADP038.png"
+    },
+    "DP0203": {
+      "image": "assets/product-images/106-8-DP-Cable-DP0203.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP0203.png"
+    },
+    "DP0303": {
+      "image": "assets/product-images/107-8-DP-Cable-DP0303.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP0303.png"
+    },
+    "DP0403": {
+      "image": "assets/product-images/108-8-DP-Cable-DP0403.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP0403.png"
+    },
+    "DP0503": {
+      "image": "assets/product-images/109-8-DP-Cable-DP0503.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP0503.png"
+    },
+    "DP0703": {
+      "image": "assets/product-images/110-8-DP-Cable-DP0703.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP0703.png"
+    },
+    "DP0803": {
+      "image": "assets/product-images/111-8-DP-Cable-DP0803.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP0803.png"
+    },
+    "DP0903": {
+      "image": "assets/product-images/112-8-DP-Cable-DP0903.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP0903.png"
+    },
+    "DP1006": {
+      "image": "assets/product-images/113-8-DP-Cable-DP1006.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP1006.png"
+    },
+    "DP1203": {
+      "image": "assets/product-images/114-8-DP-Cable-DP1203.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP1203.png"
+    },
+    "DP1303": {
+      "image": "assets/product-images/115-8-DP-Cable-DP1303.jpg",
+      "matchType": "exact",
+      "source": "8. DP Cable/DP1303.png"
+    },
+    "DVI0103": {
+      "image": "assets/product-images/116-9-DVI-Cable-DVI0103.jpg",
+      "matchType": "exact",
+      "source": "9. DVI Cable/DVI0103.png"
+    },
+    "DVI0203": {
+      "image": "assets/product-images/117-9-DVI-Cable-DVI0203.jpg",
+      "matchType": "exact",
+      "source": "9. DVI Cable/DVI0203.png"
+    },
+    "DVI0403": {
+      "image": "assets/product-images/118-9-DVI-Cable-DVI0403.jpg",
+      "matchType": "exact",
+      "source": "9. DVI Cable/DVI0403.png"
+    },
+    "DVI0503": {
+      "image": "assets/product-images/119-9-DVI-Cable-DVI0503.jpg",
+      "matchType": "exact",
+      "source": "9. DVI Cable/DVI0503.png"
+    },
+    "DVI0601": {
+      "image": "assets/product-images/120-9-DVI-Cable-DVI0601.jpg",
+      "matchType": "exact",
+      "source": "9. DVI Cable/DVI0601.png"
+    },
+    "HD0102": {
+      "image": "assets/product-images/121-9-DVI-Cable-HD0102.jpg",
+      "matchType": "exact",
+      "source": "9. DVI Cable/HD0102.png"
+    },
+    "HD0203": {
+      "image": "assets/product-images/122-9-DVI-Cable-HD0203.jpg",
+      "matchType": "exact",
+      "source": "9. DVI Cable/HD0203.png"
+    },
+    "HW03-W": {
+      "image": "assets/product-images/123-6-Earphone-HW03-W-HW03-B.jpg",
+      "matchType": "pair",
+      "source": "6. Earphone/HW03-W & HW03-B.png"
+    },
+    "HW03-B": {
+      "image": "assets/product-images/123-6-Earphone-HW03-W-HW03-B.jpg",
+      "matchType": "pair",
+      "source": "6. Earphone/HW03-W & HW03-B.png"
+    },
+    "N6A02": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N6A03": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N6A04": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N6A05": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N6A06": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N6A07": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N6A08": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N6A09": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N6A10": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N6A11": {
+      "image": "assets/product-images/124-1-Patch-Cable-N6A02---N6A11.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N6A02 - N6A11.png"
+    },
+    "N8A02": {
+      "image": "assets/product-images/125-1-Patch-Cable-N8A02---N8A08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8A02 - N8A08.png"
+    },
+    "N8A03": {
+      "image": "assets/product-images/125-1-Patch-Cable-N8A02---N8A08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8A02 - N8A08.png"
+    },
+    "N8A04": {
+      "image": "assets/product-images/125-1-Patch-Cable-N8A02---N8A08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8A02 - N8A08.png"
+    },
+    "N8A05": {
+      "image": "assets/product-images/125-1-Patch-Cable-N8A02---N8A08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8A02 - N8A08.png"
+    },
+    "N8A06": {
+      "image": "assets/product-images/125-1-Patch-Cable-N8A02---N8A08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8A02 - N8A08.png"
+    },
+    "N8A07": {
+      "image": "assets/product-images/125-1-Patch-Cable-N8A02---N8A08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8A02 - N8A08.png"
+    },
+    "N8A08": {
+      "image": "assets/product-images/125-1-Patch-Cable-N8A02---N8A08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8A02 - N8A08.png"
+    },
+    "N8B03": {
+      "image": "assets/product-images/126-1-Patch-Cable-N8B03---N8B08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8B03 - N8B08.png"
+    },
+    "N8B04": {
+      "image": "assets/product-images/126-1-Patch-Cable-N8B03---N8B08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8B03 - N8B08.png"
+    },
+    "N8B05": {
+      "image": "assets/product-images/126-1-Patch-Cable-N8B03---N8B08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8B03 - N8B08.png"
+    },
+    "N8B06": {
+      "image": "assets/product-images/126-1-Patch-Cable-N8B03---N8B08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8B03 - N8B08.png"
+    },
+    "N8B08": {
+      "image": "assets/product-images/126-1-Patch-Cable-N8B03---N8B08.jpg",
+      "matchType": "range",
+      "source": "1. Patch Cable/N8B03 - N8B08.png"
+    },
+    "H0103": {
+      "image": "assets/product-images/127-2-HDMI-Cable-H0103---H0110.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0103 - H0110.png"
+    },
+    "H0104": {
+      "image": "assets/product-images/127-2-HDMI-Cable-H0103---H0110.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0103 - H0110.png"
+    },
+    "H0105": {
+      "image": "assets/product-images/127-2-HDMI-Cable-H0103---H0110.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0103 - H0110.png"
+    },
+    "H0106": {
+      "image": "assets/product-images/127-2-HDMI-Cable-H0103---H0110.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0103 - H0110.png"
+    },
+    "H0108": {
+      "image": "assets/product-images/127-2-HDMI-Cable-H0103---H0110.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0103 - H0110.png"
+    },
+    "H0109": {
+      "image": "assets/product-images/127-2-HDMI-Cable-H0103---H0110.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0103 - H0110.png"
+    },
+    "H0110": {
+      "image": "assets/product-images/127-2-HDMI-Cable-H0103---H0110.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0103 - H0110.png"
+    },
+    "H0203": {
+      "image": "assets/product-images/128-2-HDMI-Cable-H0203---H0210.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0203 - H0210.png"
+    },
+    "H0204": {
+      "image": "assets/product-images/128-2-HDMI-Cable-H0203---H0210.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0203 - H0210.png"
+    },
+    "H0205": {
+      "image": "assets/product-images/128-2-HDMI-Cable-H0203---H0210.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0203 - H0210.png"
+    },
+    "H0206": {
+      "image": "assets/product-images/128-2-HDMI-Cable-H0203---H0210.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0203 - H0210.png"
+    },
+    "H0208": {
+      "image": "assets/product-images/128-2-HDMI-Cable-H0203---H0210.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0203 - H0210.png"
+    },
+    "H0209": {
+      "image": "assets/product-images/128-2-HDMI-Cable-H0203---H0210.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0203 - H0210.png"
+    },
+    "H0210": {
+      "image": "assets/product-images/128-2-HDMI-Cable-H0203---H0210.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0203 - H0210.png"
+    },
+    "H0303": {
+      "image": "assets/product-images/129-2-HDMI-Cable-H0303---H0310.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0303 - H0310.png"
+    },
+    "H0304": {
+      "image": "assets/product-images/129-2-HDMI-Cable-H0303---H0310.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0303 - H0310.png"
+    },
+    "H0305": {
+      "image": "assets/product-images/129-2-HDMI-Cable-H0303---H0310.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0303 - H0310.png"
+    },
+    "H0306": {
+      "image": "assets/product-images/129-2-HDMI-Cable-H0303---H0310.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0303 - H0310.png"
+    },
+    "H0308": {
+      "image": "assets/product-images/129-2-HDMI-Cable-H0303---H0310.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0303 - H0310.png"
+    },
+    "H0309": {
+      "image": "assets/product-images/129-2-HDMI-Cable-H0303---H0310.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0303 - H0310.png"
+    },
+    "H0310": {
+      "image": "assets/product-images/129-2-HDMI-Cable-H0303---H0310.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0303 - H0310.png"
+    },
+    "H0403": {
+      "image": "assets/product-images/130-2-HDMI-Cable-H0403---H0408.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0403 - H0408.png"
+    },
+    "H0404": {
+      "image": "assets/product-images/130-2-HDMI-Cable-H0403---H0408.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0403 - H0408.png"
+    },
+    "H0405": {
+      "image": "assets/product-images/130-2-HDMI-Cable-H0403---H0408.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0403 - H0408.png"
+    },
+    "H0406": {
+      "image": "assets/product-images/130-2-HDMI-Cable-H0403---H0408.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0403 - H0408.png"
+    },
+    "H0408": {
+      "image": "assets/product-images/130-2-HDMI-Cable-H0403---H0408.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0403 - H0408.png"
+    },
+    "H0503": {
+      "image": "assets/product-images/131-2-HDMI-Cable-H0503---H0507.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0503 - H0507.png"
+    },
+    "H0504": {
+      "image": "assets/product-images/131-2-HDMI-Cable-H0503---H0507.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0503 - H0507.png"
+    },
+    "H0505": {
+      "image": "assets/product-images/131-2-HDMI-Cable-H0503---H0507.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0503 - H0507.png"
+    },
+    "H0506": {
+      "image": "assets/product-images/131-2-HDMI-Cable-H0503---H0507.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0503 - H0507.png"
+    },
+    "H0601": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0602": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0603": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0604": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0605": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0606": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0607": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0608": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0609": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0610": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0611": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "H0612": {
+      "image": "assets/product-images/132-2-HDMI-Cable-H0601---H0612.jpg",
+      "matchType": "range",
+      "source": "2. HDMI Cable/H0601 - H0612.png"
+    },
+    "POW-101": {
+      "image": "assets/product-images/133-5-Cable-Power-POW-101---POW-102.jpg",
+      "matchType": "range",
+      "source": "5. Cable Power/POW-101 - POW-102.png"
+    },
+    "POW-102": {
+      "image": "assets/product-images/133-5-Cable-Power-POW-101---POW-102.jpg",
+      "matchType": "range",
+      "source": "5. Cable Power/POW-101 - POW-102.png"
+    },
+    "POW-201": {
+      "image": "assets/product-images/134-5-Cable-Power-POW-201---POW-202.jpg",
+      "matchType": "range",
+      "source": "5. Cable Power/POW-201 - POW-202.png"
+    },
+    "POW-202": {
+      "image": "assets/product-images/134-5-Cable-Power-POW-201---POW-202.jpg",
+      "matchType": "range",
+      "source": "5. Cable Power/POW-201 - POW-202.png"
+    },
+    "POW-301": {
+      "image": "assets/product-images/135-5-Cable-Power-POW-301---POW-302.jpg",
+      "matchType": "range",
+      "source": "5. Cable Power/POW-301 - POW-302.png"
+    },
+    "POW-302": {
+      "image": "assets/product-images/135-5-Cable-Power-POW-301---POW-302.jpg",
+      "matchType": "range",
+      "source": "5. Cable Power/POW-301 - POW-302.png"
+    }
+  },
+  "unmatchedSkus": [
+    "AU0801",
+    "AU0802",
+    "AU0804",
+    "AU0805",
+    "AU1201",
+    "AU1202",
+    "AU1203",
+    "AU1204",
+    "AU1205",
+    "AU1207",
+    "AU0701",
+    "AU0702",
+    "AU0704",
+    "AU0705",
+    "AU0301",
+    "AU0302",
+    "AU0304",
+    "AU0305",
+    "AU0601",
+    "AU0602",
+    "AU0604",
+    "AU0605",
+    "AU0501",
+    "AU0502",
+    "AU0504",
+    "AU0505",
+    "AU0401",
+    "AU0402",
+    "AU0404",
+    "AU0405",
+    "AU0406",
+    "AU0407",
+    "AU1301",
+    "AU1303",
+    "AU1304",
+    "AU1305",
+    "AU0104",
+    "AU0105",
+    "AU0106",
+    "AU0107",
+    "AU0204",
+    "AU0205",
+    "AU0206",
+    "AU0207",
+    "CDP013",
+    "CH0403",
+    "CH0503",
+    "CH0603",
+    "CH0703",
+    "CEA001",
+    "CEA002",
+    "CEA003",
+    "CEA004",
+    "UEA001",
+    "UEA002",
+    "UEA003",
+    "DK1301",
+    "DK1501",
+    "HUB801",
+    "DP0601",
+    "DP0602",
+    "DP0603",
+    "DP0604",
+    "DP0605",
+    "DP0103",
+    "DP1101",
+    "DP1102",
+    "DP1103",
+    "DP1104",
+    "DVI0501",
+    "DVI0502",
+    "DVI0504",
+    "DVI0505",
+    "DVI0506",
+    "DVI0507",
+    "DVI0303",
+    "VGA0108",
+    "DH0401",
+    "DH0402",
+    "DH0403",
+    "DH0404",
+    "DH0405",
+    "MH0101",
+    "MH0102",
+    "MH0103",
+    "MH0104",
+    "MH0105",
+    "MH0106",
+    "H0508",
+    "H2201",
+    "H2202",
+    "H2203",
+    "H2204",
+    "POW-303",
+    "POW-304",
+    "POW-305",
+    "POW-401",
+    "POW-402",
+    "POW-403",
+    "POW-501",
+    "POW-502",
+    "POW-503",
+    "POW-601",
+    "POW-602",
+    "POW-603",
+    "POW-701",
+    "UMF101",
+    "UMF102",
+    "UMF103",
+    "UMF104",
+    "UMF105",
+    "USB0202",
+    "USB0203",
+    "USB0204",
+    "USB0205",
+    "UMM101",
+    "UMM102",
+    "UMM103",
+    "UMM104",
+    "UMM105",
+    "UBM101",
+    "UBM102",
+    "UBM103",
+    "UBM104",
+    "UBM105",
+    "UBM107",
+    "U5P101",
+    "U5P102",
+    "U5P103",
+    "U5P104",
+    "U5P105",
+    "UMI101",
+    "UMI102",
+    "UMI103",
+    "UMI104",
+    "UMI105",
+    "AC0501",
+    "AC0502",
+    "AC0503",
+    "AC0504",
+    "AC0505",
+    "AC0601",
+    "LCP001",
+    "LCP002",
+    "LCP003",
+    "LCP004",
+    "LCP005",
+    "MIC001",
+    "MIC002",
+    "MIC003",
+    "MIC004",
+    "WS2001",
+    "HP0101",
+    "VC0101",
+    "VC0201",
+    "HNE001",
+    "HS1401",
+    "HS1801",
+    "HS3101",
+    "HS4101",
+    "HS5101",
+    "HSAB01",
+    "HSAB02",
+    "VD0101",
+    "VD0201",
+    "VD0202",
+    "VD0301",
+    "VD0302"
+  ],
+  "unusedSourceFiles": [
+    "4. Acc Ponsel/AC05.png",
+    "7. Adapter/ADP002 - ADP013.png"
+  ]
+}

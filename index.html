@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#FFFFFF" />
   <title>Howell Inventory</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="theme-light.css" />
+  <link rel="stylesheet" href="styles.css?v=20261110-maintenance-publish-13" />
+  <link rel="stylesheet" href="theme-light.css?v=20261110-maintenance-publish-13" />
 </head>
 <body>
+  <noscript><div style="position:fixed;inset:12px 12px auto;z-index:1000;padding:14px;border:1px solid #D4A91E;border-radius:10px;background:#FFF2BF;color:#17191c;font:14px/1.5 Arial,sans-serif">Howell Inventory memerlukan JavaScript aktif untuk membuka halaman dan menyimpan perubahan.</div></noscript>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <div class="brand"><img src="assets/howell-mark-color.png" alt="" /><strong class="brand-name">Howell</strong><button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Ciutkan menu" aria-expanded="true" title="Ciutkan menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><button class="icon-btn close-menu" id="closeMenu" aria-label="Tutup menu">Tutup</button></div>
@@ -19,7 +20,8 @@
           <button class="nav-item" data-page="stores" title="Cabang Retail" aria-label="Cabang Retail"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h18l-2-6H5l-2 6ZM5 10v10h14V10M9 20v-6h6v6"/><path d="M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/></svg></b><span>Cabang Retail</span></button>
         </div></div>
         <div class="nav-group"><div class="nav-label">OPERASIONAL</div><div class="nav-group-items">
-          <button class="nav-item" data-page="shipments" title="Pengiriman" aria-label="Pengiriman"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v11H3zM14 11h4l3 3v4h-7z"/><circle cx="7.5" cy="19" r="1.5"/><circle cx="18" cy="19" r="1.5"/></svg></b><span>Pengiriman</span></button>
+          <button class="nav-item" data-page="shipments" title="Purchase Order" aria-label="Purchase Order"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v11H3zM14 11h4l3 3v4h-7z"/><circle cx="7.5" cy="19" r="1.5"/><circle cx="18" cy="19" r="1.5"/></svg></b><span>Purchase Order</span></button>
+          <button class="nav-item" data-page="warehouse" title="Gudang" aria-label="Gudang"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-6 9 6v12H3z"/><path d="M7 21v-8h10v8M9 13v4m6-4v4M3 9h18"/></svg></b><span>Gudang</span></button>
           <button class="nav-item" data-page="inventory" title="Stok & Opname" aria-label="Stok & Opname"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v15H4zM8 5V3h8v2M8 10h8M8 14h8M8 17h4"/></svg></b><span>Stok & Opname</span><i id="lowStockBadge">3</i></button>
           <button class="nav-item" data-page="sales" title="Penjualan" aria-label="Penjualan"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h17M7 15l4-4 3 2 6-7"/></svg></b><span>Penjualan</span></button>
           <button class="nav-item" data-page="invoices" title="Tagihan" aria-label="Tagihan"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></b><span>Tagihan</span><i class="nav-count" id="invoiceBadge">2</i></button>
@@ -31,15 +33,17 @@
       <div class="sidebar-bottom"><div class="profile"><div class="avatar">HC</div><div class="profile-info"><strong>Howell Cable</strong><small>Administrator</small></div></div></div>
     </aside>
     <main class="main-area">
-      <header class="topbar"><button class="top-text-button menu-toggle" id="menuToggle" aria-label="Buka menu">Menu</button><div class="crumb"><span>HOWELL</span><b>/</b><strong id="crumbCurrent">Ringkasan</strong></div><div class="top-actions"><label class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="globalSearch" type="search" placeholder="Cari produk, SKU, transaksi…" aria-label="Cari produk, SKU, transaksi" /></label><button class="top-icon-button" id="filterButton" aria-label="Filter" title="Filter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8L4 5Z"/></svg></button><select class="top-period" id="topPeriod" aria-label="Pilih periode"><option value="week">Minggu ini</option><option value="month">Bulan ini</option></select><button class="top-icon-button notification" id="notificationButton" aria-label="Notifikasi" title="Notifikasi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="top-profile"><div class="top-avatar">HC</div><div><strong>Howell Cable</strong><small>Administrator</small></div></div></div></header>
+      <header class="topbar"><button class="top-text-button menu-toggle" id="menuToggle" aria-label="Buka menu">Menu</button><div class="crumb"><span>HOWELL</span><b>/</b><strong id="crumbCurrent">Ringkasan</strong></div><div class="top-actions"><div class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="globalSearch" type="search" placeholder="Cari produk, SKU, transaksi…" aria-label="Cari produk, SKU, transaksi" /><button type="button" id="globalSearchSubmit" class="global-search-submit" aria-label="Cari">Cari</button></div><button class="top-icon-button" id="filterButton" aria-label="Filter" title="Filter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8L4 5Z"/></svg></button><select class="top-period" id="topPeriod" aria-label="Pilih periode"><option value="week">Minggu ini</option><option value="month">Bulan ini</option></select><button class="top-icon-button notification" id="notificationButton" aria-label="Notifikasi" title="Notifikasi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="top-profile"><div class="top-avatar">HC</div><div><strong>Howell Cable</strong><small>Administrator</small></div></div></div></header>
       <section class="page-content" id="pageContent"></section>
-      <footer class="footer"><span>© 2026 Howell Inventory</span><span><span class="status-dot"></span> Sinkronisasi lokal aktif</span></footer>
+      <footer class="footer"><span>© 2026 Howell Inventory</span><span title="Data tersimpan hanya di browser/perangkat ini."><span class="status-dot"></span> Penyimpanan lokal aktif</span></footer>
     </main>
   </div>
   <div class="overlay" id="overlay"></div>
   <div class="toast" id="toast" role="status"></div>
   <div class="modal-backdrop" id="modalBackdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><header><div><small id="modalEyebrow">FORMULIR</small><h2 id="modalTitle">Tambah data</h2></div><button class="top-text-button" id="modalClose" aria-label="Tutup">Tutup</button></header><form id="modalForm"><div class="modal-fields" id="modalFields"></div><div class="modal-actions"><button type="button" class="btn btn-light" id="modalCancel">Batal</button><button type="submit" class="btn btn-primary" id="modalSubmit">Simpan data</button></div></form></section></div>
   <script src="assets/master-draft-2026-10.js"></script>
-  <script src="app.js"></script>
+  <script src="assets/howell-source-data.js"></script>
+  <script src="assets/product-image-map.js?v=20261110-maintenance-publish-13"></script>
+  <script src="app.js?v=20261110-maintenance-publish-13"></script>
 </body>
 </html>
