@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#FFFFFF" />
   <title>Howell Inventory</title>
-  <link rel="stylesheet" href="styles.css?v=20261111-stock-sync-6" />
-  <link rel="stylesheet" href="theme-light.css?v=20261111-stock-sync-6" />
+  <link rel="stylesheet" href="styles.css?v=20261111-ean13-2" />
+  <link rel="stylesheet" href="theme-light.css?v=20261111-ean13-2" />
 </head>
 <body>
   <noscript><div style="position:fixed;inset:12px 12px auto;z-index:1000;padding:14px;border:1px solid #D4A91E;border-radius:10px;background:#FFF2BF;color:#17191c;font:14px/1.5 Arial,sans-serif">Howell Inventory memerlukan JavaScript aktif untuk membuka halaman dan menyimpan perubahan.</div></noscript>
@@ -33,7 +33,7 @@
       <div class="sidebar-bottom"><div class="profile"><div class="avatar">HC</div><div class="profile-info"><strong>Howell Cable</strong><small>Administrator</small></div></div></div>
     </aside>
     <main class="main-area">
-      <header class="topbar"><button class="top-text-button menu-toggle" id="menuToggle" aria-label="Buka menu">Menu</button><div class="crumb"><span>HOWELL</span><b>/</b><strong id="crumbCurrent">Ringkasan</strong></div><div class="top-actions"><div class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="globalSearch" type="search" placeholder="Cari produk, SKU, transaksi…" aria-label="Cari produk, SKU, transaksi" /><button type="button" id="globalSearchSubmit" class="global-search-submit" aria-label="Cari">Cari</button></div><button class="top-icon-button" id="filterButton" aria-label="Filter" title="Filter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8L4 5Z"/></svg></button><select class="top-period" id="topPeriod" aria-label="Pilih periode"><option value="week">Minggu ini</option><option value="month">Bulan ini</option></select><button class="top-icon-button notification" id="notificationButton" aria-label="Notifikasi" title="Notifikasi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="top-profile"><div class="top-avatar">HC</div><div><strong>Howell Cable</strong><small>Administrator</small></div></div></div></header>
+      <header class="topbar"><button class="top-text-button menu-toggle" id="menuToggle" aria-label="Buka menu">Menu</button><div class="crumb"><span>HOWELL</span><b>/</b><strong id="crumbCurrent">Ringkasan</strong></div><div class="top-actions"><div class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="globalSearch" type="search" placeholder="Cari produk, SKU, transaksi…" aria-label="Cari produk, SKU, transaksi" /><button type="button" id="globalSearchSubmit" class="global-search-submit" aria-label="Cari">Cari</button></div><button class="barcode-scan-button" id="barcodeScanOpen" type="button" aria-label="Pindai barcode EAN-13" title="Pindai barcode EAN-13"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3M6 8v8m3-8v8m3-8v8m3-8v8m3-8v8"/></svg><span>Pindai</span></button><button class="top-icon-button" id="filterButton" aria-label="Filter" title="Filter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8L4 5Z"/></svg></button><select class="top-period" id="topPeriod" aria-label="Pilih periode"><option value="week">Minggu ini</option><option value="month">Bulan ini</option></select><button class="top-icon-button notification" id="notificationButton" aria-label="Notifikasi" title="Notifikasi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="top-profile"><div class="top-avatar">HC</div><div><strong>Howell Cable</strong><small>Administrator</small></div></div></div></header>
       <section class="page-content" id="pageContent"></section>
       <footer class="footer"><span>© 2026 Howell Inventory</span><span id="syncStatus" title="Memeriksa database…"><span class="status-dot"></span><span id="syncStatusText">Memeriksa database…</span></span></footer>
     </main>
@@ -41,10 +41,11 @@
   <div class="overlay" id="overlay"></div>
   <div class="toast" id="toast" role="status"></div>
   <div class="modal-backdrop" id="modalBackdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><header><div><small id="modalEyebrow">FORMULIR</small><h2 id="modalTitle">Tambah data</h2></div><button class="top-text-button" id="modalClose" aria-label="Tutup">Tutup</button></header><form id="modalForm"><div class="modal-fields" id="modalFields"></div><div class="modal-actions"><button type="button" class="btn btn-light" id="modalCancel">Batal</button><button type="submit" class="btn btn-primary" id="modalSubmit">Simpan data</button></div></form></section></div>
+  <dialog class="barcode-scanner-dialog" id="barcodeScanner" aria-labelledby="barcodeScannerTitle"><form method="dialog" class="barcode-scanner-close-form"><button class="barcode-scanner-close" aria-label="Tutup pemindai">×</button></form><div class="barcode-scanner-content"><span class="eyebrow">PEMINDAI PRODUK</span><h2 id="barcodeScannerTitle">Pindai barcode EAN-13</h2><p>Arahkan pemindai USB ke kolom ini atau gunakan kamera perangkat.</p><label class="barcode-scanner-label" for="barcodeScannerInput">Kode barcode<input id="barcodeScannerInput" type="search" inputmode="numeric" autocomplete="off" maxlength="13" placeholder="Scan atau ketik 13 digit EAN-13" /></label><div class="barcode-scanner-actions"><button class="btn btn-primary" id="barcodeScannerLookup" type="button">Cari produk</button><button class="btn btn-light" id="barcodeCameraStart" type="button">Buka kamera</button></div><p id="barcodeScannerStatus" class="barcode-scanner-status" role="status" aria-live="polite">Pemindai USB akan mengisi kode. Tekan Enter jika scanner tidak mengirim Enter otomatis.</p><div class="barcode-camera-frame" id="barcodeCameraFrame" hidden><video id="barcodeScannerVideo" playsinline muted></video></div></div></dialog>
   <script src="assets/master-draft-2026-10.js"></script>
   <script src="assets/howell-source-data.js"></script>
-  <script src="assets/product-image-map.js?v=20261110-maintenance-publish-13"></script>
+  <script src="assets/product-image-map.js?v=20261111-ean13-2"></script>
   <script src="assets/howell-runtime-config.js?v=20261111-vps-db-1"></script>
-  <script src="app.js?v=20261111-stock-sync-6"></script>
+    <script src="app.js?v=20261111-ean13-2"></script>
 </body>
 </html>

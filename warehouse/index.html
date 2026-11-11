@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#FFFFFF" />
   <title>Howell Inventory · Portal Gudang</title>
-  <link rel="stylesheet" href="styles.css?v=20261111-stock-sync-6" />
-  <link rel="stylesheet" href="theme-light.css?v=20261111-stock-sync-6" />
+  <link rel="stylesheet" href="styles.css?v=20261111-ean13-2" />
+  <link rel="stylesheet" href="theme-light.css?v=20261111-ean13-2" />
   <style>
     body.warehouse-portal .sidebar { position:fixed; }
     body.warehouse-portal .nav-group-preferences { display:none; }
@@ -37,9 +37,10 @@
   </div>
   <div class="overlay" id="overlay"></div><div class="toast" id="toast" role="status"></div>
   <div class="modal-backdrop" id="modalBackdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><header><div><small id="modalEyebrow">FORMULIR</small><h2 id="modalTitle">Tambah data</h2></div><button class="top-text-button" id="modalClose" aria-label="Tutup">Tutup</button></header><form id="modalForm"><div class="modal-fields" id="modalFields"></div><div class="modal-actions"><button type="button" class="btn btn-light" id="modalCancel">Batal</button><button type="submit" class="btn btn-primary" id="modalSubmit">Simpan data</button></div></form></section></div>
-  <script src="assets/howell-warehouse-data.js?v=20261111-stock-sync-6"></script>
-  <script src="assets/product-image-map.js?v=20261111-stock-sync-6"></script>
-  <script src="assets/howell-runtime-config.js?v=20261111-stock-sync-6"></script>
-  <script src="app.js?v=20261111-stock-sync-6"></script>
+  <dialog class="barcode-scanner-dialog" id="barcodeScanner" aria-labelledby="barcodeScannerTitle"><form method="dialog" class="barcode-scanner-close-form"><button class="barcode-scanner-close" aria-label="Tutup pemindai">×</button></form><div class="barcode-scanner-content"><span class="eyebrow">PEMINDAI PRODUK</span><h2 id="barcodeScannerTitle">Pindai barcode EAN-13</h2><p>Arahkan pemindai USB ke kolom ini atau gunakan kamera perangkat.</p><label class="barcode-scanner-label" for="barcodeScannerInput">Kode barcode<input id="barcodeScannerInput" type="search" inputmode="numeric" autocomplete="off" maxlength="13" placeholder="Scan atau ketik 13 digit EAN-13" /></label><div class="barcode-scanner-actions"><button class="btn btn-primary" id="barcodeScannerLookup" type="button">Cari produk</button><button class="btn btn-light" id="barcodeCameraStart" type="button">Buka kamera</button></div><p id="barcodeScannerStatus" class="barcode-scanner-status" role="status" aria-live="polite">Pemindai USB akan mengisi kode. Tekan Enter jika scanner tidak mengirim Enter otomatis.</p><div class="barcode-camera-frame" id="barcodeCameraFrame" hidden><video id="barcodeScannerVideo" playsinline muted></video></div></div></dialog>
+  <script src="assets/howell-warehouse-data.js?v=20261111-ean13-2"></script>
+  <script src="assets/product-image-map.js?v=20261111-ean13-2"></script>
+  <script src="assets/howell-runtime-config.js?v=20261111-vps-db-1"></script>
+  <script src="app.js?v=20261111-ean13-2"></script>
 </body>
 </html>
