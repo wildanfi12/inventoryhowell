@@ -285,7 +285,7 @@ function validState(state) {
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url || '/', 'http://localhost');
-  if (url.pathname === '/api/health' && req.method === 'GET') return json(res, 200, { ok: true });
+  if (url.pathname === '/api/health' && (req.method === 'GET' || req.method === 'HEAD')) return json(res, 200, { ok: true });
   if (!url.pathname.startsWith('/api/')) return json(res, 404, { error: 'Not found' });
   const account = authorized(req);
   if (!account) {
