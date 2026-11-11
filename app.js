@@ -37,7 +37,10 @@
   let serverRevision=0,syncReady=false,syncBlocked=false,syncConnecting=false,syncPending=0,syncQueue=Promise.resolve(),syncStatusText='Memeriksa database…',syncStatusTitle='Menghubungkan ke database bersama…',syncErrorDetails='';
   // Do not make the public GitHub Pages site read-only just because it has fetch().
   // Shared API sync is an explicit per-host opt-in configured outside the app bundle.
-  const syncEnabled=window.HOWELL_SHARED_DATABASE===true&&typeof window.fetch==='function'&&window.location?.protocol!=='file:';
+  // The warehouse portal must never fall back to an empty browser-only stock view.
+  // Its role is injected by the portal-specific runtime config, so use that as a
+  // fail-safe signal if the shared-database boolean is missing from a stale/mixed release.
+  const syncEnabled=(window.HOWELL_SHARED_DATABASE===true||window.HOWELL_PORTAL_ROLE==='warehouse')&&typeof window.fetch==='function'&&window.location?.protocol!=='file:';
   const sharedFetch=(url,options={})=>{const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);return window.fetch(url,{...options,signal:controller.signal}).finally(()=>clearTimeout(timer));};
   const formatSyncTime=(d=new Date())=>{try{return d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}catch{return ''}};
   const updateSyncStatus=(text,title,{error=false}={})=>{syncStatusText=text;syncStatusTitle=title||text;const node=$('#syncStatus');if(node){const label=$('#syncStatusText');if(label)label.textContent=text;node.title=syncStatusTitle;node.classList.toggle('sync-error',error||/gagal|konflik|lokal|terputus|tidak tersambung/i.test(text));}};
