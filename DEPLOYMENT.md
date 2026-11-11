@@ -41,3 +41,63 @@ Jangan buka aplikasi ini untuk operasi bersama, atau memasukkan data produksi, s
 - `deployment/inventory.env.example` — nama variabel; buat file rahasia terpisah di `/etc/howell-inventory/inventory.env` dengan mode `0600`.
 
 Jangan salin konfigurasi Nginx contoh ke situs `stockflow.howellcable.site`; situs itu dan service Howell lain harus tetap terpisah.
+
+## Prosedur Deploy, Rollback, dan Health Check
+
+### 1. Build Bundle Rilis
+Jalankan di repositori:
+```bash
+node scripts/build-warehouse-portal.cjs
+node scripts/build-vps-release.cjs
+```
+Folder `release/` akan berisi:
+- Portal Utama (Admin): `release/`
+- Portal Gudang (Warehouse): `release/warehouse/`
+
+### 2. Backup Sebelum Deploy (di VPS)
+Sebelum memasang rilis baru, buat cadangan folder rilis aktif dan database SQLite:
+```bash
+sudo cp -r /var/www/howell-inventory/release /var/www/howell-inventory/release-backup-$(date +%Y%m%d%H%M%S)
+sudo cp /var/lib/howell-inventory/inventory.sqlite /var/lib/howell-inventory/inventory.sqlite.bak-$(date +%Y%m%d%H%M%S)
+```
+
+### 3. Deploy ke VPS
+Unggah isi folder `release/` ke `/var/www/howell-inventory/release/`, kemudian pastikan izin kepemilikan file web:
+```bash
+sudo chown -R www-data:www-data /var/www/howell-inventory/release/
+```
+Jika ada perubahan pada `server.cjs`, salin ke `/opt/howell-inventory/server.cjs` dan restart service:
+```bash
+sudo systemctl restart howell-inventory-api.service
+```
+
+### 4. Health Check
+Periksa status service dan endpoint API:
+- Status systemd:
+  ```bash
+  sudo systemctl status howell-inventory-api.service
+  ```
+- Endpoint Health:
+  - Internal VPS: `curl -sS http://127.0.0.1:3103/api/health`
+  - Portal Utama: `curl -sS https://inventory.howellcable.site/api/health`
+  - Portal Gudang: `curl -sS https://gudang.inventory.howellcable.site/api/health`
+- Endpoint State:
+  - `curl -sS https://inventory.howellcable.site/api/state`
+  - `curl -sS https://gudang.inventory.howellcable.site/api/state`
+
+### 5. Prosedur Rollback
+Jika rilis baru mengalami kendala:
+1. Kembalikan folder rilis sebelumnya:
+   ```bash
+   sudo rm -rf /var/www/howell-inventory/release
+   sudo cp -r /var/www/howell-inventory/release-backup-<TIMESTAMP> /var/www/howell-inventory/release
+   sudo chown -R www-data:www-data /var/www/howell-inventory/release/
+   ```
+2. (Bila diperlukan pemulihan database) Kembalikan snapshot database:
+   ```bash
+   sudo systemctl stop howell-inventory-api.service
+   sudo cp /var/lib/howell-inventory/inventory.sqlite.bak-<TIMESTAMP> /var/lib/howell-inventory/inventory.sqlite
+   sudo systemctl start howell-inventory-api.service
+   ```
+3. Lakukan verifikasi ulang dengan health check.
+

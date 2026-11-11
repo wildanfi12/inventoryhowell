@@ -654,3 +654,37 @@ input:focus,select:focus,textarea:focus,.search:focus-within,.global-search:focu
 @media(max-width:640px){.inventory-categories{padding:0 10px 10px}.inventory-category>summary.inventory-category-summary{min-height:58px;padding:9px 10px!important;gap:8px!important}.inventory-category-meta{gap:7px!important}.inventory-category-controls{width:100%}.inventory-category-controls .btn{flex:1 1 auto}}
 @media(max-width:640px){.global-search-submit{display:none!important}}
 .footer #syncStatus.sync-error{color:#8a3b31!important}.footer #syncStatus .status-dot{display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;vertical-align:middle}.footer #syncStatus.sync-error .status-dot{background:#b74536!important}
+/* Warehouse portal header: keep only the operator profile in the right action group. */
+body.warehouse-portal .topbar{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  min-width:0!important;
+}
+body.warehouse-portal .topbar .crumb{
+  flex:0 1 auto!important;
+  min-width:0!important;
+}
+body.warehouse-portal .topbar .top-actions{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  flex:0 0 auto!important;
+  gap:0!important;
+  margin-left:auto!important;
+  min-width:0!important;
+}
+body.warehouse-portal .topbar .top-actions>:not(.top-profile){
+  display:none!important;
+}
+body.warehouse-portal .topbar .top-profile{
+  display:flex!important;
+  flex:0 0 auto!important;
+  margin:0!important;
+}
+@media(max-width:560px){
+  body.warehouse-portal .topbar{gap:8px!important;padding-inline:10px!important}
+  body.warehouse-portal .topbar .crumb{font-size:9px!important}
+  body.warehouse-portal .topbar .top-profile{height:36px!important;min-height:36px!important}
+}
+
