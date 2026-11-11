@@ -25,16 +25,18 @@ Foto dicocokkan ke SKU dari nama file. Nama SKU yang persis selalu didahulukan; 
 6. Catat pembayaran sebagian atau penuh dengan tanggal dan referensi.
 7. Retur mengurangi saldo cabang setelah cabang mengonfirmasi pengiriman, lalu menambah stok pusat hanya setelah gudang menerima dan menyatakan barang layak jual.
 
-Perubahan operasional disimpan dalam audit lokal. Pengaturan menyediakan ekspor JSON dan pemulihan dari file cadangan; pemulihan membuat salinan data browser saat ini terlebih dahulu. Cadangan ini tetap manual dan berada di perangkat pengguna, bukan backup server.
+Pengaturan menyediakan ekspor JSON dan pemulihan dari file cadangan. Saat API VPS aktif, audit aplikasi ikut tersimpan di state database; catatan itu belum setara dengan audit transaksi yang tidak dapat diubah.
 
 ## Menjalankan
 
-Buka `index.html` di browser modern atau sajikan folder ini sebagai static site. Data operasional tersimpan di `localStorage` browser/perangkat yang digunakan. Pembaruan data sumber hanya diterapkan sekali saat migrasi; catatan lama dicadangkan ke `howell-inventory-v1-pre-source-import-v2`.
+Buka `index.html` untuk pratinjau lokal. Portal gudang lokal tersedia di `warehouse/index.html`. Untuk VPS, jalankan `node scripts/build-vps-release.cjs`; hasilnya memuat aplikasi utama dan gudang di folder `release/` serta mengaktifkan koneksi API bersama hanya pada hasil build. Jalankan `node server.cjs` dengan Node.js 24+ dan variabel `HOWELL_API_USER`, `HOWELL_API_PASSWORD`, `HOWELL_WAREHOUSE_USER`, `HOWELL_WAREHOUSE_PASSWORD`, dan `HOWELL_DB_PATH`. Jangan expose port API secara publik; gunakan Nginx dan HTTPS. Lihat [DEPLOYMENT.md](DEPLOYMENT.md).
+
+URL yang disiapkan pada konfigurasi Nginx: `https://inventory.howellcable.site/` untuk admin/marketing dan `https://gudang.inventory.howellcable.site/` untuk Gudang, Stok & Opname, dan Retur. Kedua alamat menggunakan endpoint dan file database SQLite yang sama, tetapi login gudang menerima data yang sudah disaring oleh server.
 
 ## Batasan
 
-Ini masih prototype sisi klien, bukan sistem produksi. Belum ada server/database bersama, autentikasi dan hak akses, sinkronisasi antarperangkat, unggah dokumen, integrasi POS, atau penyimpanan audit yang tahan manipulasi. Stok awal tidak tersedia pada workbook, sehingga tetap “belum diopname” sampai dihitung dan dicatat. Tanggal efektif dan bukti perjanjian dapat dilengkapi untuk administrasi cabang, tetapi bukan syarat untuk membuat atau mengajukan PO.
+Integrasi server dan kedua portal sudah disiapkan di kode, tetapi belum dipasang ke VPS dan belum diuji untuk produksi. Database memakai snapshot bersama dengan penolakan revisi lama, belum model tabel transaksi domain. Backup offsite, pemulihan bencana, dan uji penerimaan dengan dua akun perlu diselesaikan sebelum operasional. Stok awal workbook tetap “belum diopname” sampai dihitung dan dicatat. Tanggal efektif dan bukti perjanjian dapat dilengkapi untuk administrasi cabang, tetapi bukan syarat untuk mengajukan PO.
 
 ## Sebelum digunakan di VPS
 
-Lihat [DEPLOYMENT.md](DEPLOYMENT.md). Website boleh dipasang sebagai demo, tetapi jangan gunakan sebagai sumber resmi stok, pengiriman, atau pembayaran sampai penyimpanan server bersama, login dan hak akses, audit sisi server, serta pencadangan dan pemulihan database tersedia. Memasang file statis di VPS tidak memindahkan `localStorage` browser menjadi database server.
+Lihat [DEPLOYMENT.md](DEPLOYMENT.md). Perubahan lokal ini belum dipush dan tidak ada perubahan dilakukan pada VPS atau DNS. Sebelum pemakaian resmi, konfigurasi server, HTTPS, dua kredensial, migrasi state, backup/restore, dan verifikasi akses lintas peran harus disiapkan.

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#FFFFFF" />
+  <title>Howell Inventory · Portal Gudang</title>
+  <link rel="stylesheet" href="styles.css?v=portal-gudang-1" />
+  <link rel="stylesheet" href="theme-light.css?v=portal-gudang-1" />
+  <style>
+    body.warehouse-portal .sidebar { position:fixed; }
+    body.warehouse-portal .nav-group-preferences { display:none; }
+    body.warehouse-portal .top-actions > :not(.top-profile) { display:none; }
+    body.warehouse-portal .top-profile { margin-left:auto; }
+    body.warehouse-portal .global-search, body.warehouse-portal .top-period { display:none!important; }
+  </style>
+</head>
+<body class="warehouse-portal">
+  <noscript><div style="padding:14px;background:#fff2bf;color:#17191c">Howell Inventory memerlukan JavaScript aktif.</div></noscript>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><img src="assets/howell-mark-color.png" alt="" /><strong class="brand-name">Howell</strong><button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Ciutkan menu" aria-expanded="true" title="Ciutkan menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><button class="icon-btn close-menu" id="closeMenu" aria-label="Tutup menu">Tutup</button></div>
+      <nav class="nav" aria-label="Navigasi Portal Gudang">
+        <div class="nav-group"><div class="nav-label">OPERASIONAL GUDANG</div><div class="nav-group-items">
+          <button class="nav-item active" data-page="warehouse" title="Gudang" aria-label="Gudang"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 9 9-6 9 6v12H3z"/><path d="M7 21v-8h10v8M9 13v4m6-4v4M3 9h18"/></svg></b><span>Gudang</span></button>
+          <button class="nav-item" data-page="inventory" title="Stok & Opname" aria-label="Stok & Opname"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v15H4zM8 5V3h8v2M8 10h8M8 14h8M8 17h4"/></svg></b><span>Stok & Opname</span><i id="lowStockBadge">0</i></button>
+          <button class="nav-item" data-page="returns" title="Retur" aria-label="Retur"><b class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></b><span>Retur</span></button>
+        </div></div>
+      </nav>
+      <div class="sidebar-bottom"><div class="profile"><div class="avatar">G</div><div class="profile-info"><strong>Portal Gudang</strong><small>Akses operasional</small></div></div></div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar"><button class="top-text-button menu-toggle" id="menuToggle" aria-label="Buka menu">Menu</button><div class="crumb"><span>HOWELL</span><b>/</b><strong id="crumbCurrent">Gudang</strong></div><div class="top-actions"><div class="global-search"><input id="globalSearch" aria-label="Cari" /><button id="globalSearchSubmit" type="button">Cari</button></div><button class="top-icon-button" id="filterButton">Filter</button><select id="topPeriod"><option value="week">Minggu ini</option></select><button class="top-icon-button notification" id="notificationButton">Notifikasi</button><div class="top-profile"><div class="top-avatar">G</div><div><strong>Portal Gudang</strong><small>Operator</small></div></div></div></header>
+      <section class="page-content" id="pageContent"></section>
+      <footer class="footer"><span>© 2026 Howell Inventory · Portal Gudang</span><span id="syncStatus" title="Memeriksa database…"><span class="status-dot"></span><span id="syncStatusText">Memeriksa database…</span></span></footer>
+    </main>
+  </div>
+  <div class="overlay" id="overlay"></div><div class="toast" id="toast" role="status"></div>
+  <div class="modal-backdrop" id="modalBackdrop"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><header><div><small id="modalEyebrow">FORMULIR</small><h2 id="modalTitle">Tambah data</h2></div><button class="top-text-button" id="modalClose" aria-label="Tutup">Tutup</button></header><form id="modalForm"><div class="modal-fields" id="modalFields"></div><div class="modal-actions"><button type="button" class="btn btn-light" id="modalCancel">Batal</button><button type="submit" class="btn btn-primary" id="modalSubmit">Simpan data</button></div></form></section></div>
+  <script src="assets/howell-warehouse-data.js"></script>
+  <script src="assets/product-image-map.js"></script>
+  <script src="assets/howell-runtime-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

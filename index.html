@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#FFFFFF" />
   <title>Howell Inventory</title>
-  <link rel="stylesheet" href="styles.css?v=20261110-maintenance-publish-13" />
-  <link rel="stylesheet" href="theme-light.css?v=20261110-maintenance-publish-13" />
+  <link rel="stylesheet" href="styles.css?v=20261111-vps-db-1" />
+  <link rel="stylesheet" href="theme-light.css?v=20261111-vps-db-1" />
 </head>
 <body>
   <noscript><div style="position:fixed;inset:12px 12px auto;z-index:1000;padding:14px;border:1px solid #D4A91E;border-radius:10px;background:#FFF2BF;color:#17191c;font:14px/1.5 Arial,sans-serif">Howell Inventory memerlukan JavaScript aktif untuk membuka halaman dan menyimpan perubahan.</div></noscript>
@@ -35,7 +35,7 @@
     <main class="main-area">
       <header class="topbar"><button class="top-text-button menu-toggle" id="menuToggle" aria-label="Buka menu">Menu</button><div class="crumb"><span>HOWELL</span><b>/</b><strong id="crumbCurrent">Ringkasan</strong></div><div class="top-actions"><div class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><input id="globalSearch" type="search" placeholder="Cari produk, SKU, transaksi…" aria-label="Cari produk, SKU, transaksi" /><button type="button" id="globalSearchSubmit" class="global-search-submit" aria-label="Cari">Cari</button></div><button class="top-icon-button" id="filterButton" aria-label="Filter" title="Filter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8L4 5Z"/></svg></button><select class="top-period" id="topPeriod" aria-label="Pilih periode"><option value="week">Minggu ini</option><option value="month">Bulan ini</option></select><button class="top-icon-button notification" id="notificationButton" aria-label="Notifikasi" title="Notifikasi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="top-profile"><div class="top-avatar">HC</div><div><strong>Howell Cable</strong><small>Administrator</small></div></div></div></header>
       <section class="page-content" id="pageContent"></section>
-      <footer class="footer"><span>© 2026 Howell Inventory</span><span title="Data tersimpan hanya di browser/perangkat ini."><span class="status-dot"></span> Penyimpanan lokal aktif</span></footer>
+      <footer class="footer"><span>© 2026 Howell Inventory</span><span id="syncStatus" title="Memeriksa database…"><span class="status-dot"></span><span id="syncStatusText">Memeriksa database…</span></span></footer>
     </main>
   </div>
   <div class="overlay" id="overlay"></div>
@@ -44,6 +44,7 @@
   <script src="assets/master-draft-2026-10.js"></script>
   <script src="assets/howell-source-data.js"></script>
   <script src="assets/product-image-map.js?v=20261110-maintenance-publish-13"></script>
-  <script src="app.js?v=20261110-maintenance-publish-13"></script>
+  <script src="assets/howell-runtime-config.js?v=20261111-vps-db-1"></script>
+  <script src="app.js?v=20261111-vps-db-1"></script>
 </body>
 </html>

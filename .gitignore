@@ -1,1 +1,8 @@
 /assets/Foto Produk/
+/data/
+/release/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.env
+!deployment/*.env.example

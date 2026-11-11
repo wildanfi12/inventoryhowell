@@ -653,3 +653,4 @@ input:focus,select:focus,textarea:focus,.search:focus-within,.global-search:focu
 .global-search-submit:focus-visible{outline:2px solid #D4A91E;outline-offset:2px}
 @media(max-width:640px){.inventory-categories{padding:0 10px 10px}.inventory-category>summary.inventory-category-summary{min-height:58px;padding:9px 10px!important;gap:8px!important}.inventory-category-meta{gap:7px!important}.inventory-category-controls{width:100%}.inventory-category-controls .btn{flex:1 1 auto}}
 @media(max-width:640px){.global-search-submit{display:none!important}}
+.footer #syncStatus.sync-error{color:#8a3b31!important}.footer #syncStatus .status-dot{display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;vertical-align:middle}.footer #syncStatus.sync-error .status-dot{background:#b74536!important}
