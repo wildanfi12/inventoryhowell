@@ -360,7 +360,7 @@ button,input,select,textarea{font-family:-apple-system,BlinkMacSystemFont,"SF Pr
 .paperclip-branches-tools>span,.paperclip-branches-footer{flex:none;color:var(--muted,#737981);font-size:12px}
 .paperclip-branches-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:min(58vh,540px);overflow:auto;overscroll-behavior:contain;padding:1px 2px 2px}
 .paperclip-branch-row{min-height:62px;display:grid;grid-template-columns:38px minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--border,#e3e5e2);border-radius:9px;background:var(--surface,#fff);min-width:0}
-.paperclip-branch-row[hidden]{display:none!important}
+.paperclip-branch-row[hidden],[hidden]{display:none!important}
 .paperclip-branch-code{width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--surface-muted,#f2f3f1);color:var(--text,#30343a);font-size:10px;font-weight:650}
 .paperclip-branch-info{min-width:0;display:block}
 .paperclip-branch-info strong,.paperclip-branch-info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
