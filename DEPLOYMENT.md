@@ -13,9 +13,13 @@
 
 ## Status operasional
 
-**Belum dipasang ke VPS dan belum live.** Perubahan ini hanya ada di checkout lokal; tidak ada commit/push GitHub, perubahan DNS, atau modifikasi layanan VPS.
+**Kode sudah dipush ke GitHub (`main`) dan rilis sudah dipasang pada VPS `103.150.227.170`.** Service API aktif pada `127.0.0.1:3103`; health check lokal berhasil, dan endpoint state menolak akses tanpa autentikasi. Rilis statis berada di `/var/www/howell-inventory/release`, dengan API di `/opt/howell-inventory/server.cjs` dan SQLite di `/var/lib/howell-inventory/inventory.sqlite`.
 
-**Belum dipasang ke VPS dan belum boleh dianggap siap produksi.** Walau API sekarang memisahkan akun admin/gudang dan menerapkan proyeksi serta validasi mutasi di server, penyimpanan operasional masih berupa satu snapshot JSON dalam SQLite, bukan tabel transaksi domain. Belum ada backup otomatis teruji, pemulihan bencana, pembatasan laju login, atau uji penerimaan end-to-end di VPS. Gunakan staging terlebih dulu dan jangan masukkan transaksi produksi sebelum backup/restore serta seluruh alur dua akun diverifikasi.
+**Belum live untuk pengguna.** DNS `inventory.howellcable.site` masih mengarah ke GitHub Pages dan DNS `gudang.inventory.howellcable.site` belum diarahkan ke VPS. Nginx hanya menyiapkan jalur ACME challenge dan mengembalikan HTTP 503 untuk halaman lain; belum ada akses aplikasi melalui HTTP. Sertifikat HTTPS untuk kedua host belum diterbitkan. Setelah DNS diarahkan, terbitkan sertifikat TLS, aktifkan virtual host HTTPS pada contoh konfigurasi, lalu uji kedua akun.
+
+Database di VPS masih kosong dan menunggu inisialisasi admin. Saat host utama diarahkan ke VPS, login admin pertama dari browser sumber data resmi akan mengirim data lokal browser tersebut ke database bersama. Pastikan data browser itu yang benar dan unduh cadangannya sebelum login pertama. Jangan inisialisasi dari akun gudang.
+
+**Belum boleh dianggap siap produksi.** Walau API sekarang memisahkan akun admin/gudang dan menerapkan proyeksi serta validasi mutasi di server, penyimpanan operasional masih berupa satu snapshot JSON dalam SQLite, bukan tabel transaksi domain. Belum ada backup otomatis teruji, pemulihan bencana, pembatasan laju login, atau uji penerimaan end-to-end di VPS. Gunakan staging terlebih dulu dan jangan masukkan transaksi produksi sebelum backup/restore serta seluruh alur dua akun diverifikasi.
 
 Jangan buka aplikasi ini untuk operasi bersama, atau memasukkan data produksi, sebelum kekurangan tersebut ditangani. Menyimpan ke SQLite VPS saja belum cukup untuk menjamin konsistensi semua alur operasional.
 
