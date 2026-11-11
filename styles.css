@@ -396,3 +396,5 @@ button,input,select,textarea{font-family:-apple-system,BlinkMacSystemFont,"SF Pr
 i[hidden],[hidden]{display:none!important}
 .global-search:focus-within{outline:0!important;border-color:#e3e0d8!important;box-shadow:none!important}
 .global-search input:focus{outline:0!important;border:0!important;box-shadow:none!important}
+.global-search,.global-search:focus,.global-search:focus-within{border:1px solid #e3e0d8!important;border-color:#e3e0d8!important;outline:none!important;box-shadow:none!important}
+.global-search input,.global-search input:focus,.global-search button,.global-search button:focus{outline:none!important;box-shadow:none!important}
