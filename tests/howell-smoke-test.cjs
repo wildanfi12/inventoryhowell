@@ -44,8 +44,14 @@ function boot() {
     constructor(form) { this.form = form; }
     entries() { return Object.entries(this.form.values); }
   }
+  class MutationObserverMock {
+    constructor(callback) { this.callback = callback; }
+    observe() {}
+    disconnect() {}
+    takeRecords() { return []; }
+  }
   const sandbox = {
-    document, localStorage, FormData: FormDataMock, structuredClone,
+    document, localStorage, FormData: FormDataMock, MutationObserver: MutationObserverMock, structuredClone,
     Date, Intl, Math, Number, String, Object, Array, Map, Set, Event: class Event {},
     window: { scrollTo(){} }, setTimeout, clearTimeout, console
   };
