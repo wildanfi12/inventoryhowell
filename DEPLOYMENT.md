@@ -6,7 +6,7 @@
 - Database memakai SQLite WAL, file mode privat, transaksi tulis, audit revisi/hash, dan optimistic concurrency (`If-Match`). Dua browser yang mengubah revisi lama tidak akan saling menimpa tanpa diketahui; permintaan kedua ditolak sebagai konflik.
 - Aplikasi mengambil state dari `/api/state`, mengirim perubahan ke server, memperbarui data saat server berubah, serta menunjukkan status koneksi. Sinkronisasi hanya aktif bila `window.HOWELL_SHARED_DATABASE = true` pada `assets/howell-runtime-config.js`. Default GitHub Pages tetap memakai browser storage agar tidak terkunci ketika API VPS belum siap.
 - Bila database masih kosong, browser pertama yang berhasil tersambung menginisialisasinya dari data yang sedang dibuka. State lokal sebelumnya disimpan sebagai salinan pemulihan sebelum diganti oleh state server.
-- API memerlukan HTTP Basic Authentication. Konfigurasi contoh Nginx melindungi file website dan API, meneruskan kredensial ke service Node yang hanya bind ke `127.0.0.1`.
+- Default API memerlukan HTTP Basic Authentication dengan akun admin dan gudang terpisah. Untuk fase pembaruan sementara, `HOWELL_PUBLIC_PORTALS=true` membuka kedua host tanpa prompt password: host utama diberi peran admin, sedangkan host gudang tetap dibatasi ke proyeksi dan mutasi gudang di server. Dalam mode ini siapa pun yang mengetahui URL dapat melihat/mengubah data admin dari host utama; matikan mode publik dan aktifkan kembali autentikasi sebelum mengisi data sensitif atau memakai operasi produksi.
 - `scripts/build-vps-release.cjs` membuat folder `release/` untuk VPS: portal utama di root dan portal gudang terpisah di `/warehouse/`. Frontend kedua portal mengarah ke `/api/state` yang sama.
 - Akun API `HOWELL_API_*` memberi akses admin penuh. Akun `HOWELL_WAREHOUSE_*` mendapat proyeksi allowlist tanpa pricelist, nota/harga PO, penjualan, invoice, laporan finansial, atau stok cabang terperinci. Server juga membatasi mutasi stok ke opname, pengeluaran PO lewat surat jalan, dan penerimaan retur serta mencatat username autentikasi sebagai pelaku.
 - Portal gudang hanya menampilkan menu Gudang, Stok & Opname, dan Retur. Host usulan: `gudang.inventory.howellcable.site`; situs utama: `inventory.howellcable.site`.
@@ -19,7 +19,7 @@
 
 Database di VPS masih kosong dan menunggu inisialisasi admin. Saat host utama diarahkan ke VPS, login admin pertama dari browser sumber data resmi akan mengirim data lokal browser tersebut ke database bersama. Pastikan data browser itu yang benar dan unduh cadangannya sebelum login pertama. Jangan inisialisasi dari akun gudang.
 
-**Belum boleh dianggap siap produksi.** Walau API sekarang memisahkan akun admin/gudang dan menerapkan proyeksi serta validasi mutasi di server, penyimpanan operasional masih berupa satu snapshot JSON dalam SQLite, bukan tabel transaksi domain. Belum ada backup otomatis teruji, pemulihan bencana, pembatasan laju login, atau uji penerimaan end-to-end di VPS. Gunakan staging terlebih dulu dan jangan masukkan transaksi produksi sebelum backup/restore serta seluruh alur dua akun diverifikasi.
+**Belum boleh dianggap siap produksi.** Saat portal dibuka tanpa password, host utama terbuka untuk siapa pun yang mengetahui URL dan tidak ada identitas pengguna yang terverifikasi. Walau host gudang tetap dibatasi di API, operasi tetap tidak memiliki identitas individu. Penyimpanan operasional masih berupa satu snapshot JSON dalam SQLite, bukan tabel transaksi domain. Belum ada backup otomatis teruji, pemulihan bencana, atau uji penerimaan end-to-end di VPS. Kembalikan autentikasi sebelum data sensitif/transaksi produksi dan siapkan backup/restore serta audit identitas pengguna.
 
 Jangan buka aplikasi ini untuk operasi bersama, atau memasukkan data produksi, sebelum kekurangan tersebut ditangani. Menyimpan ke SQLite VPS saja belum cukup untuk menjamin konsistensi semua alur operasional.
 
@@ -27,9 +27,9 @@ Jangan buka aplikasi ini untuk operasi bersama, atau memasukkan data produksi, s
 
 1. VPS memakai Node.js 24 atau lebih baru (`node:sqlite`), Nginx, service account khusus, dan `/var/lib/howell-inventory` dengan izin hanya untuk service. Jalankan `node scripts/build-vps-release.cjs`, lalu salin hasil `release/` ke `/var/www/howell-inventory/release/`.
 2. Arahkan DNS `inventory.howellcable.site` dan `gudang.inventory.howellcable.site` ke VPS. Pertahankan DNS lama sampai VPS, HTTPS, dan uji staging berhasil. Terbitkan sertifikat HTTPS untuk kedua host sebelum mengaktifkan konfigurasi TLS Nginx.
-3. Buat dua pasangan kredensial berbeda. Nginx `howell-inventory.htpasswd` hanya berisi akun admin; `howell-warehouse.htpasswd` hanya akun gudang. Samakan nama pengguna dan kata sandi masing-masing dengan environment API. Simpan `inventory.env` di `/etc/howell-inventory/` bermode `0600`, jangan masukkan rahasia ke Git.
+3. Untuk akses terlindungi, buat dua pasangan kredensial berbeda. Nginx `howell-inventory.htpasswd` hanya berisi akun admin; `howell-warehouse.htpasswd` hanya akun gudang. Samakan nama pengguna dan kata sandi masing-masing dengan environment API. Simpan `inventory.env` di `/etc/howell-inventory/` bermode `0600`, jangan masukkan rahasia ke Git. Jangan aktifkan `HOWELL_PUBLIC_PORTALS=true` untuk data produksi.
 4. Migrasikan state dari browser yang menjadi sumber data resmi. Bila database kosong, browser pertama yang terhubung menjadi sumber inisialisasi. Cadangkan JSON dari aplikasi dan tinjau jumlah SKU, stok, PO, serta riwayat sebelum migrasi.
-5. Pastikan Nginx memisahkan `root` dan Basic Auth file untuk kedua host. Kedua host boleh meneruskan `/api/` ke service yang sama; API menentukan peran dari kredensialnya sendiri, jadi jangan memakai ulang akun admin di portal gudang.
+5. Pastikan Nginx memisahkan `root` kedua host. Kedua host boleh meneruskan `/api/` ke service yang sama. Dalam mode autentikasi, API menentukan peran dari kredensial; dalam mode publik sementara, API menentukan peran dari host secara tepat.
 6. Migrasikan state resmi hanya sekali dengan akun admin. Cadangkan JSON sumber, hitung SKU/stok/PO/retur, lalu pastikan akun gudang tidak dapat mengambil data finansial sebelum mengundang operator.
 7. Siapkan backup terenkripsi di luar VPS, retensi, pemantauan disk, dan uji restore. Jangan anggap audit hash snapshot sebagai audit transaksi yang tidak dapat diubah.
 8. Uji dengan dua browser/perangkat dan dua akun: akses halaman, pencarian SKU, opname sumber Bizgo/Gudang, keputusan PO, surat jalan bertahap, stok tidak cukup, retur, konflik revisi, cetak PDF, ekspor admin, pemulihan backup, dan pemulihan layanan.
@@ -37,7 +37,7 @@ Jangan buka aplikasi ini untuk operasi bersama, atau memasukkan data produksi, s
 ## File konfigurasi contoh
 
 - `deployment/howell-inventory-api.service` — unit systemd untuk service terpisah.
-- `deployment/nginx-howell-inventory.conf.example` — dua virtual host dengan reverse proxy ke satu API dan auth file terpisah. Pasang hanya setelah kedua DNS dan sertifikat TLS siap.
+- `deployment/nginx-howell-inventory.conf.example` — dua virtual host dengan reverse proxy ke satu API. Pasang hanya setelah kedua DNS dan sertifikat TLS siap.
 - `deployment/inventory.env.example` — nama variabel; buat file rahasia terpisah di `/etc/howell-inventory/inventory.env` dengan mode `0600`.
 
 Jangan salin konfigurasi Nginx contoh ke situs `stockflow.howellcable.site`; situs itu dan service Howell lain harus tetap terpisah.

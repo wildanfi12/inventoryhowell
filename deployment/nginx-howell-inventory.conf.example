@@ -14,9 +14,9 @@ server {
     }
 }
 
-# Warehouse portal uses a separate host, root and Basic Auth file. Both frontends
-# proxy to the same private API/database; only the warehouse API credentials can
-# retrieve the server-side allowlisted warehouse projection.
+# Warehouse portal uses a separate host and root. In temporary public mode, the
+# API maps each exact host to its role; the warehouse host receives only the
+# server-side allowlisted warehouse projection. Enable API public mode explicitly.
 server {
     listen 80;
     listen [::]:80;
@@ -41,9 +41,6 @@ server {
     index index.html;
     client_max_body_size 12m;
 
-    auth_basic "Howell Inventory Gudang";
-    auth_basic_user_file /etc/nginx/howell-warehouse.htpasswd;
-
     ssl_certificate /etc/letsencrypt/live/inventory.howellcable.site/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/inventory.howellcable.site/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -57,7 +54,7 @@ server {
         proxy_pass http://127.0.0.1:3103/api/;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
-        proxy_set_header Authorization $http_authorization;
+        proxy_set_header Authorization "";
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_read_timeout 30s;
@@ -79,10 +76,6 @@ server {
     index index.html;
     client_max_body_size 12m;
 
-    # Keep the files and API behind the same password gate. Node validates the API credentials again.
-    auth_basic "Howell Inventory";
-    auth_basic_user_file /etc/nginx/howell-inventory.htpasswd;
-
     ssl_certificate /etc/letsencrypt/live/inventory.howellcable.site/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/inventory.howellcable.site/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -95,7 +88,7 @@ server {
         proxy_pass http://127.0.0.1:3103/api/;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
-        proxy_set_header Authorization $http_authorization;
+        proxy_set_header Authorization "";
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_read_timeout 30s;
