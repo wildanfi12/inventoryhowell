@@ -241,8 +241,6 @@ html,body,.app-shell,.main-area,.page-content{background:#0B0B0C;color:#F5F5F5}.
 @media(max-width:1180px){.ware-dashboard{grid-template-columns:minmax(205px,.78fr) minmax(320px,1.3fr);grid-template-areas:"left center" "sales center" "transactions transactions"}.sales-card{align-self:stretch}.product-card-row{grid-template-columns:repeat(3,minmax(0,1fr))}.page-content{padding-left:20px;padding-right:20px}}
 @media(max-width:820px){.sidebar{width:76px;left:-84px;right:auto;padding:14px 10px;transition:left .2s}.sidebar.open{left:0;box-shadow:14px 0 32px #0009}.main-area{margin-left:0}.topbar{height:62px;padding:0 14px}.menu-toggle{display:inline-flex;width:36px;height:36px;align-items:center;justify-content:center;border:1px solid #383A3E;border-radius:50%;background:#202124;color:#F5F5F5;font-size:0}.menu-toggle:after{content:'☰';font-size:15px}.close-menu{display:block!important;position:absolute;top:17px;left:17px;width:42px;height:42px;opacity:0;pointer-events:none}.sidebar.open .brand .close-menu{opacity:1;pointer-events:auto;z-index:3}.brand{margin-bottom:66px}.global-search{width:min(280px,35vw)}.ware-dashboard{grid-template-columns:minmax(205px,.8fr) minmax(0,1.2fr);grid-template-areas:"left center" "sales sales" "transactions transactions"}.sales-card{min-height:0}.page-content{padding-top:8px}.top-profile>div:last-child{display:none}}
 @media(max-width:600px){.topbar{gap:8px}.crumb{display:none}.top-actions{flex:1;justify-content:flex-end;gap:6px}.global-search{width:auto;flex:1;max-width:220px;height:36px;padding:0 10px}.global-search input{font-size:10px}.top-icon-button,.top-period{width:34px;height:34px;padding:0;min-width:34px;font-size:0}.top-period{appearance:none;text-align:center}.top-period option{font-size:12px}.top-profile{padding:3px}.top-profile .top-avatar{width:28px;height:28px}.top-profile>div:last-child{display:none}.page-content{padding:6px 12px 18px}.page-heading{margin-bottom:10px}.page-heading h1{font-size:21px}.demo-banner{font-size:9px}.ware-dashboard{grid-template-columns:minmax(0,1fr);grid-template-areas:"left" "center" "sales" "transactions";gap:10px}.dash-left{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:8px}.dash-kpis{grid-template-columns:1fr;gap:7px}.kpi-card{min-height:78px;padding:10px}.kpi-value{font-size:20px}.capacity-card{min-height:0;padding:12px}.capacity-total{margin:12px 0 8px}.capacity-total strong{font-size:22px}.capacity-legend{gap:6px;margin:10px 0}.insight-box{padding:10px}.insight-box p{font-size:9px}.capacity-reminder{font-size:8px}.product-card-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.product-card{padding:6px}.product-art{height:64px}.product-card>strong{font-size:9px}.product-card-meta{font-size:7px}.sales-card,.transaction-card{padding:12px}.chart-wrap{height:175px}.table-wrap{overflow:auto}.top-profile{display:none}}
-.global-search,.global-search:focus,.global-search:focus-within{border:1px solid #e3e0d8!important;border-color:#e3e0d8!important;outline:none!important;box-shadow:none!important}
-.global-search input,.global-search input:focus,.global-search button,.global-search button:focus{outline:none!important;box-shadow:none!important}
 @media(max-width:390px){.dash-left{grid-template-columns:1fr}.dash-kpis{grid-template-columns:1fr 1fr}.capacity-card{min-height:310px}.product-card-row{grid-template-columns:1fr}.product-card{display:grid;grid-template-columns:54px 1fr;grid-template-rows:auto auto auto;column-gap:8px;align-items:center}.product-card-meta{grid-column:1/-1}.product-art{grid-row:2/4;width:54px;height:50px}.product-art span{font-size:28px}.product-card>strong,.product-card>small{grid-column:2}.top-period{display:none}}
 .global-search input,.top-period,.nav-item i,.text-action{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Arial,sans-serif}.close-menu{font-family:inherit}.product-image-missing{font-size:9px;font-weight:500;letter-spacing:.01em}
 /* Replace remaining orange UI accents with the reference's Howell yellow. */
@@ -362,7 +360,9 @@ button,input,select,textarea{font-family:-apple-system,BlinkMacSystemFont,"SF Pr
 .paperclip-branches-tools>span,.paperclip-branches-footer{flex:none;color:var(--muted,#737981);font-size:12px}
 .paperclip-branches-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:min(58vh,540px);overflow:auto;overscroll-behavior:contain;padding:1px 2px 2px}
 .paperclip-branch-row{min-height:62px;display:grid;grid-template-columns:38px minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--border,#e3e5e2);border-radius:9px;background:var(--surface,#fff);min-width:0}
-.paperclip-branch-row[hidden]{display:none!important}
+.paperclip-branch-row[hidden],[hidden]{display:none!important}
+.global-search:focus-within{border-color:var(--line)!important;box-shadow:none!important;outline:0!important}
+.global-search input:focus{border:0!important;box-shadow:none!important;outline:0!important}
 .paperclip-branch-code{width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--surface-muted,#f2f3f1);color:var(--text,#30343a);font-size:10px;font-weight:650}
 .paperclip-branch-info{min-width:0;display:block}
 .paperclip-branch-info strong,.paperclip-branch-info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -393,6 +393,11 @@ button,input,select,textarea{font-family:-apple-system,BlinkMacSystemFont,"SF Pr
 .product-photo-viewer img{display:block;width:100%;height:100%;min-height:0;object-fit:contain;object-position:center}
 .product-photo-viewer figcaption{padding:10px 42px 0 0;border-top:1px solid #e7eae6;color:#34383e;font-size:13px;text-align:center}
 @media(max-width:600px){.product-thumbnail{width:48px;height:48px;flex-basis:48px}.product-photo-viewer{width:96vw;max-height:88vh;padding:14px}.product-photo-viewer figure{height:min(78vh,720px)}}
+i[hidden],[hidden]{display:none!important}
+.global-search:focus-within{outline:0!important;border-color:#e3e0d8!important;box-shadow:none!important}
+.global-search input:focus{outline:0!important;border:0!important;box-shadow:none!important}
+.global-search,.global-search:focus,.global-search:focus-within{border:1px solid #e3e0d8!important;border-color:#e3e0d8!important;outline:none!important;box-shadow:none!important}
+.global-search input,.global-search input:focus,.global-search button,.global-search button:focus{outline:none!important;box-shadow:none!important}
 .global-search,.global-search:hover,.global-search:focus,.global-search:focus-within,.global-search:has(input:focus){border:1px solid #d9dde2!important;border-color:#d9dde2!important;outline:0!important;box-shadow:none!important}
 .global-search input,.global-search input:hover,.global-search input:focus{border:0!important;border-color:transparent!important;outline:0!important;box-shadow:none!important;background:transparent!important}
 .global-search-submit,.global-search-submit:hover,.global-search-submit:focus{border:0!important;outline:0!important;box-shadow:none!important}
@@ -402,3 +407,20 @@ button,input,select,textarea{font-family:-apple-system,BlinkMacSystemFont,"SF Pr
 .global-search *,.global-search *:focus,.global-search *:focus-visible{border:0!important;border-color:transparent!important;outline:0!important;box-shadow:none!important}
 .global-search svg,.global-search input,.global-search button{border:0!important;border-left:0!important;border-right:0!important;border-inline:0!important;outline:0!important;box-shadow:none!important;appearance:none!important;-webkit-appearance:none!important}
 .global-search{border:1px solid #dfe3e8!important;border-radius:10px!important;overflow:hidden!important}
+
+/* Unified minimal borders: one clean edge per control, no nested/floating lines. */
+:root{--border-soft:#dfe3e8;--border-active:#d9a52d;--border-focus:rgba(217,165,45,.16)}
+input,select,textarea{border:1px solid var(--border-soft);border-radius:8px;box-shadow:none}
+input:focus,select:focus,textarea:focus{border-color:var(--border-active);outline:0;box-shadow:0 0 0 2px var(--border-focus)}
+.global-search{height:44px!important;display:flex!important;align-items:center!important;gap:0!important;padding:0 6px!important;border:1px solid var(--border-soft)!important;border-radius:10px!important;background:#fff!important;box-shadow:none!important;overflow:hidden!important}
+.global-search:focus-within{border-color:var(--border-active)!important;box-shadow:0 0 0 2px var(--border-focus)!important;outline:0!important}
+.global-search input,.global-search input:hover,.global-search input:focus{min-width:0!important;height:100%!important;margin:0!important;padding:0 8px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:0!important}
+.global-search button,.global-search button:hover,.global-search button:focus,.global-search-submit{height:32px!important;margin:0!important;border:0!important;border-radius:7px!important;box-shadow:none!important;outline:0!important}
+.global-search svg{border:0!important;outline:0!important;box-shadow:none!important}
+.btn,.filter-select,.top-period,.top-icon-button,.top-profile,.system-status,.pill,.sku,.page-num{border:1px solid var(--border-soft)!important;border-radius:8px!important;box-shadow:none!important}
+.btn-primary,.btn-primary:hover,.nav-item.active{border-color:var(--border-active)!important}
+.card,.panel,.table-card,.table-wrap,.modal,.product-card,.insight-box{border:1px solid var(--border-soft)!important;border-radius:10px!important;box-shadow:none!important}
+.search{position:relative;display:flex;align-items:center;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;outline:0!important;box-shadow:none!important}
+.search:before{left:10px;top:50%;transform:translateY(-50%);z-index:1;pointer-events:none}
+.search input,.search input:hover,.search input:focus,.search input:focus-visible{width:210px!important;height:36px!important;margin:0!important;padding:0 10px 0 28px!important;border:1px solid var(--border-soft)!important;border-radius:8px!important;background:#fff!important;outline:0!important;box-shadow:none!important}
+.search input:focus,.search input:focus-visible{border-color:var(--border-active)!important}
