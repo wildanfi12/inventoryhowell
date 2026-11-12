@@ -34,7 +34,7 @@
   const money=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
   const date=s=>s?new Date(s+'T00:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}):'—';
   const storeName=id=>data.stores.find(x=>x.code===id)?.name||id;
-  const prodName=id=>data.products.find(x=>x.sku===id)?.name||id;
+  const prodName=id=>{const name=data.products.find(x=>x.sku===id)?.name||id;return id==='HW05'?String(name).replace(/\s+WHITE$/i,''):name};
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const productPhoto=sku=>{const src=window.HOWELL_PRODUCT_IMAGES?.[String(sku??'').trim().toUpperCase()];return src?`<img class="product-photo" src="${esc(src)}" alt="" aria-hidden="true" width="720" height="720" loading="lazy" decoding="async">`:'<span class="product-image-missing">Foto belum tersedia</span>'};
   const inventoryPhoto=p=>{const src=window.HOWELL_PRODUCT_IMAGES?.[String(p.sku??'').trim().toUpperCase()];return src?`<button type="button" class="product-photo-trigger" data-action="preview-product-photo" data-photo-src="${esc(src)}" data-photo-name="${esc(p.name)}" data-photo-sku="${esc(p.sku)}" aria-label="Lihat foto ${esc(p.name)} (${esc(p.sku)})"><img class="product-photo" src="${esc(src)}" alt="" aria-hidden="true" width="720" height="720" loading="lazy" decoding="async"></button>`:'<span class="product-image-missing">Foto belum tersedia</span>'};
