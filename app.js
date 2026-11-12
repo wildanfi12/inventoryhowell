@@ -188,7 +188,14 @@
       if(product?.sku==='HW05')product.name=String(product.name||'').replace(/\s+WHITE$/i,'').trim();
     }
   }
+  function normalizeRuntimeData(){
+    if(!data || typeof data!=='object')data={};
+    const arrayKeys=['products','stores','shipments','sales','invoices','returns','branchStock','counts','countHistory','audit'];
+    arrayKeys.forEach(key=>{if(!Array.isArray(data[key]))data[key]=[]});
+    data.shipments=data.shipments.filter(Boolean).map(po=>({...po,items:Array.isArray(po.items)?po.items:[],dispatches:Array.isArray(po.dispatches)?po.dispatches:[]}));
+  }
   function render(){
+    normalizeRuntimeData();
     normalizeCatalogNames();
     let map={dashboard,inventory,warehouse,products,stores,shipments,sales,invoices,returns,reports,settings};
     try{$('#pageContent').innerHTML=map[current]()}catch(error){console.error(`Halaman ${pageNames[current]||current} gagal dimuat:`,error);$('#pageContent').innerHTML=`<section class="card page-error" role="alert"><strong>Halaman ${esc(pageNames[current]||current)} belum dapat dimuat.</strong><p>Terjadi kesalahan saat menyiapkan data halaman. Muat ulang aplikasi atau buka halaman lain, lalu coba kembali.</p><button class="btn btn-light btn-small" data-action="reload-page">Coba lagi</button></section>`}

@@ -176,7 +176,14 @@
     const panel=(title,headers,rows)=>'<article class="card table-card"><div class="table-toolbar"><div class="panel-title">'+title+'</div></div>'+table(headers,rows)+'</article>';
     return heading('Laporan','Ringkasan inventori, cabang, distribusi, penjualan, dan rekonsiliasi dari data tersimpan.','<button class="btn btn-light" data-action="export">Ekspor</button>')+demoBanner()+'<div class="section-grid">'+panel('Produk per kategori',['Kategori','SKU','Stok pusat'],categories)+panel('Status distribusi',['Status DO','Jumlah'],statuses)+panel('Stok konsinyasi cabang',['Cabang','SKU','Stok sistem','Fisik','Selisih'],branchRows)+panel('Penjualan per cabang',['Cabang','Unit terjual','Penjualan bersih'],salesRows)+panel('Status rekonsiliasi',['Status invoice','Jumlah','Sisa payout'],invoicesList)+'</div>';
   }
+  function normalizeRuntimeData(){
+    if(!data || typeof data!=='object')data={};
+    const arrayKeys=['products','stores','shipments','sales','invoices','returns','branchStock','counts','countHistory','audit'];
+    arrayKeys.forEach(key=>{if(!Array.isArray(data[key]))data[key]=[]});
+    data.shipments=data.shipments.filter(Boolean).map(po=>({...po,items:Array.isArray(po.items)?po.items:[],dispatches:Array.isArray(po.dispatches)?po.dispatches:[]}));
+  }
   function render(){
+    normalizeRuntimeData();
     let map={dashboard,inventory,warehouse,products,stores,shipments,sales,invoices,returns,reports,settings};
     try{$('#pageContent').innerHTML=map[current]()}catch(error){console.error(`Halaman ${pageNames[current]||current} gagal dimuat:`,error);$('#pageContent').innerHTML=`<section class="card page-error" role="alert"><strong>Halaman ${esc(pageNames[current]||current)} belum dapat dimuat.</strong><p>Terjadi kesalahan saat menyiapkan data halaman. Muat ulang aplikasi atau buka halaman lain, lalu coba kembali.</p><button class="btn btn-light btn-small" data-action="reload-page">Coba lagi</button></section>`}
     if(current==='inventory'&&portalRole!=='warehouse'){
