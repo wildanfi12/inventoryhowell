@@ -398,3 +398,6 @@ i[hidden],[hidden]{display:none!important}
 .global-search input:focus{outline:0!important;border:0!important;box-shadow:none!important}
 .global-search,.global-search:focus,.global-search:focus-within{border:1px solid #e3e0d8!important;border-color:#e3e0d8!important;outline:none!important;box-shadow:none!important}
 .global-search input,.global-search input:focus,.global-search button,.global-search button:focus{outline:none!important;box-shadow:none!important}
+.global-search,.global-search:hover,.global-search:focus,.global-search:focus-within,.global-search:has(input:focus){border:1px solid #d9dde2!important;border-color:#d9dde2!important;outline:0!important;box-shadow:none!important}
+.global-search input,.global-search input:hover,.global-search input:focus{border:0!important;border-color:transparent!important;outline:0!important;box-shadow:none!important;background:transparent!important}
+.global-search-submit,.global-search-submit:hover,.global-search-submit:focus{border:0!important;outline:0!important;box-shadow:none!important}
