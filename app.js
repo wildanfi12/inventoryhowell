@@ -73,6 +73,8 @@
   const pill=(label,tone)=>`<span class="pill ${tone}">${esc(label)}</span>`;
   const statusPill=s=>pill(s,({'Disetujui':'blue','Menunggu verifikasi':'amber','Menunggu persetujuan':'amber','Menunggu konfirmasi cabang':'amber','Tidak disetujui':'red','Ditangguhkan':'amber','Dalam perjalanan':'blue','Dikirim':'blue','Draft':'gray','Paid':'green','Received':'green','Diterima':'green','In Transit':'blue','Partial':'amber','Unpaid':'red','Overdue':'red','Rejected':'red','Pending':'amber','Repairable':'amber','Scrap/Musnah':'red','Re-sellable':'green'}[s]||'gray'));
   const button=(label,action,cls='btn-light')=>`<button class="btn ${cls} btn-small" data-action="${action}">${label}</button>`;
+  function orderedQty(item){return Number(item?.orderedQty??item?.qty??0)}
+  function dispatchedQty(order,item){return Number(item?.dispatchedQty??(order?.stockDispatched?item?.qty:0))}
   function demoBanner(){return data.demo?`<div class="demo-banner"><span class="demo-tag">DEMO</span><span><b>Data pratinjau.</b> Angka dan nama pada halaman ini hanya contoh dan tersimpan di browser ini.</span><button data-action="dismiss-demo">Sembunyikan</button></div>`:''}
   function heading(title,sub,actions=''){return `<div class="page-heading"><div><span class="eyebrow">HOWELL INVENTORY / ${esc(title.toUpperCase())}</span><h1>${esc(title)}</h1><p>${sub}</p></div><div class="heading-actions">${actions}</div></div>`}
   function kpi(label,value,note){return `<article class="card kpi-card"><div class="kpi-top">${label}</div><div class="kpi-value">${value}</div><div class="kpi-foot">${note}</div></article>`}
