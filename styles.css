@@ -420,7 +420,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--border-active);outlin
 .btn,.filter-select,.top-period,.top-icon-button,.top-profile,.system-status,.pill,.sku,.page-num{border:1px solid var(--border-soft)!important;border-radius:8px!important;box-shadow:none!important}
 .btn-primary,.btn-primary:hover,.nav-item.active{border-color:var(--border-active)!important}
 .card,.panel,.table-card,.table-wrap,.modal,.product-card,.insight-box{border:1px solid var(--border-soft)!important;border-radius:10px!important;box-shadow:none!important}
-.search{position:relative;display:flex;align-items:center}
+.search{position:relative;display:flex;align-items:center;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;outline:0!important;box-shadow:none!important}
 .search:before{left:10px;top:50%;transform:translateY(-50%);z-index:1;pointer-events:none}
 .search input,.search input:hover,.search input:focus,.search input:focus-visible{width:210px!important;height:36px!important;margin:0!important;padding:0 10px 0 28px!important;border:1px solid var(--border-soft)!important;border-radius:8px!important;background:#fff!important;outline:0!important;box-shadow:none!important}
 .search input:focus,.search input:focus-visible{border-color:var(--border-active)!important}
