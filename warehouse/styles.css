@@ -400,3 +400,5 @@ button,input,select,textarea{font-family:-apple-system,BlinkMacSystemFont,"SF Pr
 #globalSearch{border:0!important;border-color:transparent!important;outline:0!important;box-shadow:none!important;background:transparent!important}
 .global-search,.global-search:hover,.global-search:focus,.global-search:focus-within{border:1px solid #dfe3e8!important;border-color:#dfe3e8!important;border-style:solid!important;outline:0!important;box-shadow:none!important}
 .global-search *,.global-search *:focus,.global-search *:focus-visible{border:0!important;border-color:transparent!important;outline:0!important;box-shadow:none!important}
+.global-search svg,.global-search input,.global-search button{border:0!important;border-left:0!important;border-right:0!important;border-inline:0!important;outline:0!important;box-shadow:none!important;appearance:none!important;-webkit-appearance:none!important}
+.global-search{border:1px solid #dfe3e8!important;border-radius:10px!important;overflow:hidden!important}
