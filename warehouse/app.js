@@ -1,16 +1,19 @@
 (() => {
   const KEY='howell-inventory-v1';
-  const source=window.HOWELL_SOURCE_DATA||{products:[],paperclipBranches:[]};
+  const sourceRaw=window.HOWELL_SOURCE_DATA||{};
+  const source={products:(Array.isArray(sourceRaw.products)?sourceRaw.products:[]).filter(x=>x&&typeof x==='object'),paperclipBranches:(Array.isArray(sourceRaw.paperclipBranches)?sourceRaw.paperclipBranches:[]).filter(x=>x&&typeof x==='object')};
   const initial={products:source.products.map(x=>({...x,stock:null,stockSource:null})),stores:source.paperclipBranches.map(x=>({...x,agreementStatus:'Perlu perjanjian',effectiveDate:''})),shipments:[],sales:[],invoices:[],returns:[],branchStock:[],counts:[],countHistory:[],audit:[],demo:false,seedVersion:2};
   const demoIds={shipments:new Set(['DO-HWL-20261102-001','DO-HWL-20261101-003']),sales:new Set(['SR-PPR-20261101','SR-EC-20261029','SR-PPR-20261025']),invoices:new Set(['INV-HWL-2026-1108','INV-HWL-2026-1105','INV-HWL-2026-1031']),returns:new Set(['RMA-HWL-2026-014']),products:new Set(['ACC-HOU-001','ACC-HOU-002','CAB-HOU-014','AUD-HOU-003','CAB-HOU-021','ACC-HOU-011']),stores:new Set(['STR-PPR-005','STR-PPR-002','STR-ELC-008','STR-PPR-009'])};
   let legacy=null,recoveryNotice='';try{const raw=localStorage.getItem(KEY);if(raw!==null){try{legacy=JSON.parse(raw)}catch(error){console.error('Data Howell lama tidak valid:',error);try{localStorage.setItem(KEY+'-recovery-latest',raw);recoveryNotice='Data browser tidak dapat dibaca; salinan pemulihan lokal sudah dibuat.'}catch{recoveryNotice='Data browser tidak dapat dibaca dan ruang penyimpanan tidak cukup untuk membuat salinan pemulihan.'}}}}catch(error){console.error('Penyimpanan browser tidak tersedia:',error);recoveryNotice='Penyimpanan browser tidak tersedia; perubahan mungkin tidak dapat disimpan.'}
   let data=structuredClone(initial);
-  if(legacy){
+  if(legacy&&typeof legacy==='object'&&!Array.isArray(legacy)){
+    ['products','stores','shipments','sales','invoices','returns','branchStock','counts','countHistory','audit'].forEach(key=>{legacy[key]=Array.isArray(legacy[key])?legacy[key].filter(x=>x&&typeof x==='object'):[]});
+    legacy.shipments.forEach(x=>{x.items=Array.isArray(x.items)?x.items.filter(i=>i&&typeof i==='object'):[]});
     try{if(!localStorage.getItem(KEY+'-recovery-latest'))localStorage.setItem(KEY+'-recovery-latest',JSON.stringify(legacy))}catch{}
-    const shipments=(legacy.shipments||[]).filter(x=>!demoIds.shipments.has(x.id));
-    const sales=(legacy.sales||[]).filter(x=>!demoIds.sales.has(x.id));
-    const invoices=(legacy.invoices||[]).filter(x=>!demoIds.invoices.has(x.id));
-    const returns=(legacy.returns||[]).filter(x=>!demoIds.returns.has(x.id));
+    const shipments=(Array.isArray(legacy.shipments)?legacy.shipments:[]).filter(x=>x&&typeof x==='object'&&!demoIds.shipments.has(x.id));
+    const sales=(Array.isArray(legacy.sales)?legacy.sales:[]).filter(x=>x&&typeof x==='object'&&!demoIds.sales.has(x.id));
+    const invoices=(Array.isArray(legacy.invoices)?legacy.invoices:[]).filter(x=>x&&typeof x==='object'&&!demoIds.invoices.has(x.id));
+    const returns=(Array.isArray(legacy.returns)?legacy.returns:[]).filter(x=>x&&typeof x==='object'&&!demoIds.returns.has(x.id));
     const demoTransactionIds=new Set([...demoIds.shipments,...demoIds.sales,...demoIds.invoices,...demoIds.returns]);
     const audit=(legacy.audit||[]).filter(entry=>!demoTransactionIds.has(entry.entityId));
     const branchStock=(legacy.branchStock||[]).filter(x=>!(['STR-PPR-005|ACC-HOU-001','STR-PPR-005|ACC-HOU-002','STR-ELC-008|CAB-HOU-014','STR-PPR-002|AUD-HOU-003'].includes(x.store+'|'+x.sku)));
