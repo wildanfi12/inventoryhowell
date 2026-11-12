@@ -1,6 +1,9 @@
 (() => {
   const KEY='howell-inventory-v1';
   const source=window.HOWELL_SOURCE_DATA||{products:[],paperclipBranches:[]};
+  // Keep the shared catalog name consistent across the main and warehouse portals.
+  const hw05=source.products.find(item=>item.sku==='HW05');
+  if(hw05)hw05.name=String(hw05.name||'').replace(/\s+WHITE$/i,'');
   const initial={products:source.products.map(x=>({...x,stock:null,stockSource:null})),stores:source.paperclipBranches.map(x=>({...x,agreementStatus:'Perlu perjanjian',effectiveDate:''})),shipments:[],sales:[],invoices:[],returns:[],branchStock:[],counts:[],countHistory:[],audit:[],demo:false,seedVersion:2};
   const demoIds={shipments:new Set(['DO-HWL-20261102-001','DO-HWL-20261101-003']),sales:new Set(['SR-PPR-20261101','SR-EC-20261029','SR-PPR-20261025']),invoices:new Set(['INV-HWL-2026-1108','INV-HWL-2026-1105','INV-HWL-2026-1031']),returns:new Set(['RMA-HWL-2026-014']),products:new Set(['ACC-HOU-001','ACC-HOU-002','CAB-HOU-014','AUD-HOU-003','CAB-HOU-021','ACC-HOU-011']),stores:new Set(['STR-PPR-005','STR-PPR-002','STR-ELC-008','STR-PPR-009'])};
   let legacy=null,recoveryNotice='';try{const raw=localStorage.getItem(KEY);if(raw!==null){try{legacy=JSON.parse(raw)}catch(error){console.error('Data Howell lama tidak valid:',error);try{localStorage.setItem(KEY+'-recovery-latest',raw);recoveryNotice='Data browser tidak dapat dibaca; salinan pemulihan lokal sudah dibuat.'}catch{recoveryNotice='Data browser tidak dapat dibaca dan ruang penyimpanan tidak cukup untuk membuat salinan pemulihan.'}}}}catch(error){console.error('Penyimpanan browser tidak tersedia:',error);recoveryNotice='Penyimpanan browser tidak tersedia; perubahan mungkin tidak dapat disimpan.'}
