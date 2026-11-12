@@ -407,3 +407,16 @@ i[hidden],[hidden]{display:none!important}
 .global-search *,.global-search *:focus,.global-search *:focus-visible{border:0!important;border-color:transparent!important;outline:0!important;box-shadow:none!important}
 .global-search svg,.global-search input,.global-search button{border:0!important;border-left:0!important;border-right:0!important;border-inline:0!important;outline:0!important;box-shadow:none!important;appearance:none!important;-webkit-appearance:none!important}
 .global-search{border:1px solid #dfe3e8!important;border-radius:10px!important;overflow:hidden!important}
+
+/* Unified minimal borders: one clean edge per control, no nested/floating lines. */
+:root{--border-soft:#dfe3e8;--border-active:#d9a52d;--border-focus:rgba(217,165,45,.16)}
+input,select,textarea{border:1px solid var(--border-soft);border-radius:8px;box-shadow:none}
+input:focus,select:focus,textarea:focus{border-color:var(--border-active);outline:0;box-shadow:0 0 0 2px var(--border-focus)}
+.global-search{height:44px!important;display:flex!important;align-items:center!important;gap:0!important;padding:0 6px!important;border:1px solid var(--border-soft)!important;border-radius:10px!important;background:#fff!important;box-shadow:none!important;overflow:hidden!important}
+.global-search:focus-within{border-color:var(--border-active)!important;box-shadow:0 0 0 2px var(--border-focus)!important;outline:0!important}
+.global-search input,.global-search input:hover,.global-search input:focus{min-width:0!important;height:100%!important;margin:0!important;padding:0 8px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;outline:0!important}
+.global-search button,.global-search button:hover,.global-search button:focus,.global-search-submit{height:32px!important;margin:0!important;border:0!important;border-radius:7px!important;box-shadow:none!important;outline:0!important}
+.global-search svg{border:0!important;outline:0!important;box-shadow:none!important}
+.btn,.filter-select,.top-period,.top-icon-button,.top-profile,.system-status,.pill,.sku,.page-num{border:1px solid var(--border-soft)!important;border-radius:8px!important;box-shadow:none!important}
+.btn-primary,.btn-primary:hover,.nav-item.active{border-color:var(--border-active)!important}
+.card,.panel,.table-card,.table-wrap,.modal,.product-card,.insight-box{border:1px solid var(--border-soft)!important;border-radius:10px!important;box-shadow:none!important}
