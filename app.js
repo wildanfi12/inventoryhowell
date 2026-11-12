@@ -469,6 +469,22 @@
   $('#barcodeScanOpen')?.addEventListener('click',openBarcodeScanner);$('#barcodeScannerLookup')?.addEventListener('click',lookupBarcode);$('#barcodeScannerInput')?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();lookupBarcode()}});$('#barcodeCameraStart')?.addEventListener('click',startBarcodeCamera);$('#barcodeScanner')?.addEventListener('close',stopBarcodeCamera);$('#barcodeScanner')?.addEventListener('click',event=>{if(event.target===event.currentTarget)event.currentTarget.close()});
   document.addEventListener('click',event=>{const trigger=event.target.closest('[data-action="barcode-scan"]');if(trigger){event.preventDefault();openBarcodeScanner()}});
   $('#barcodeCameraStart')?.addEventListener('click',()=>{let attempts=0;const reveal=()=>{if(barcodeCameraStream){$('#barcodeCameraFrame').hidden=false;return}if(++attempts<12)setTimeout(reveal,200)};setTimeout(reveal,80)});$('#barcodeScanner')?.addEventListener('close',()=>{$('#barcodeCameraFrame').hidden=true});
+  // Purchase Order memakai nama perusahaan jaringan, bukan nama cabang, pada field yang tampil ke pengguna.
+  const poCompanyObserver=new MutationObserver(()=>{
+    const fields=$('#modalFields');
+    if(!fields||!fields.querySelector('.po-editor'))return;
+    const labels=[...fields.querySelectorAll('label')];
+    const branchLabel=labels.find(item=>item.textContent.trim().startsWith('Cabang retail / customer'));
+    const label=labels.find(item=>item.textContent.trim().startsWith('Nama customer'));
+    const input=fields.querySelector('#poCustomerName');
+    if(branchLabel)branchLabel.childNodes[0].nodeValue='Cabang retail';
+    if(!label||!input)return;
+    label.childNodes[0].nodeValue='Nama perusahaan';
+    const branch=data.stores.find(item=>item.code===$('#poStore')?.value);
+    const company=branch?.network||'Paperclip';
+    if(input.value!==company)input.value=company;
+  });
+  poCompanyObserver.observe(document.body,{childList:true,subtree:true});
   const sidebarToggle=$('#sidebarToggle'),sidebar=$('#sidebar');
   sidebarToggle.addEventListener('click',()=>{const collapsed=sidebar.classList.toggle('collapsed');sidebarToggle.setAttribute('aria-expanded',String(!collapsed));sidebarToggle.setAttribute('aria-label',collapsed?'Perluas menu':'Ciutkan menu');sidebarToggle.title=collapsed?'Perluas menu':'Ciutkan menu'});
   if(syncEnabled){render();connectSharedDatabase().then(()=>{if(recoveryNotice)toast(recoveryNotice)});window.addEventListener('focus',()=>syncReady?refreshSharedDatabase():connectSharedDatabase({quiet:true}));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){if(syncReady)refreshSharedDatabase();else connectSharedDatabase({quiet:true})}});setInterval(()=>syncReady?refreshSharedDatabase():connectSharedDatabase({quiet:true}),15000);}else{connectSharedDatabase();if(recoveryNotice)toast(recoveryNotice)}
