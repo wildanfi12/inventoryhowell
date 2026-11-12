@@ -403,3 +403,5 @@ i[hidden],[hidden]{display:none!important}
 .global-search-submit,.global-search-submit:hover,.global-search-submit:focus{border:0!important;outline:0!important;box-shadow:none!important}
 .global-search{border:0!important;background:#f5f6f7!important}
 #globalSearch{border:0!important;border-color:transparent!important;outline:0!important;box-shadow:none!important;background:transparent!important}
+.global-search,.global-search:hover,.global-search:focus,.global-search:focus-within{border:1px solid #dfe3e8!important;border-color:#dfe3e8!important;border-style:solid!important;outline:0!important;box-shadow:none!important}
+.global-search *,.global-search *:focus,.global-search *:focus-visible{border:0!important;border-color:transparent!important;outline:0!important;box-shadow:none!important}
