@@ -489,9 +489,16 @@
     if(branchLabel)branchLabel.childNodes[0].nodeValue='Cabang retail';
     if(!label||!input)return;
     label.childNodes[0].nodeValue='Nama perusahaan';
+    // Nama perusahaan adalah data PO yang boleh disesuaikan; jangan dibuat
+    // read-only seperti snapshot nama cabang.
+    input.readOnly=false;
+    input.removeAttribute('readonly');
+    input.name='poCustomerName';
     const branch=data.stores.find(item=>item.code===$('#poStore')?.value);
     const company=branch?.network||'Paperclip';
-    if(input.value!==company)input.value=company;
+    // Jangan menimpa teks yang sedang diedit pengguna ketika observer
+    // terpanggil karena perubahan DOM lain di dalam form.
+    if(document.activeElement!==input && input.value!==company)input.value=company;
   });
   poCompanyObserver.observe(document.body,{childList:true,subtree:true});
   const sidebarToggle=$('#sidebarToggle'),sidebar=$('#sidebar');
