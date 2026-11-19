@@ -207,7 +207,10 @@
     const dispatch=printSnapshot?.dispatch||(dispatchIndex!==null?(po.dispatches||[])[dispatchIndex]:(po.dispatches||[]).at(-1)||{number:po.dispatchNumber||po.id,date:po.dispatchDate||po.date,sender:po.responsible||'Howell Cable',driver:po.driver||'',recipient:po.recipient||'',warehouse:'Gudang Pusat Howell',items:po.items.map(x=>({sku:x.sku,qty:dispatchedQty(po,x)}))});
     dispatch.number=String(dispatch.number||po.id||'').replace(/^SJ-HWL-/i,'SJ-HNI-');
     if(!dispatch?.items?.length){printFrame?.remove();return toast('Surat jalan belum dibuat.');}
-    const branch=printSnapshot?.branch||data.stores.find(x=>x.code===po.store),products=printSnapshot?.products||data.products,logoUrl=new URL('assets/howell-logo-color.png',window.location.href).href,paperOverrides=paperSize==='a4-portrait'?'@page{size:A4 portrait;margin:10mm}@media screen{body{width:210mm;min-height:297mm;padding:10mm}}':'';
+    const branch=printSnapshot?.branch||data.stores.find(x=>x.code===po.store),products=printSnapshot?.products||data.products;
+    const paperOverrides=paperSize==='a4-portrait'
+      ?'@page{size:A4 portrait;margin:10mm}@media screen{body{width:210mm;min-height:297mm;padding:10mm}}@media print{html,body{max-height:none!important;padding:0!important}}'
+      :'';
     const rows=dispatch.items.map((item,index)=>{
       const product=products.find(x=>x.sku===item.sku);
       const rawSize=String(product?.spec||'').trim(),sizeDisplay=/\d+(?:[.,]\d+)?\s*(?:mm|cm|m(?:eter|eters|etre|metres)?|inch(?:es)?|in|ft|feet)(?:\b|$)/i.test(rawSize)?rawSize:'—';
@@ -217,20 +220,147 @@
     }).join('');
     const frame=printFrame||createWaybillPrintFrame(paperSize),w=frame.contentWindow;if(!w){frame.remove();return toast('Frame cetak surat jalan gagal disiapkan.');}
     const originalPageTitle=document.title,pdfTitle=('Surat Jalan '+String(dispatch.number||po.id)).replace(/[\\/:*?"<>|]+/g,'-').trim();
+    const senderName=dispatch.sender||po.responsible||'Warehouse';
+    const driverName=dispatch.driver||'Pengantar';
+    const recipientName=dispatch.recipient||branch?.contact||'Penerima';
     w.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Surat Jalan ${esc(dispatch.number||po.id)}</title><style>
-      @page{size:21cm 14.8cm;margin:4mm}*{box-sizing:border-box}body{margin:0;color:#202328;font:8pt/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.brand{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:20px;padding:0 0 12px;border-bottom:2px solid #25282b}.brand-main{display:flex;align-items:center;gap:18px;min-width:0}.brand img{display:block;width:126px;max-height:39px;object-fit:contain;object-position:left center}.brand-copy{display:grid;gap:2px}.brand-copy strong{font-size:15pt;line-height:1.2}.brand-copy span{font-size:10pt;font-weight:600}.brand-copy small{color:#59616a;font-size:9pt}.doc-number{text-align:right;min-width:180px}.doc-number small,.doc-number strong{display:block}.doc-number small{color:#59616a;font-size:9pt}.doc-number strong{margin:3px 0;font-size:12pt}.document-title{margin:5px 0 6px;padding:4px 0;border-bottom:1px solid #8b9095;text-align:center}.document-title h1{margin:0;font-size:16pt;line-height:1.25;letter-spacing:.035em}.document-title p{margin:3px 0 0;color:#59616a;font-size:9.5pt}.meta{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px;margin:0 0 7px}.meta-group{display:grid;grid-template-columns:minmax(94px,34%) minmax(0,1fr);gap:2px 5px;align-content:start}.meta-group h2{grid-column:1/-1;margin:0 0 3px;padding-bottom:4px;border-bottom:1px solid #d8dce0;font-size:7.5pt;letter-spacing:.045em}.meta-group span{color:#59616a;font-size:7pt}.meta-group strong{font-size:7.5pt;font-weight:600;overflow-wrap:anywhere}.meta-group:nth-child(n+3){padding-top:1px}.items{width:100%;border-collapse:collapse;table-layout:fixed;break-inside:auto}.items thead{display:table-header-group}.items tr{break-inside:avoid}.items th,.items td{padding:1.5mm 1mm;border:1px solid #7d8389;text-align:left;vertical-align:middle}.items th{background:#f0f1ef;font-size:7pt;font-weight:700}.items .num{width:34px;text-align:center}.items th:nth-child(2){width:14%}.items th:nth-child(3){width:28%}.items th:nth-child(4){width:11%}.items th:nth-child(5){width:17%;text-align:right}.items th:nth-child(6){width:11%}.items th:nth-child(7){width:9%}.items td strong,.items td small{display:block}.items td strong{font-size:7.5pt}.items td small{margin-top:1px;color:#59616a;font-size:6.5pt}.items .price{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.items .qty{text-align:left;font-variant-numeric:tabular-nums}.remarks{min-height:8mm;margin-top:4mm;padding:2mm;border:1px solid #7d8389;break-inside:avoid}.remarks strong{display:block;margin-bottom:2px;font-size:7pt;letter-spacing:.03em}.remarks span{white-space:pre-wrap}.acknowledgement{margin:3mm 0 0;color:#454b52;font-size:7pt}.signatures{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12mm;max-width:180mm;margin:8mm auto 0;text-align:center;break-inside:avoid}.signature{min-width:0}.signature .role{min-height:4mm;margin:0;font-size:7.5pt;font-weight:600}.signature .space{height:15mm}.signature .line{padding-top:1mm;border-top:1px solid #555;font-size:7pt;overflow-wrap:anywhere}.signature .line small{display:block;margin-top:1mm;color:#59616a;font-size:6.5pt}.footer-note{margin-top:4mm;padding-top:1.5mm;border-top:1px solid #b9bec2;color:#59616a;font-size:6.5pt;break-inside:avoid}@media print{body{print-color-adjust:exact;-webkit-print-color-adjust:exact}.remarks,.signatures{break-inside:avoid}}@media screen{body{width:210mm;min-height:148mm;margin:20px auto;padding:5mm;background:#fff;box-shadow:0 2px 18px #0002}}
-      *,*::before,*::after{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif!important;font-weight:400!important;font-style:normal!important}.items{width:100%;table-layout:auto!important}.items th,.items td,.items td strong{font-size:8pt!important;text-align:left!important}.items th:nth-child(1),.items td:nth-child(1){width:6%!important}.items th:nth-child(2),.items td:nth-child(2){width:15%!important}.items th:nth-child(3),.items td:nth-child(3){width:43%!important}.items th:nth-child(4),.items td:nth-child(4){width:14%!important}.items th:nth-child(5),.items td:nth-child(5){width:13%!important}.items th:nth-child(6),.items td:nth-child(6){width:9%!important}.items td:nth-child(3){white-space:normal!important;overflow-wrap:normal}@media print{body{position:relative;isolation:isolate;font-size:7pt;line-height:1.08;print-color-adjust:exact;-webkit-print-color-adjust:exact}.table-wrap{position:relative;width:100%}.table-wrap .watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:0;display:flex;align-items:center;justify-content:center;opacity:.18;pointer-events:none;width:100%;height:100%}.table-wrap .watermark img{display:block;width:80mm;max-width:55%;max-height:85%;object-fit:contain}.items{position:relative;z-index:1;background:transparent!important}.items th{background:#f0f1ef!important}.items td{background:transparent!important}.brand,.document-title,.meta,.items,.remarks,.acknowledgement,.signatures,.footer-note{position:relative;z-index:1}.brand{gap:10px;padding-bottom:5px}.brand-main{gap:0}.brand-copy{gap:1px}.brand-copy strong{font-size:12pt;line-height:1.05}.brand-copy span{font-size:8pt}.brand-copy small{font-size:7pt}.doc-number{min-width:150px}.doc-number small{font-size:7pt}.doc-number strong{margin:2px 0;font-size:10pt}.document-title{margin:2px 0 3px;padding:2px 0}.document-title h1{font-size:13pt}.document-title p{margin-top:2px;font-size:8pt}.meta{gap:2px 10px;margin-bottom:3px}.meta-group{grid-template-columns:minmax(72px,30%) minmax(0,1fr);gap:1px 4px}.meta-group h2{margin-bottom:2px;padding-bottom:2px;font-size:6.5pt}.meta-group span{font-size:6pt}.meta-group strong{font-size:6.5pt;line-height:1.05}.items th,.items td{padding:.7mm .8mm}.items th,.items td,.items td strong{font-size:7pt!important}.remarks{min-height:5mm;margin-top:2mm;padding:1mm}.remarks strong,.remarks span{font-size:6pt}.acknowledgement{margin:1.5mm 0 0;font-size:6pt;line-height:1.08}.signatures{gap:8mm;max-width:170mm;margin:3mm auto 0}.signature .role{min-height:3mm;font-size:6.5pt}.signature .space{height:7mm}.signature .line{padding-top:.5mm;font-size:6.5pt}.signature .line small{margin-top:.5mm;font-size:6pt}.footer-note{margin-top:1.5mm;padding-top:1mm;font-size:5.5pt}.remarks,.signatures,.footer-note{break-inside:avoid}}@media print{.items{border:1px solid #7d8389!important;border-collapse:collapse!important;table-layout:auto!important}.items th,.items td{border:1px solid #7d8389!important}.items th:first-child,.items td:first-child{width:8mm!important;min-width:8mm!important;max-width:8mm!important;padding-left:0!important;padding-right:0!important;text-align:center!important;white-space:nowrap!important}.meta-group h2{border-bottom:0!important;padding-bottom:0!important}.footer-note{border-top:0!important;padding-top:.5mm!important}}@page{size:9.5in 5.5in;margin:4mm 12.7mm}@media screen{body{width:241.3mm;min-height:139.7mm;padding:4mm 12.7mm}}@media print{body{font-size:8pt;line-height:1.14}.brand{padding-bottom:7px}.brand-copy strong{font-size:14pt}.brand-copy span{font-size:9pt}.brand-copy small,.doc-number small{font-size:8pt}.doc-number strong{font-size:11pt}.document-title h1{font-size:15pt}.document-title p{font-size:9pt}.meta-group h2{font-size:7pt}.meta-group span{font-size:7pt}.meta-group strong{font-size:7.5pt;line-height:1.12}.items th,.items td,.items td strong{font-size:8pt!important}.remarks strong,.remarks span,.acknowledgement{font-size:7.5pt}.signature .role,.signature .line{font-size:7.5pt}.signature .line small{font-size:7pt}.footer-note{font-size:6.5pt}}${paperOverrides}</style></head><body><header class="brand"><div class="brand-main"><div class="brand-copy"><strong>PT Howell Niaga Indonesia</strong><span>Gudang Pusat</span><small>Dokumen pengeluaran barang konsinyasi</small></div></div><div class="doc-number"><small>Nomor surat jalan</small><strong>${esc(dispatch.number||'—')}</strong><small style="margin-top:5px">Tanggal: ${date(dispatch.date)}</small></div></header><section class="document-title"><h1>SURAT JALAN BARANG</h1><p>Pengiriman Purchase Order Retail</p></section><section class="meta"><div class="meta-group"><h2>DATA PENGIRIM</h2><span>Perusahaan</span><strong>PT Howell Niaga Indonesia</strong><span>Gudang</span><strong>${esc(dispatch.warehouse||'Gudang Pusat Howell')}</strong><span>Penanggung jawab</span><strong>${esc(dispatch.sender||'—')}</strong></div><div class="meta-group"><h2>DATA PENERIMA</h2><span>Nama perusahaan</span><strong>PT JINGGA UNGGUL LOHJINAWI</strong><span>Cabang / customer</span><strong>${esc(po.customerName||storeName(po.store))}</strong><span>Alamat tujuan</span><strong>${esc(po.shipTo||branch?.address||'—')}</strong><span>Penerima / PIC</span><strong>${esc(dispatch.recipient||'Mika Pasaribu')}</strong></div><div class="meta-group"><span>Nomor PO</span><strong>${esc(po.id)}</strong><span>Tanggal PO</span><strong>${date(po.date)}</strong></div><div class="meta-group"><span>Kontak cabang</span><strong>${esc(branch?.phone||'—')}</strong></div></section><div class="table-wrap"><div class="watermark" aria-hidden="true"><img src="${esc(logoUrl)}" alt=""></div><table class="items"><thead><tr><th>No</th><th>SKU</th><th>Nama Barang</th><th>Ukuran</th><th>Quantity</th><th>Satuan</th></tr></thead><tbody>${rows}</tbody></table></div><section class="remarks"><strong>CATATAN</strong><span>${esc(dispatch.note||'')}</span></section><p class="acknowledgement">Barang di atas diserahkan untuk pengiriman sesuai Purchase Order. Penerima dapat mencatat kondisi atau kekurangan barang pada kolom catatan.</p><section class="signatures"><div class="signature"><p class="role">Warehouse</p><div class="space"></div><div class="line"><small>Tanda tangan</small></div></div><div class="signature"><p class="role">Pengantar</p><div class="space"></div><div class="line">${esc(dispatch.driver||'Anam')}<small>Tanda tangan</small></div></div><div class="signature"><p class="role">Penerima</p><div class="space"></div><div class="line"><small>Tanda tangan</small></div></div></section><footer class="footer-note">Howell Inventory · ${esc(dispatch.number||'Surat Jalan')} · PO ${esc(po.id)}</footer></body></html>`);
+      @page{size:9.5in 5.5in;margin:3mm 8mm}
+      *{box-sizing:border-box}
+      html,body{margin:0;padding:0;color:#000;background:#fff;font:8pt/1.15 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      body{width:241.3mm;max-height:139.7mm;padding:3mm 8mm;margin:0 auto}
+      .brand{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:0 0 3px;border-bottom:1.5px solid #000}
+      .brand-main{display:flex;align-items:center;gap:10px;min-width:0}
+      .brand-copy{display:grid;gap:1px}
+      .brand-copy strong{font-size:12.5pt;line-height:1.1;font-weight:700;color:#000}
+      .brand-copy span{font-size:8.5pt;font-weight:700;color:#000}
+      .brand-copy small{font-size:7.5pt;font-weight:600;color:#000}
+      .doc-number{text-align:right;min-width:160px}
+      .doc-number small,.doc-number strong{display:block;color:#000}
+      .doc-number small{font-size:7.5pt;font-weight:600}
+      .doc-number strong{margin:1px 0;font-size:10.5pt;font-weight:700}
+      .document-title{margin:3px 0 4px;padding:2px 0;border-bottom:1px solid #000;text-align:center}
+      .document-title h1{margin:0;font-size:13.5pt;line-height:1.15;letter-spacing:.04em;font-weight:700;color:#000}
+      .document-title p{margin:1px 0 0;font-size:8pt;font-weight:600;color:#000}
+      .meta{display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;margin:0 0 4px}
+      .meta-group{display:grid;grid-template-columns:minmax(85px,28%) minmax(0,1fr);gap:1px 4px;align-content:start}
+      .meta-group h2{grid-column:1/-1;margin:0 0 2px;padding-bottom:1px;border-bottom:1px solid #000;font-size:7.5pt;font-weight:700;letter-spacing:.04em;color:#000}
+      .meta-group span{color:#000;font-size:7.5pt;font-weight:600}
+      .meta-group strong{font-size:7.5pt;font-weight:700;color:#000;overflow-wrap:anywhere;line-height:1.15}
+      .table-wrap{width:100%;margin:0;padding:0}
+      .items{width:100%;border-collapse:collapse;table-layout:fixed}
+      .items thead{display:table-header-group}
+      .items tr{break-inside:avoid;page-break-inside:avoid}
+      .items th,.items td{padding:1.4mm 1.2mm;border:1px solid #000!important;text-align:left;vertical-align:middle;color:#000}
+      .items th{background:#f0f0f0!important;font-size:7.5pt;font-weight:700}
+      .items td{font-size:7.5pt;font-weight:600}
+      .items .num{width:8mm!important;text-align:center!important}
+      .items th:nth-child(2),.items td:nth-child(2){width:14%!important}
+      .items th:nth-child(3),.items td:nth-child(3){width:44%!important}
+      .items th:nth-child(4),.items td:nth-child(4){width:12%!important;text-align:center!important}
+      .items th:nth-child(5),.items td:nth-child(5){width:12%!important;text-align:right!important}
+      .items th:nth-child(6),.items td:nth-child(6){width:10%!important;text-align:center!important}
+      .items td strong{display:block;font-size:7.5pt;font-weight:700;color:#000}
+      .remarks{min-height:5.5mm;margin-top:2.5mm;padding:1.5mm;border:1px solid #000;break-inside:avoid}
+      .remarks strong{display:block;margin-bottom:1px;font-size:7pt;font-weight:700;letter-spacing:.03em;color:#000}
+      .remarks span{white-space:pre-wrap;font-size:7pt;font-weight:600;color:#000}
+      .acknowledgement{margin:1.5mm 0 0;color:#000;font-size:6.5pt;font-weight:600;line-height:1.15}
+      .signatures{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6mm;max-width:180mm;margin:2.5mm auto 0;text-align:center;break-inside:avoid}
+      .signature{min-width:0}
+      .signature .role{min-height:3.5mm;margin:0;font-size:7pt;font-weight:700;color:#000}
+      .signature .space{height:7mm}
+      .signature .line{padding-top:1px;border-top:1px solid #000;font-size:7pt;font-weight:700;color:#000;overflow-wrap:anywhere}
+      .signature .line small{display:block;margin-top:1px;color:#000;font-size:6.5pt;font-weight:600}
+      .footer-note{margin-top:2mm;padding-top:1px;border-top:1px solid #000;color:#000;font-size:6pt;font-weight:600;break-inside:avoid}
+      @media print{
+        html,body{width:100%!important;max-height:135mm!important;overflow:hidden!important;margin:0!important;padding:0!important}
+        .brand,.document-title,.meta,.items,.remarks,.acknowledgement,.signatures,.footer-note{break-inside:avoid!important;page-break-inside:avoid!important}
+      }
+      ${paperOverrides}
+    </style></head><body>
+      <header class="brand">
+        <div class="brand-main">
+          <div class="brand-copy">
+            <strong>PT Howell Niaga Indonesia</strong>
+            <span>Gudang Pusat</span>
+            <small>Dokumen pengeluaran barang konsinyasi</small>
+          </div>
+        </div>
+        <div class="doc-number">
+          <small>Nomor surat jalan</small>
+          <strong>${esc(dispatch.number||'—')}</strong>
+          <small style="margin-top:2px">Tanggal: ${date(dispatch.date)}</small>
+        </div>
+      </header>
+      <section class="document-title">
+        <h1>SURAT JALAN BARANG</h1>
+        <p>Pengiriman Purchase Order Retail</p>
+      </section>
+      <section class="meta">
+        <div class="meta-group">
+          <h2>DATA PENGIRIM</h2>
+          <span>Perusahaan</span><strong>PT Howell Niaga Indonesia</strong>
+          <span>Gudang</span><strong>${esc(dispatch.warehouse||'Gudang Pusat Howell')}</strong>
+          <span>Penanggung jawab</span><strong>${esc(senderName)}</strong>
+        </div>
+        <div class="meta-group">
+          <h2>DATA PENERIMA</h2>
+          <span>Nama perusahaan</span><strong>${esc(po.customerName||'PT JINGGA UNGGUL LOHJINAWI')}</strong>
+          <span>Cabang / customer</span><strong>${esc(po.customerName||storeName(po.store))}</strong>
+          <span>Alamat tujuan</span><strong>${esc(po.shipTo||branch?.address||'—')}</strong>
+          <span>Penerima / PIC</span><strong>${esc(recipientName)}</strong>
+        </div>
+        <div class="meta-group">
+          <span>Nomor PO</span><strong>${esc(po.id)}</strong>
+          <span>Tanggal PO</span><strong>${date(po.date)}</strong>
+        </div>
+        <div class="meta-group">
+          <span>Kontak cabang</span><strong>${esc(branch?.phone||'—')}</strong>
+        </div>
+      </section>
+      <div class="table-wrap">
+        <table class="items">
+          <thead>
+            <tr>
+              <th>No</th><th>SKU</th><th>Nama Barang</th><th>Ukuran</th><th>Quantity</th><th>Satuan</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <section class="remarks">
+        <strong>CATATAN</strong>
+        <span>${esc(dispatch.note||'')}</span>
+      </section>
+      <p class="acknowledgement">Barang di atas diserahkan untuk pengiriman sesuai Purchase Order. Penerima dapat mencatat kondisi atau kekurangan barang pada kolom catatan.</p>
+      <section class="signatures">
+        <div class="signature">
+          <p class="role">Warehouse</p>
+          <div class="space"></div>
+          <div class="line">${esc(senderName)}<small>Tanda tangan</small></div>
+        </div>
+        <div class="signature">
+          <p class="role">Pengantar</p>
+          <div class="space"></div>
+          <div class="line">${esc(driverName)}<small>Tanda tangan</small></div>
+        </div>
+        <div class="signature">
+          <p class="role">Penerima</p>
+          <div class="space"></div>
+          <div class="line">${esc(recipientName)}<small>Tanda tangan</small></div>
+        </div>
+      </section>
+      <footer class="footer-note">Howell Inventory · ${esc(dispatch.number||'Surat Jalan')} · PO ${esc(po.id)}</footer>
+    </body></html>`);
     w.document.close();
-     const cleanupPrintFrame=()=>{if(frame.isConnected)frame.remove()};
-     w.addEventListener('afterprint',()=>setTimeout(cleanupPrintFrame,100),{once:true});
-     setTimeout(cleanupPrintFrame,120000);
-     let pageTitleRestored=false;const restorePageTitle=()=>{if(pageTitleRestored)return;pageTitleRestored=true;if(document.title===pdfTitle)document.title=originalPageTitle};
-     window.addEventListener('afterprint',restorePageTitle,{once:true});w.addEventListener('afterprint',restorePageTitle,{once:true});
-     const printWhenReady=()=>{
-       const images=[...w.document.images];
-       Promise.all(images.map(image=>image.complete?Promise.resolve():new Promise(resolve=>{image.addEventListener('load',resolve,{once:true});image.addEventListener('error',resolve,{once:true});setTimeout(resolve,2500)}))).then(()=>setTimeout(()=>{if(!w.closed){w.document.title=pdfTitle;document.title=pdfTitle;w.focus();w.print();setTimeout(restorePageTitle,120000)}},150));
-     };
-     if(w.document.readyState==='complete')printWhenReady();else w.addEventListener('load',printWhenReady,{once:true});
+    const cleanupPrintFrame=()=>{if(frame.isConnected)frame.remove()};
+    w.addEventListener('afterprint',()=>setTimeout(cleanupPrintFrame,100),{once:true});
+    setTimeout(cleanupPrintFrame,120000);
+    let pageTitleRestored=false;const restorePageTitle=()=>{if(pageTitleRestored)return;pageTitleRestored=true;if(document.title===pdfTitle)document.title=originalPageTitle};
+    window.addEventListener('afterprint',restorePageTitle,{once:true});w.addEventListener('afterprint',restorePageTitle,{once:true});
+    const printWhenReady=()=>{
+      if(!w.closed){w.document.title=pdfTitle;document.title=pdfTitle;w.focus();w.print();setTimeout(restorePageTitle,120000)}
+    };
+    if(w.document.readyState==='complete')printWhenReady();else w.addEventListener('load',printWhenReady,{once:true});
   }
   function shipments(){
     const dispatchedTotal=data.shipments.filter(po=>po.status!=='Rejected').reduce((sum,po)=>sum+po.items.reduce((n,item)=>n+dispatchedQty(po,item),0),0);
