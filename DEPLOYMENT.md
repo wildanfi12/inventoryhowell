@@ -13,7 +13,7 @@
 
 ## Status operasional
 
-**Kode sudah dipush ke GitHub (`main`) dan rilis sudah dipasang pada VPS `103.150.227.170`.** Service API aktif pada `127.0.0.1:3103`; health check lokal berhasil, dan endpoint state menolak akses tanpa autentikasi. Rilis statis berada di `/var/www/howell-inventory/release`, dengan API di `/opt/howell-inventory/server.cjs` dan SQLite di `/var/lib/howell-inventory/inventory.sqlite`.
+**Perubahan template Surat Jalan sudah dipush ke GitHub** pada commit `37ece92` (`main`). Status pemasangan commit ini di VPS `103.150.227.170` belum diverifikasi. Path rilis `/var/www/howell-inventory/release`, API `/opt/howell-inventory/server.cjs`, dan database `/var/lib/howell-inventory/inventory.sqlite` tercantum pada catatan deployment lama, tetapi wajib diperiksa langsung di VPS sebelum dipakai.
 
 **Belum live untuk pengguna.** DNS `inventory.howellcable.site` masih mengarah ke GitHub Pages dan DNS `gudang.inventory.howellcable.site` belum diarahkan ke VPS. Nginx hanya menyiapkan jalur ACME challenge dan mengembalikan HTTP 503 untuk halaman lain; belum ada akses aplikasi melalui HTTP. Sertifikat HTTPS untuk kedua host belum diterbitkan. Setelah DNS diarahkan, terbitkan sertifikat TLS, aktifkan virtual host HTTPS pada contoh konfigurasi, lalu uji kedua akun.
 
@@ -62,6 +62,7 @@ sudo cp /var/lib/howell-inventory/inventory.sqlite /var/lib/howell-inventory/inv
 ```
 
 ### 3. Deploy ke VPS
+Sebelum mengunggah, verifikasi secara read-only host, direktori aplikasi, konfigurasi Nginx, service, dan path rilis aktif. Hentikan bila path yang ditemukan berbeda dari catatan ini; jangan menebak direktori tujuan atau menjalankan skrip deploy.
 Unggah isi folder `release/` ke `/var/www/howell-inventory/release/`, kemudian pastikan izin kepemilikan file web:
 ```bash
 sudo chown -R www-data:www-data /var/www/howell-inventory/release/
