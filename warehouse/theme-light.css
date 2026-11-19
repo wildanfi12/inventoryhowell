@@ -518,12 +518,131 @@ html,body,button,input,select,textarea,#pageContent *,.sidebar *{
 .po-product-summary span:last-child{text-align:right;white-space:nowrap}
 .po-product-summary strong{color:#272C31;font-size:11px;font-weight:600}
 .po-product-summary small{color:#747B82;font-size:10px}
-.po-actions{display:flex;flex-wrap:wrap;gap:6px;min-width:135px}
-.po-actions .link-btn{padding:5px 7px;border:1px solid #E0E3E6;border-radius:6px;background:#fff;color:#343A40;font-size:10px;text-decoration:none}
-.po-actions .link-btn:hover{background:#F4F5F4}
-.po-actions>.btn,.warehouse-dispatches td>.btn,.inventory-table-card td>.link-btn{box-sizing:border-box!important;display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;width:auto!important;min-width:0!important;height:24px!important;min-height:24px!important;padding:0 10px!important;border-radius:8px!important;white-space:nowrap!important}
-.inventory-table-card td>.sku{border-radius:8px!important}
-.po-actions .po-edit-disabled{border-color:#C9CED3!important;background:#E5E8EB!important;color:#626A72!important;cursor:pointer!important;opacity:1!important}
+/* Seragamkan semua shape tombol & status menjadi bentuk kapsul/pill seperti Selesai Terjual */
+.btn,
+.link-btn,
+button.link-btn,
+.po-actions .btn,
+.po-actions .link-btn,
+.warehouse-dispatches td .btn,
+.warehouse-dispatch-actions .btn,
+.inventory-table-card td .link-btn,
+.stock-history-actions .btn,
+table td button,
+table td .btn,
+table td .link-btn,
+.paperclip-branch-row .btn,
+.pill {
+  border-radius: 999px !important;
+}
+
+.po-actions{display:flex;flex-wrap:wrap;gap:6px;min-width:148px}
+
+/* Seluruh tombol tindakan tabel: ukuran, tinggi, dan bentuk kapsul seragam */
+td button,
+td .btn,
+td .link-btn,
+.po-actions button,
+.po-actions .btn,
+.po-actions .link-btn,
+.warehouse-dispatches td .btn,
+.warehouse-dispatch-actions .btn,
+.inventory-table-card td .link-btn,
+.paperclip-branch-row .btn,
+.link-btn,
+button.link-btn {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  padding: 0 12px !important;
+  border-radius: 999px !important;
+  font-family: inherit !important;
+  font-size: 11px !important;
+  font-weight: 550 !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+  transition: all 0.15s ease !important;
+}
+
+/* Default / outline light pill button (Perbarui stok, Buat invoice periode, Lihat di Penjualan, Ubah status, Cetak surat jalan, Edit) */
+td button,
+td .btn-light,
+td .link-btn,
+.po-actions .link-btn,
+.inventory-table-card td .link-btn,
+.paperclip-branch-row .btn-light,
+.link-btn,
+button.link-btn {
+  background: #ffffff !important;
+  border: 1px solid #cfd4ce !important;
+  color: #343a40 !important;
+}
+td button:hover,
+td .btn-light:hover,
+td .link-btn:hover,
+.po-actions .link-btn:hover,
+.inventory-table-card td .link-btn:hover,
+.paperclip-branch-row .btn-light:hover,
+.link-btn:hover,
+button.link-btn:hover {
+  background: #f4f5f4 !important;
+  border-color: #b0b7af !important;
+  color: #17191c !important;
+}
+
+/* Primary yellow pill button (Selesai terjual (Done), Ajukan, dll) */
+td .btn-primary,
+.po-actions .btn-primary,
+button.btn-primary.btn-small {
+  background: #F4C63D !important;
+  border: 1px solid #D4A91E !important;
+  color: #17191c !important;
+  font-weight: 600 !important;
+}
+td .btn-primary:hover,
+.po-actions .btn-primary:hover {
+  background: #e5b72e !important;
+  border-color: #c49914 !important;
+}
+
+/* Danger red pill button (Hapus PO) */
+td .btn-danger,
+.po-actions .btn-danger,
+button.btn-danger.btn-small {
+  background: #fdeeee !important;
+  border: 1px solid #f3d8d8 !important;
+  color: #a52d2d !important;
+  font-weight: 600 !important;
+}
+td .btn-danger:hover,
+.po-actions .btn-danger:hover {
+  background: #fcdada !important;
+  border-color: #e8bebe !important;
+  color: #8c1e1e !important;
+}
+
+/* Disabled gray pill button (Edit terkunci) */
+td .po-edit-disabled,
+.po-actions .po-edit-disabled {
+  background: #eef0f2 !important;
+  border: 1px solid #d5d9dd !important;
+  color: #626a72 !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+td .po-edit-disabled:hover,
+.po-actions .po-edit-disabled:hover {
+  background: #e5e8eb !important;
+  border-color: #c9ced3 !important;
+}
+
+.inventory-table-card td>.sku{border-radius:999px!important;padding:2px 8px!important}
 .search:before,.search:after{display:none!important}
 .search .table-search-icon{position:absolute;z-index:1;left:10px;top:50%;width:14px;height:14px;transform:translateY(-50%);fill:none;stroke:#53606B;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 .toast{border-left-color:#F4C63D!important}
