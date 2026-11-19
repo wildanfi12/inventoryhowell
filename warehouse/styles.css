@@ -424,3 +424,25 @@ input:focus,select:focus,textarea:focus{border-color:var(--border-active);outlin
 .search:before{left:10px;top:50%;transform:translateY(-50%);z-index:1;pointer-events:none}
 .search input,.search input:hover,.search input:focus,.search input:focus-visible{width:210px!important;height:36px!important;margin:0!important;padding:0 10px 0 28px!important;border:1px solid var(--border-soft)!important;border-radius:8px!important;background:#fff!important;outline:0!important;box-shadow:none!important}
 .search input:focus,.search input:focus-visible{border-color:var(--border-active)!important}
+
+/* Riwayat perubahan stok gudang: tampilan dipersempit & scrollable */
+.stock-history-card{margin-top:14px!important}
+.stock-history-toolbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;padding:12px 14px!important}
+.stock-history-actions{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important}
+.stock-history-search{position:relative!important;min-width:190px!important;max-width:260px!important}
+.stock-history-search input{padding-left:30px!important}
+.stock-history-wrap{max-height:460px!important;overflow-y:auto!important;overscroll-behavior:contain!important;border:1px solid var(--border-soft,#e6e8eb)!important;border-radius:8px!important}
+.stock-history-table{width:100%!important;border-collapse:separate!important;border-spacing:0!important;table-layout:fixed!important}
+.stock-history-table th{position:sticky!important;top:0!important;z-index:3!important;border-bottom:1.5px solid var(--border-soft,#e6e8eb)!important;padding:8px 12px!important;font-size:11px!important;font-weight:600!important;letter-spacing:.03em!important;text-align:left!important}
+.stock-history-table th:nth-child(1),.stock-history-table td:nth-child(1){width:17%!important}
+.stock-history-table th:nth-child(2),.stock-history-table td:nth-child(2){width:26%!important}
+.stock-history-table th:nth-child(3),.stock-history-table td:nth-child(3){width:12%!important}
+.stock-history-table th:nth-child(4),.stock-history-table td:nth-child(4){width:12%!important}
+.stock-history-table th:nth-child(5),.stock-history-table td:nth-child(5){width:12%!important}
+.stock-history-table th:nth-child(6),.stock-history-table td:nth-child(6){width:11%!important}
+.stock-history-table th:nth-child(7),.stock-history-table td:nth-child(7){width:10%!important}
+.stock-history-table td{padding:7px 12px!important;font-size:12px!important;border-bottom:1px solid var(--border-soft,#eceef0)!important;vertical-align:middle!important;overflow-wrap:anywhere!important}
+@media(max-width:900px){
+  .stock-history-table{min-width:680px!important;table-layout:auto!important}
+}
+

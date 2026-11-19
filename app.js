@@ -32,7 +32,7 @@
   const pageNames={dashboard:'Ringkasan',inventory:'Stok & Opname',warehouse:'Gudang',products:'Master Produk',stores:'Cabang Retail',shipments:'Purchase Order',sales:'Laporan Penjualan',invoices:'Tagihan & Pembayaran',returns:'Retur Barang',reports:'Laporan',settings:'Pengaturan'};
   const portalRole=window.HOWELL_PORTAL_ROLE||'admin';
   const allowedPages=portalRole==='warehouse'?new Set(['warehouse','inventory','returns']):null;
-  let current=portalRole==='warehouse'?'warehouse':'dashboard',query='',statusFilter='Semua status',modalMode=null,chartPeriod='week';
+  let current=portalRole==='warehouse'?'warehouse':'dashboard',query='',statusFilter='Semua status',modalMode=null,chartPeriod='week',stockHistoryLimit=10,stockHistoryQuery='';
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const money=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
   const date=s=>s?new Date(s+'T00:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}):'—';
@@ -551,14 +551,196 @@
       safeSubmit(values)
     },initialValues);
   };
+  function exportStockHistoryCsv(entries){
+    const headers=['Waktu','Produk','SKU','Saldo Sebelum','Saldo Sesudah','Perubahan','Petugas','Sumber'];
+    const lines=[headers.map(h=>`"${h}"`).join(',')];
+    entries.forEach(entry=>{
+      const product=data.products.find(p=>p.sku===entry.sku);
+      const when=entry.at||entry.archivedAt||entry.date;
+      const formattedDate=when?new Date(when).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'}):'—';
+      const delta=entry.delta??(entry.previous==null?null:Number(entry.physical)-Number(entry.previous));
+      const deltaStr=delta==null?'—':(delta>0?`+${delta}`:String(delta));
+      const row=[
+        formattedDate,
+        product?.name||entry.sku||'—',
+        entry.sku||'—',
+        entry.previous==null?'Saldo awal':String(entry.previous),
+        String(entry.physical??0),
+        deltaStr,
+        entry.actor||'Nama petugas belum tercatat',
+        entry.source||'Belum dicatat'
+      ];
+      lines.push(row.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(','));
+    });
+    const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`riwayat-perubahan-stok-${today}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('File ekspor riwayat perubahan stok berhasil dibuat.');
+  }
+
+  function renderStockHistoryPanel(){
+    const container=$('#pageContent');
+    if(!container)return;
+    const allEntries=(data.countHistory||[]).filter(x=>!x.level||x.level==='Gudang pusat').sort((a,b)=>{
+      const tA=new Date(a.at||a.archivedAt||a.date||0).getTime();
+      const tB=new Date(b.at||b.archivedAt||b.date||0).getTime();
+      return (tB||0)-(tA||0);
+    });
+    const panel=document.createElement('article');
+    panel.className='card table-card stock-history-card';
+    panel.id='stockHistoryPanel';
+
+    const getFilteredEntries=()=>{
+      const q=String(stockHistoryQuery||'').trim().toLocaleLowerCase('id-ID');
+      const tokens=q.split(/\s+/).filter(Boolean);
+      return tokens.length?allEntries.filter(entry=>{
+        const product=data.products.find(p=>p.sku===entry.sku);
+        const when=entry.at||entry.archivedAt||entry.date;
+        const formattedDate=when?new Date(when).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'}):'';
+        const text=[
+          entry.sku,
+          product?.name||'',
+          product?.spec||'',
+          entry.actor||'',
+          entry.source||'',
+          entry.date||'',
+          formattedDate
+        ].join(' ').toLocaleLowerCase('id-ID');
+        return tokens.every(token=>text.includes(token));
+      }):allEntries;
+    };
+
+    const updateTable=()=>{
+      const filtered=getFilteredEntries();
+      const isAll=stockHistoryLimit==='all';
+      const limitNum=isAll?filtered.length:(Number(stockHistoryLimit)||10);
+      const displayed=filtered.slice(0,limitNum);
+      const q=String(stockHistoryQuery||'').trim();
+
+      const subtitleEl=panel.querySelector('#stockHistorySubtitle');
+      if(subtitleEl){
+        if(q){
+          subtitleEl.textContent=`Menemukan ${filtered.length.toLocaleString('id-ID')} riwayat untuk "${q}" (menampilkan ${displayed.length.toLocaleString('id-ID')}) · Gudang pusat`;
+        }else if(isAll){
+          subtitleEl.textContent=`Menampilkan semua ${allEntries.length.toLocaleString('id-ID')} riwayat perubahan stok · Gudang pusat`;
+        }else{
+          subtitleEl.textContent=`Menampilkan ${displayed.length.toLocaleString('id-ID')} dari ${allEntries.length.toLocaleString('id-ID')} riwayat perubahan terbaru (tampilan dipersempit) · Gudang pusat`;
+        }
+      }
+
+      const toggleBtn=panel.querySelector('#stockHistoryToggleAll');
+      if(toggleBtn){
+        if(isAll){
+          toggleBtn.textContent='Persempit ke 10';
+          toggleBtn.title='Persempit tampilan riwayat ke 10 data terbaru';
+        }else{
+          toggleBtn.textContent=`Lihat semua (${allEntries.length.toLocaleString('id-ID')})`;
+          toggleBtn.title='Tampilkan seluruh catatan riwayat perubahan stok';
+        }
+      }
+
+      const selectLimit=panel.querySelector('#stockHistoryLimit');
+      if(selectLimit&&selectLimit.value!==String(stockHistoryLimit)){
+        selectLimit.value=String(stockHistoryLimit);
+      }
+
+      const rows=displayed.map(entry=>{
+        const product=data.products.find(p=>p.sku===entry.sku);
+        const when=entry.at||entry.archivedAt||entry.date;
+        const delta=entry.delta??(entry.previous==null?null:Number(entry.physical)-Number(entry.previous));
+        const deltaHtml=delta==null?'<span class="panel-subtitle">—</span>':(delta>0?`<strong style="color:var(--green,#177245)">+${delta.toLocaleString('id-ID')} unit</strong>`:(delta<0?`<strong style="color:var(--red,#c53030)">${delta.toLocaleString('id-ID')} unit</strong>`:'<span class="panel-subtitle">0 unit</span>'));
+        return `<tr>
+          <td>${esc(when?new Date(when).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'}):'—')}</td>
+          <td><strong>${esc(product?.name||entry.sku||'—')}</strong><div class="panel-subtitle">${esc(entry.sku||'')}</div></td>
+          <td>${entry.previous==null?'<span class="panel-subtitle">Saldo awal</span>':Number(entry.previous).toLocaleString('id-ID')+' unit'}</td>
+          <td><strong>${Number(entry.physical??0).toLocaleString('id-ID')} unit</strong></td>
+          <td>${deltaHtml}</td>
+          <td>${esc(entry.actor||'Nama petugas belum tercatat')}</td>
+          <td><span class="sku">${esc(entry.source||'Belum dicatat')}</span></td>
+        </tr>`;
+      });
+
+      const bodyEl=panel.querySelector('#stockHistoryBody');
+      if(bodyEl){
+        bodyEl.innerHTML=rows.length?rows.join(''):`<tr><td colspan="7"><div class="empty-state"><strong>Tidak ada riwayat perubahan yang cocok</strong><span>Coba kata kunci pencarian lain atau tampilkan semua data.</span></div></td></tr>`;
+      }
+    };
+
+    const isAll=stockHistoryLimit==='all';
+    panel.innerHTML=`<div class="table-toolbar stock-history-toolbar">
+      <div>
+        <div class="panel-title">Riwayat perubahan stok gudang</div>
+        <div class="panel-subtitle" id="stockHistorySubtitle">Memuat riwayat perubahan stok…</div>
+      </div>
+      <div class="toolbar-right stock-history-actions">
+        <div class="search stock-history-search">
+          <svg class="table-search-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.6"></circle><path d="m10.2 10.2 3.1 3.1"></path></svg>
+          <input id="stockHistorySearch" type="search" placeholder="Cari SKU, produk, petugas..." value="${esc(stockHistoryQuery)}" aria-label="Cari riwayat perubahan stok" />
+        </div>
+        <select id="stockHistoryLimit" class="filter-select" aria-label="Jumlah riwayat yang ditampilkan">
+          <option value="10"${stockHistoryLimit===10?' selected':''}>10 data (Persempit)</option>
+          <option value="25"${stockHistoryLimit===25?' selected':''}>25 data</option>
+          <option value="50"${stockHistoryLimit===50?' selected':''}>50 data</option>
+          <option value="100"${stockHistoryLimit===100?' selected':''}>100 data</option>
+          <option value="all"${stockHistoryLimit==='all'?' selected':''}>Semua data (${allEntries.length.toLocaleString('id-ID')})</option>
+        </select>
+        <button type="button" class="btn btn-light btn-small" id="stockHistoryToggleAll">${isAll?'Persempit ke 10':`Lihat semua (${allEntries.length.toLocaleString('id-ID')})`}</button>
+        <button type="button" class="btn btn-light btn-small" id="stockHistoryExport" title="Ekspor riwayat perubahan stok ke CSV">Ekspor CSV</button>
+      </div>
+    </div>
+    <div class="table-wrap stock-history-wrap">
+      <table class="stock-history-table">
+        <thead>
+          <tr>
+            <th>Waktu</th>
+            <th>Produk / SKU</th>
+            <th>Saldo sebelum</th>
+            <th>Saldo sesudah</th>
+            <th>Perubahan</th>
+            <th>Petugas</th>
+            <th>Sumber</th>
+          </tr>
+        </thead>
+        <tbody id="stockHistoryBody"></tbody>
+      </table>
+    </div>`;
+
+    container.append(panel);
+    updateTable();
+
+    const searchInput=panel.querySelector('#stockHistorySearch');
+    searchInput?.addEventListener('input',e=>{
+      stockHistoryQuery=e.target.value;
+      updateTable();
+    });
+
+    const limitSelect=panel.querySelector('#stockHistoryLimit');
+    limitSelect?.addEventListener('change',e=>{
+      stockHistoryLimit=e.target.value==='all'?'all':Number(e.target.value);
+      updateTable();
+    });
+
+    const toggleBtn=panel.querySelector('#stockHistoryToggleAll');
+    toggleBtn?.addEventListener('click',()=>{
+      stockHistoryLimit=(stockHistoryLimit==='all'?10:'all');
+      updateTable();
+    });
+
+    const exportBtn=panel.querySelector('#stockHistoryExport');
+    exportBtn?.addEventListener('click',()=>{
+      exportStockHistoryCsv(getFilteredEntries());
+    });
+  }
+
   const renderBeforeStatus=render;
   render=function(){
     data.invoices.forEach(x=>x.status=invoiceStatus(x));
     renderBeforeStatus();
     if(current==='inventory'){
-      const entries=(data.countHistory||[]).filter(x=>x.level==='Gudang pusat').slice(0,30);
-      const rows=entries.map(entry=>{const product=data.products.find(p=>p.sku===entry.sku),when=entry.at||entry.archivedAt||entry.date,delta=entry.delta??(entry.previous==null?null:Number(entry.physical)-Number(entry.previous));return '<tr><td>'+esc(when?new Date(when).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'}):'—')+'</td><td><strong>'+esc(product?.name||entry.sku||'—')+'</strong><div class="panel-subtitle">'+esc(entry.sku||'')+'</div></td><td>'+(entry.previous==null?'Saldo awal':Number(entry.previous)+' unit')+'</td><td>'+Number(entry.physical??0)+' unit</td><td>'+(delta==null?'—':(delta>0?'+':'')+delta+' unit')+'</td><td>'+esc(entry.actor||'Nama petugas belum tercatat')+'</td><td>'+esc(entry.source||'Belum dicatat')+'</td></tr>'});
-      const panel=document.createElement('article');panel.className='card table-card';panel.style.marginTop='14px';panel.innerHTML='<div class="table-toolbar"><div><div class="panel-title">Riwayat perubahan stok gudang</div><div class="panel-subtitle">Perubahan terbaru beserta saldo, petugas, dan sumber stok.</div></div></div>'+table(['Waktu','Produk / SKU','Saldo sebelum','Saldo sesudah','Perubahan','Petugas','Sumber'],rows,'Belum ada riwayat perubahan stok.');$('#pageContent').append(panel);
+      renderStockHistoryPanel();
     }
     if(current==='settings'){
       const rows=data.audit.slice(-12).reverse().map(x=>'<tr><td>'+esc(new Date(x.at).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'}))+'</td><td>'+esc(x.actor)+'</td><td>'+esc(x.action)+'</td><td>'+esc(x.entity)+' · '+esc(x.entityId)+'</td><td>'+esc(JSON.stringify(x.details||{}))+'</td></tr>');

@@ -882,3 +882,27 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .po-list-table td:nth-child(6)::before{display:block;margin-bottom:6px;content:'Tindakan'}
   .po-list-table .po-actions{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:8px}
 }
+
+/* Riwayat perubahan stok gudang: tampilan dipersempit & scrollable */
+.stock-history-card{margin-top:14px!important}
+.stock-history-toolbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;padding:12px 14px!important}
+.stock-history-actions{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important}
+.stock-history-search{position:relative!important;min-width:190px!important;max-width:260px!important}
+.stock-history-search input{padding-left:30px!important}
+.stock-history-wrap{max-height:460px!important;overflow-y:auto!important;overscroll-behavior:contain!important;border:1px solid #e6e8eb!important;border-radius:8px!important;background:#fff!important}
+.stock-history-table{width:100%!important;border-collapse:separate!important;border-spacing:0!important;table-layout:fixed!important}
+.stock-history-table th{position:sticky!important;top:0!important;z-index:3!important;background:#f6f7f8!important;border-bottom:1.5px solid #e6e8eb!important;padding:8px 12px!important;font-size:11px!important;font-weight:600!important;letter-spacing:.03em!important;color:#656b73!important;text-align:left!important}
+.stock-history-table th:nth-child(1),.stock-history-table td:nth-child(1){width:17%!important}
+.stock-history-table th:nth-child(2),.stock-history-table td:nth-child(2){width:26%!important}
+.stock-history-table th:nth-child(3),.stock-history-table td:nth-child(3){width:12%!important}
+.stock-history-table th:nth-child(4),.stock-history-table td:nth-child(4){width:12%!important}
+.stock-history-table th:nth-child(5),.stock-history-table td:nth-child(5){width:12%!important}
+.stock-history-table th:nth-child(6),.stock-history-table td:nth-child(6){width:11%!important}
+.stock-history-table th:nth-child(7),.stock-history-table td:nth-child(7){width:10%!important}
+.stock-history-table td{padding:7px 12px!important;font-size:12px!important;border-bottom:1px solid #eceef0!important;vertical-align:middle!important;overflow-wrap:anywhere!important}
+.stock-history-table tbody tr:hover td{background:#f8f9fa!important}
+.stock-history-table tbody tr:last-child td{border-bottom:none!important}
+@media(max-width:900px){
+  .stock-history-table{min-width:680px!important;table-layout:auto!important}
+}
+
