@@ -194,24 +194,7 @@ function warehouse(){
     const activeDispatches=allDispatches.filter(x=>!isSoldPo(x.po));
     const totalSoldUnits=soldDispatches.reduce((sum,x)=>sum+(Array.isArray(x.dispatch.items)?x.dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0),0);
 
-    let currentDispatches=allDispatches;
-    let panelTitle='Semua Riwayat Surat Jalan';
-    let panelSubtitle='Pengeluaran terbaru yang sudah disimpan dari Gudang.';
-    let emptyMessage='Belum ada surat jalan.';
-
-    if(warehouseDispatchTab==='sold'){
-      currentDispatches=soldDispatches;
-      panelTitle='Riwayat Penjualan (Stok Terjual)';
-      panelSubtitle='Daftar surat jalan dan barang keluar dari gudang yang telah selesai terjual.';
-      emptyMessage='Belum ada riwayat penjualan dari gudang.';
-    }else if(warehouseDispatchTab==='active'){
-      currentDispatches=activeDispatches;
-      panelTitle='Pengiriman Berjalan (Surat Jalan Aktif)';
-      panelSubtitle='Surat jalan yang sedang dikirim atau menunggu konfirmasi selesai terjual.';
-      emptyMessage='Tidak ada pengiriman yang sedang berjalan saat ini.';
-    }
-
-    const dispatchedRows=currentDispatches.map(({po,dispatch,index})=>{
+    const dispatchedRows=allDispatches.map(({po,dispatch,index})=>{
       const isSold=isSoldPo(po);
       const actionButtons='<div class="po-actions warehouse-dispatch-actions">'+
         '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="'+index+'" data-id="'+esc(po.id)+'">Cetak surat jalan</button>'+
@@ -221,24 +204,6 @@ function warehouse(){
         )+'</div>';
       return '<tr><td><strong>'+esc(dispatch.number||'—')+'</strong><div class="panel-subtitle">PO '+esc(po.id)+' · '+date(dispatch.date)+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong></td><td>'+(Array.isArray(dispatch.items)?dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0).toLocaleString('id-ID')+' unit</td><td>'+statusPill(po.status)+'</td><td>'+actionButtons+'</td></tr>';
     });
-
-    const tabsNav='<div class="warehouse-tabs-nav" role="tablist" aria-label="Menu Pengiriman dan Penjualan Gudang">'+
-      '<button type="button" class="warehouse-tab-btn '+(warehouseDispatchTab==='active'?'active':'')+'" data-warehouse-tab="active" role="tab" aria-selected="'+(warehouseDispatchTab==='active')+'">'+
-        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7h11v11H3zM14 11h4l3 3v4h-7z"/><circle cx="7.5" cy="19" r="1.5"/><circle cx="18" cy="19" r="1.5"/></svg>'+
-        '<span>Pengiriman Berjalan</span>'+
-        '<b class="tab-badge">'+activeDispatches.length+'</b>'+
-      '</button>'+
-      '<button type="button" class="warehouse-tab-btn '+(warehouseDispatchTab==='sold'?'active':'')+'" data-warehouse-tab="sold" role="tab" aria-selected="'+(warehouseDispatchTab==='sold')+'">'+
-        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>'+
-        '<span>Riwayat</span>'+
-        '<b class="tab-badge gold">'+soldDispatches.length+'</b>'+
-      '</button>'+
-      '<button type="button" class="warehouse-tab-btn '+(warehouseDispatchTab==='all'?'active':'')+'" data-warehouse-tab="all" role="tab" aria-selected="'+(warehouseDispatchTab==='all')+'">'+
-        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>'+
-        '<span>Semua Surat Jalan</span>'+
-        '<b class="tab-badge gray">'+allDispatches.length+'</b>'+
-      '</button>'+
-    '</div>';
 
     const queueGuide=queue.length?'':`<div class="warehouse-guidance"><div><strong>Belum ada PO untuk diproses</strong><p>PO yang sudah dibuat oleh tim admin/marketing akan muncul di sini setelah tersimpan di database bersama.</p></div>${portalRole==='admin'?'<button class="btn btn-light btn-small" data-page="shipments">Buka Purchase Order</button>':''}</div>`;
 
@@ -253,7 +218,7 @@ function warehouse(){
     '</div>'+
     queueGuide+
     '<article class="card table-card warehouse-queue"><div class="table-toolbar"><div><div class="panel-title">Purchase Order untuk gudang</div><div class="panel-subtitle">PO yang dibuat langsung tercatat di sini. Atur statusnya; surat jalan tersedia setelah PO disetujui.</div></div></div>'+table(['Nomor PO / penanggung jawab','Customer / tanggal PO','Alamat pengiriman','Produk dan quantity','Status','Tindakan'],queueRows,'Belum ada PO yang masih memiliki quantity untuk diproses.')+'</article>'+
-    '<article class="card table-card warehouse-dispatches"><div class="table-toolbar warehouse-dispatches-toolbar"><div><div class="panel-title">'+panelTitle+'</div><div class="panel-subtitle">'+panelSubtitle+'</div></div>'+tabsNav+'</div>'+table(['Nomor surat jalan','Customer','Quantity keluar','Status PO','Tindakan & Dokumen'],dispatchedRows,emptyMessage)+'</article>';
+    '<article class="card table-card warehouse-dispatches"><div class="table-toolbar"><div><div class="panel-title">Riwayat surat jalan</div><div class="panel-subtitle">Pengeluaran terbaru yang sudah disimpan dari Gudang.</div></div></div>'+table(['Nomor surat jalan','Customer','Quantity keluar','Status PO','Tindakan & Dokumen'],dispatchedRows,'Belum ada surat jalan.')+'</article>';
   }
   function inventory(){
     if (syncEnabled && !syncReady && syncConnecting) {
