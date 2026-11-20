@@ -229,7 +229,7 @@ function warehouse(){
         '<b class="tab-badge">'+activeDispatches.length+'</b>'+
       '</button>'+
       '<button type="button" class="warehouse-tab-btn '+(warehouseDispatchTab==='sold'?'active':'')+'" data-warehouse-tab="sold" role="tab" aria-selected="'+(warehouseDispatchTab==='sold')+'">'+
-        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19V5M4 19h17M7 15l4-4 3 2 6-7"/></svg>'+
+        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>'+
         '<span>Riwayat</span>'+
         '<b class="tab-badge gold">'+soldDispatches.length+'</b>'+
       '</button>'+
