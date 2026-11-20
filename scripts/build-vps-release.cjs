@@ -8,7 +8,7 @@ if (path.resolve(release) !== path.join(root, 'release')) throw new Error('Relea
 if (fs.existsSync(release)) fs.rmSync(release, { recursive: true, force: true });
 fs.mkdirSync(path.join(release, 'assets'), { recursive: true });
 for (const file of ['index.html','styles.css','theme-light.css','app.js']) fs.copyFileSync(path.join(root,file),path.join(release,file));
-for (const file of ['howell-source-data.js','master-draft-2026-10.js','product-image-map.js','howell-logo-color.png','howell-logo-white.png','howell-mark-color.png','howell-mark-white.png']) {
+for (const file of ['howell-source-data.js','master-draft-2026-10.js','product-image-map.js','howell-logo-color.png','howell-logo-white.png','howell-mark-color.png','howell-mark-white.png','xlsx.full.min.js']) {
   const source=path.join(root,'assets',file);
   if (fs.existsSync(source)) fs.copyFileSync(source,path.join(release,'assets',file));
 }

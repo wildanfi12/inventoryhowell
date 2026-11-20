@@ -18,7 +18,7 @@ const safe = {
 fs.writeFileSync(path.join(out, 'assets/howell-warehouse-data.js'), `window.HOWELL_SOURCE_DATA=${JSON.stringify(safe)};\n`);
 fs.copyFileSync(path.join(root,'warehouse','index.html'),path.join(out,'index.html'));
 for (const file of ['styles.css','theme-light.css','app.js']) fs.copyFileSync(path.join(root,file),path.join(out,file));
-for (const file of ['howell-logo-color.png','howell-logo-white.png','howell-mark-color.png','howell-mark-white.png','product-image-map.js']) {
+for (const file of ['howell-logo-color.png','howell-logo-white.png','howell-mark-color.png','howell-mark-white.png','product-image-map.js','xlsx.full.min.js']) {
   const src = path.join(root,'assets',file);
   if (fs.existsSync(src)) fs.copyFileSync(src,path.join(out,'assets',file));
 }

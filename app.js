@@ -91,7 +91,7 @@
     return `${demoBanner()}<section class="ware-dashboard"><div class="dash-left"><div class="dash-kpis">${kpi('TOTAL STOK',stockValue,known.length?`${known.length} SKU sudah diopname`:`${data.products.length} SKU · opname awal belum dilakukan`)}${kpi('DALAM PENGIRIMAN',dispatch.toLocaleString('id-ID'),`${data.shipments.filter(s=>['Dikirim','In Transit','Partial'].includes(s.status)).length} surat jalan aktif`)}${kpi('TOTAL CABANG',data.stores.length,'Cabang terdaftar')}${kpi('TOTAL PENJUALAN',money(data.sales.filter(s=>s.status==='Disetujui').reduce((n,s)=>n+Number(s.net||0),0)),'Akumulasi laporan tersimpan')}</div><article class="card capacity-card"><div class="card-topline"><div><small>HOWELL INVENTORY OVERVIEW</small><h2>Posisi persediaan</h2></div><button class="subtle-icon" data-action="go-inventory" aria-label="Buka stok">•••</button></div><div class="capacity-total"><strong>${stockValue}</strong><span>${known.length?'unit dalam jaringan':'saldo awal belum dicatat'}</span></div>${known.length?`<div class="capacity-bar" role="img" aria-label="Gudang pusat ${pct(center)}, cabang ${pct(branch)}, perjalanan ${pct(dispatch)}"><i class="bar-center" style="width:${pct(center)}"></i><i class="bar-branch" style="width:${pct(branch)}"></i><i class="bar-dispatch" style="width:${pct(dispatch)}"></i></div><div class="capacity-legend"><span><i class="center-dot"></i>Gudang pusat <b>${center.toLocaleString('id-ID')}</b></span><span><i class="branch-dot"></i>Cabang <b>${branch.toLocaleString('id-ID')}</b></span><span><i class="dispatch-dot"></i>Pengiriman <b>${dispatch.toLocaleString('id-ID')}</b></span></div>`:`<div class="excel-source-note">Jumlah stok tidak ada pada workbook. Lakukan opname fisik untuk memulai saldo.</div>`}<div class="insight-box"><small>INVENTORY INSIGHT</small><strong>${known.length?(low.length?`${low.length} SKU membutuhkan perhatian`:'Persediaan terpantau'):'Opname awal diperlukan'}</strong><p>${discrepancies?`${discrepancies} selisih opname tercatat. Tinjau perbedaan stok.`:known.length?'Pantau alokasi stok pusat dan cabang dari satu ringkasan.':'Data produk dan cabang sudah dimuat; saldo stok menunggu hasil hitung fisik.'}</p><button class="btn btn-dark" data-action="go-inventory">${known.length?'Lihat stok':'Mulai opname'}</button></div><div class="capacity-reminder"><span>${known.length?'Opname belum dicatat':'SKU menunggu opname'}</span><b>${data.products.length-known.length} SKU</b></div></article></div><div class="dash-center"><section class="product-showcase"><div class="section-heading"><div><small>MASTER PRODUK</small><h2>Produk Howell</h2></div><button class="text-action" data-page="products">Lihat semua</button></div><div class="product-card-row">${products.map(p=>`<button class="product-card" data-action="edit-product" data-id="${esc(p.sku)}"><span class="product-card-meta"><span>${esc(p.category)}</span><span>${esc(p.sku)}</span></span><span class="product-art">${productPhoto(p.sku)}</span><strong>${esc(p.name)}</strong><small>${p.priceReady?money(p.srp)+' SRP':'Harga belum tersedia'}${p.stock!=null?` · <b style="color:#d97706;font-weight:700">Stok ${Number(p.stock)} ${esc(p.uom||'unit')}</b>`:''}</small></button>`).join('')}</div></section><article class="card low-stock-card"><div class="section-heading"><div><small>PERLU PERHATIAN</small><h2>Stok menipis <span>${known.length?low.length:'—'}</span></h2></div><button class="text-action" data-action="view-low-stock">Lihat stok rendah</button></div><p class="threshold-note">Penanda saat ini: stok di bawah 10 unit</p>${known.length?(low.length?`<div class="low-stock-list">${low.slice(0,4).map(p=>`<button class="low-stock-row" data-action="edit-product" data-id="${esc(p.sku)}"><span class="low-stock-mark"></span><span><strong>${esc(p.name)}</strong><small>${esc(p.sku)} · ${esc(p.category)}</small></span><b>${p.stock} ${esc(p.uom)}</b></button>`).join('')}</div>`:'<div class="chart-empty">Tidak ada SKU di bawah ambang 10 unit.</div>'):'<div class="chart-empty">Hasil stok rendah muncul setelah opname awal.</div>'}</article></div><article class="card sales-card"><div class="section-heading"><div><small>ANALITIK PENJUALAN</small><h2>Performa penjualan</h2></div><button class="text-action" data-page="sales">Laporan</button></div><div class="sales-switch"><span>Penjualan bersih</span><span>Unit terjual</span></div>${chart()}</article><article class="card transaction-card"><div class="section-heading"><div><small>AKTIVITAS GUDANG</small><h2>Transaksi terbaru</h2></div><button class="text-action" data-page="reports">Buka laporan</button></div>${table(['Nomor transaksi','Produk / aktivitas','Cabang','Jenis','Kuantitas','Tanggal','Status'],transactions.map(t=>`<tr><td><span class="sku">${esc(t.id)}</span></td><td><strong>${esc(t.product)}</strong></td><td>${esc(t.branch)}</td><td>${esc(t.type)}</td><td>${t.qty} unit</td><td>${date(t.date)}</td><td>${statusPill(t.status)}</td></tr>`),'Belum ada transaksi')}</article></section>`
   }
   function table(headers,rows,empty='Belum ada data untuk ditampilkan.',className=''){return `<div class="table-wrap"><table${className?' class="'+esc(className)+'"':''}><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${headers.length}"><div class="empty-state"><strong>${empty}</strong><span>Tambahkan data untuk mulai melacak aktivitas.</span></div></td></tr>`}</tbody></table></div>`}
-  function toolbar(extra=''){return `<div class="table-toolbar"><div class="toolbar-left"><div class="search"><svg class="table-search-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.6"></circle><path d="m10.2 10.2 3.1 3.1"></path></svg><input id="tableSearch" type="search" aria-label="Cari data" placeholder="Cari data..." value="${esc(query)}" /></div>${extra}</div><div class="toolbar-right"><button class="btn btn-light btn-small" data-action="export">Ekspor CSV</button></div></div>`}
+  function toolbar(extra=''){return `<div class="table-toolbar"><div class="toolbar-left"><div class="search"><svg class="table-search-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.6"></circle><path d="m10.2 10.2 3.1 3.1"></path></svg><input id="tableSearch" type="search" aria-label="Cari data" placeholder="Cari data..." value="${esc(query)}" /></div>${extra}</div><div class="toolbar-right"><button class="btn btn-light btn-small" data-action="export">Ekspor Excel</button></div></div>`}
   function recordSalesFromPo(po){
     data.sales ||= [];
     data.sales = data.sales.filter(s => s.sourcePo !== po.id);
@@ -250,10 +250,10 @@ function warehouse(){
   function products(){
     const rows=data.products.map(p=>`<tr><td><div class="product-name"><span class="product-thumbnail">${productPhoto(p.sku)}</span><div><strong>${esc(p.name)}</strong><div class="panel-subtitle">${esc(p.spec)}</div></div></div></td><td><span class="sku">${esc(p.sku)}</span>${p.priceConflict?` ${pill('SKU perlu diklarifikasi','amber')}`:''}</td><td>${esc(p.category)}${p.brand?' · '+esc(p.brand):''}</td><td>${p.hpp==null?'—':money(p.hpp)}</td><td>${p.srp==null||!p.priceReady?pill('Harga belum tersedia','amber'):money(p.srp)}</td><td>${p.margin==null?'—':p.margin+'%'}</td><td>${p.stock==null?'Belum diopname':Number(p.stock).toLocaleString('id-ID')+' '+esc(p.uom)}</td><td><button class="link-btn" data-action="edit-product" data-id="${esc(p.sku)}">Edit</button></td></tr>`);
     const noPrice=data.products.filter(p=>!p.priceReady&&!p.priceConflict).length,conflicts=data.products.filter(p=>p.priceConflict).length;
-    return `${heading('Master Produk','Katalog dari seluruh sheet master, dipasangkan dengan pricelist B2B Howell.',`<button class="btn btn-light" data-action="export">Ekspor data lengkap</button><button class="btn btn-primary" data-action="add-product">Tambah produk</button>`)}${importedExcelCatalog()}${importedB2BPriceList()}<article class="card table-card"><div class="panel-title">Produk operasional</div><div class="panel-subtitle">${data.products.length} SKU unik. Nilai harga dan stok mengikuti sumber yang tersedia; item tanpa harga atau SKU ganda tidak dapat dipakai untuk laporan penjualan.</div><div class="excel-source-note">Pembagian B2B: 65% Howell dan 35% Paperclip. ${noPrice} SKU belum memiliki SRP valid; ${conflicts} SKU memiliki varian berbeda pada sumber dan perlu klarifikasi sebelum dijual.</div>${toolbar(`<select class="filter-select" id="categoryFilter"><option>Semua kategori</option>${[...new Set(data.products.map(p=>p.category))].map(x=>`<option>${esc(x)}</option>`).join('')}</select>`)}${table(['Produk','SKU','Kategori','HPP+10%','SRP / HET','Porsi Paperclip','Stok pusat','Tindakan'],rows)}</article>`
+    return `${heading('Master Produk','Katalog dari seluruh sheet master, dipasangkan dengan pricelist B2B Howell.',`<button class="btn btn-light" data-action="export">Ekspor Excel</button><button class="btn btn-primary" data-action="add-product">Tambah produk</button>`)}${importedExcelCatalog()}${importedB2BPriceList()}<article class="card table-card"><div class="panel-title">Produk operasional</div><div class="panel-subtitle">${data.products.length} SKU unik. Nilai harga dan stok mengikuti sumber yang tersedia; item tanpa harga atau SKU ganda tidak dapat dipakai untuk laporan penjualan.</div><div class="excel-source-note">Pembagian B2B: 65% Howell dan 35% Paperclip. ${noPrice} SKU belum memiliki SRP valid; ${conflicts} SKU memiliki varian berbeda pada sumber dan perlu klarifikasi sebelum dijual.</div>${toolbar(`<select class="filter-select" id="categoryFilter"><option>Semua kategori</option>${[...new Set(data.products.map(p=>p.category))].map(x=>`<option>${esc(x)}</option>`).join('')}</select>`)}${table(['Produk','SKU','Kategori','HPP+10%','SRP / HET','Porsi Paperclip','Stok pusat','Tindakan'],rows)}</article>`
   }
-  function exportBranches(){const headers=['Kode cabang','Nama cabang','Jaringan','Wilayah','Alamat','Narahubung','Telepon','Email','Termin','Porsi Howell (%)','Porsi Paperclip (%)','Tanggal berlaku','Status kerja sama','Kapasitas rak'];const rows=data.stores.map(x=>[x.code,x.name,x.network,x.region,x.address,x.contact,x.phone,x.email,x.term,x.supplierShare,x.storeShare,x.effectiveDate,x.agreementStatus,x.capacity]);downloadExcelCsv('howell-cabang-paperclip-'+today+'.csv',[headers,...rows]);toast('Daftar cabang berhasil diekspor ke Excel.')}
-  function stores(){const branches=data.stores.filter(x=>!x.network||x.network.toLocaleLowerCase('id-ID')==='paperclip').sort((a,b)=>a.name.localeCompare(b.name,'id-ID'));const rows=branches.map(x=>`<div class="paperclip-branch-row" data-branch-search="${esc((x.code+' '+x.name+' '+(x.region||'')).toLocaleLowerCase('id-ID'))}"><span class="paperclip-branch-code">${esc(x.code)}</span><span class="paperclip-branch-info"><strong>${esc(x.name)}</strong><small>${esc(x.region||'Wilayah belum tersedia')}</small></span><span class="paperclip-branch-status">${pill(x.agreementStatus||'Perlu perjanjian',x.agreementStatus==='Aktif'?'green':'gray')}</span><button type="button" class="btn btn-light btn-small" data-action="edit-store" data-id="${esc(x.code)}">Edit</button></div>`).join('');return `${heading('Cabang Retail','Kelola jaringan toko konsinyasi yang menerima produk Howell.',`<button class="btn btn-light" data-action="export-branches">Ekspor</button><button class="btn btn-primary" data-action="add-store">Tambah cabang</button>`)}<section class="paperclip-network"><button type="button" id="paperclipBranchesToggle" class="card paperclip-selector" data-action="open-paperclip-branches" aria-expanded="false" aria-controls="paperclipBranchesPanel"><span class="paperclip-selector-copy"><small class="eyebrow">JARINGAN RETAIL</small><strong>Paperclip</strong><span class="panel-subtitle">Daftar cabang Paperclip yang terdaftar</span></span><span class="paperclip-selector-trailing"><span class="pill gray">${branches.length} cabang</span><span class="paperclip-chevron" aria-hidden="true">⌄</span></span></button><div id="paperclipBranchesPanel" class="paperclip-branches-panel" aria-hidden="true" inert><div class="paperclip-branches-inner"><div class="paperclip-branches-tools"><label><span class="sr-only">Cari cabang Paperclip</span><input id="paperclipBranchSearch" type="search" placeholder="Cari nama cabang, kode, atau wilayah…"></label><span>${branches.length} cabang</span></div><div class="paperclip-branches-list" id="paperclipBranchList">${rows||'<p class="paperclip-empty">Belum ada cabang Paperclip.</p>'}</div><div class="paperclip-branches-footer">Cabang ${branches.length} · Kelola detail melalui tombol Edit.</div></div></div></section>`;}
+  function exportBranches(){const headers=['Kode cabang','Nama cabang','Jaringan','Wilayah','Alamat','Narahubung','Telepon','Email','Termin','Porsi Howell (%)','Porsi Paperclip (%)','Tanggal berlaku','Status kerja sama','Kapasitas rak'];const rows=data.stores.map(x=>[x.code,x.name,x.network,x.region,x.address,x.contact,x.phone,x.email,x.term,x.supplierShare,x.storeShare,x.effectiveDate,x.agreementStatus,x.capacity]);downloadExcelWorkbook('howell-cabang-paperclip-'+today+'.xlsx',[{name:'Cabang Retail',rows:[headers,...rows]}],[headers,...rows]);toast('Daftar cabang berhasil diekspor ke Excel.')}
+  function stores(){const branches=data.stores.filter(x=>!x.network||x.network.toLocaleLowerCase('id-ID')==='paperclip').sort((a,b)=>a.name.localeCompare(b.name,'id-ID'));const rows=branches.map(x=>`<div class="paperclip-branch-row" data-branch-search="${esc((x.code+' '+x.name+' '+(x.region||'')).toLocaleLowerCase('id-ID'))}"><span class="paperclip-branch-code">${esc(x.code)}</span><span class="paperclip-branch-info"><strong>${esc(x.name)}</strong><small>${esc(x.region||'Wilayah belum tersedia')}</small></span><span class="paperclip-branch-status">${pill(x.agreementStatus||'Perlu perjanjian',x.agreementStatus==='Aktif'?'green':'gray')}</span><button type="button" class="btn btn-light btn-small" data-action="edit-store" data-id="${esc(x.code)}">Edit</button></div>`).join('');return `${heading('Cabang Retail','Kelola jaringan toko konsinyasi yang menerima produk Howell.',`<button class="btn btn-light" data-action="export-branches">Ekspor Excel</button><button class="btn btn-primary" data-action="add-store">Tambah cabang</button>`)}<section class="paperclip-network"><button type="button" id="paperclipBranchesToggle" class="card paperclip-selector" data-action="open-paperclip-branches" aria-expanded="false" aria-controls="paperclipBranchesPanel"><span class="paperclip-selector-copy"><small class="eyebrow">JARINGAN RETAIL</small><strong>Paperclip</strong><span class="panel-subtitle">Daftar cabang Paperclip yang terdaftar</span></span><span class="paperclip-selector-trailing"><span class="pill gray">${branches.length} cabang</span><span class="paperclip-chevron" aria-hidden="true">⌄</span></span></button><div id="paperclipBranchesPanel" class="paperclip-branches-panel" aria-hidden="true" inert><div class="paperclip-branches-inner"><div class="paperclip-branches-tools"><label><span class="sr-only">Cari cabang Paperclip</span><input id="paperclipBranchSearch" type="search" placeholder="Cari nama cabang, kode, atau wilayah…"></label><span>${branches.length} cabang</span></div><div class="paperclip-branches-list" id="paperclipBranchList">${rows||'<p class="paperclip-empty">Belum ada cabang Paperclip.</p>'}</div><div class="paperclip-branches-footer">Cabang ${branches.length} · Kelola detail melalui tombol Edit.</div></div></div></section>`;}
   function closePaperclipPopup(){const panel=document.querySelector('#paperclipBranchesPanel'),button=document.querySelector('#paperclipBranchesToggle');if(!panel||!button)return;panel.classList.remove('is-open');panel.setAttribute('aria-hidden','true');panel.setAttribute('inert','');button.setAttribute('aria-expanded','false')}
   function openPaperclipBranches(){const panel=document.querySelector('#paperclipBranchesPanel'),button=document.querySelector('#paperclipBranchesToggle');if(!panel||!button)return;if(panel.classList.contains('is-open')){closePaperclipPopup();return}panel.removeAttribute('inert');panel.setAttribute('aria-hidden','false');panel.classList.add('is-open');button.setAttribute('aria-expanded','true')}
   function openPurchaseOrderEditor(existing=null,{readyForDispatch=false,warehouseMode=false}={}){if(existing&&((existing.dispatches||[]).length||(existing.items||[]).some(item=>dispatchedQty(existing,item)>0)||['Dikirim','In Transit','Diterima','Received'].includes(existing.status)))return toast('PO yang sudah memiliki Surat Jalan tidak dapat diedit. Hapus PO jika ingin membatalkan pengiriman dan memulihkan stok.');const products=data.products,storesList=data.stores.filter(x=>x.network==='Paperclip'||!x.network),nextId=()=>`PO-HWL-${today.replaceAll('-','')}-${String(data.shipments.filter(x=>(x.id||'').includes(today.replaceAll('-',''))).length+1).padStart(3,'0')}`;let serial=0;openModal(existing?'Edit Purchase Order':'Buat Purchase Order',[],values=>{const unfinished=[...$('#poLineBody').querySelectorAll('[data-po-line]')].find(row=>row.querySelector('[data-product-search]').value.trim()&&!row.querySelector('[data-po-sku]').value);if(unfinished){toast('Pilih produk dari hasil pencarian atau hapus baris yang belum selesai.');unfinished.querySelector('[data-product-search]').focus();return}const lines=[...$('#poLineBody').querySelectorAll('[data-po-line]')].map(row=>({sku:values['poSku'+row.dataset.poLine],qty:Number(values['poQty'+row.dataset.poLine])})).filter(x=>x.sku);const id=String(values.poNumber||'').trim(),store=data.stores.find(x=>x.code===values.poStore);if(!id||data.shipments.some(x=>x.id.toLowerCase()===id.toLowerCase()&&x.id!==existing?.id))return toast('Nomor PO wajib dan harus unik.');if(!store)return toast('Pilih cabang retail terlebih dahulu.');if(!String(values.poResponsible||'').trim())return toast('Nama penanggung jawab wajib diisi.');if(!values.poDate)return toast('Tanggal Purchase Order wajib diisi.');if(!lines.length||lines.some(x=>!x.sku||!Number.isSafeInteger(x.qty)||x.qty<1))return toast('Pilih produk dan isi kuantitas minimal satu untuk setiap baris.');if(new Set(lines.map(x=>x.sku)).size!==lines.length)return toast('Produk duplikat. Gunakan tombol salin untuk menduplikasi baris lalu pilih SKU berbeda.');const items=lines.map(line=>{const p=data.products.find(x=>x.sku===line.sku);return{sku:p.sku,qty:line.qty,orderedQty:line.qty,dispatchedQty:0,receivedQty:0,barcodeSnapshot:p.barcode||'',hppSnapshot:Number(p.hpp),srpSnapshot:Number(p.srp),storeShareSnapshot:Number(store.storeShare??35)}});const row={...(existing||{}),id,date:values.poDate,eta:values.poDate,store:store.code,customerName:String(values.poCustomerName||'').trim()||store.name,shipTo:values.poAddress.trim(),responsible:values.poResponsible.trim(),items,status:readyForDispatch?'Disetujui':'Draft',recipient:'',grn:'',stockDispatched:false,dispatches:existing?.dispatches||[],createdAt:existing?.createdAt||new Date().toISOString()};if(existing&&!readyForDispatch){delete row.approvedAt;delete row.warehouseReviewedAt;delete row.warehouseReviewNote;}if(existing){data.shipments[data.shipments.findIndex(x=>x.id===existing.id)]=row;recordAudit(readyForDispatch?'approve':'update','purchase-order',id,{status:row.status,store:row.store,items:items.map(x=>({sku:x.sku,qty:x.qty})),shipTo:row.shipTo})}else{data.shipments.unshift(row);recordAudit('create','purchase-order',id,{store:row.store,items:items.map(x=>({sku:x.sku,qty:x.qty})),shipTo:row.shipTo})}data.demo=false;save();closeModal();render();toast(readyForDispatch?'PO diperbarui dan siap dibuatkan surat jalan':existing?'Purchase Order diperbarui':'Purchase Order tersimpan sebagai draft')},{poNumber:existing?.id||nextId(),poDate:existing?.date||today,poStore:existing?.store||storesList[0]?.code||'',poResponsible:existing?.responsible||'Howell Cable',poAddress:existing?.shipTo||''});$('#modalBackdrop').classList.add('po-editor-backdrop');if(!existing&&!readyForDispatch){$('#modalBackdrop').classList.add('po-create-workspace');$('#modalClose').textContent='Kembali ke Purchase Order';$('#modalClose').setAttribute('aria-label','Kembali ke Purchase Order');$('#modalCancel').textContent='Batal';}$('#modalEyebrow').textContent=existing?'EDIT PURCHASE ORDER':'PURCHASE ORDER BARU';$('#modalTitle').textContent=existing?'Edit Purchase Order':'Buat Purchase Order';$('#modalSubmit').textContent=readyForDispatch?'Simpan & siapkan surat jalan':'Simpan PO';const branchOptions=storesList.map(x=>`<option value="${esc(x.code)}">${esc(x.name)} · ${esc(x.code)}</option>`).join('');$('#modalFields').innerHTML=`<div class="po-editor${warehouseMode?' warehouse-mode':''}"><div class="po-header-grid"><label>Nomor PO<input name="poNumber" id="poNumber" value="${esc(existing?.id||nextId())}" required></label><label>Tanggal PO<input type="date" name="poDate" id="poDate" value="${esc(existing?.date||today)}" required></label><label>Penanggung jawab<input name="poResponsible" id="poResponsible" value="${esc(existing?.responsible||'Howell Cable')}" required></label><label>Cabang retail / customer<select name="poStore" id="poStore" required>${branchOptions}</select></label><label>Nama perusahaan<input name="poCustomerName" id="poCustomerName" value="${esc(existing?.customerName||data.stores.find(x=>x.code===(existing?.store||storesList[0]?.code))?.name||'')}" required></label><label class="po-address-field">Ship to address<input name="poAddress" id="poAddress" value="${esc(existing?.shipTo||data.stores.find(x=>x.code===(existing?.store||storesList[0]?.code))?.address||'')}" placeholder="Alamat tujuan pengantaran"></label></div><div class="po-details-heading"><div><small>RINCIAN PURCHASE ORDER</small><h3>Produk dan kuantitas</h3></div><button type="button" class="btn btn-light btn-small" id="poAddLine">+ Tambah baris</button></div><div class="po-table-wrap"><table class="po-detail-table"><thead><tr><th>Action</th><th>No</th><th>Product</th><th>SKU</th>${warehouseMode?'':'<th>Harga / produk</th><th>Harga SRP</th>'}<th>Quantity</th>${warehouseMode?'':'<th>Total harga omzet</th><th>Margin toko</th>'}</tr></thead><tbody id="poLineBody"></tbody></table></div>${warehouseMode?'':'<div class="po-summary"><span><small>Total quantity</small><strong id="poTotalQty">0 unit</strong></span><span><small>Total harga omzet</small><strong id="poTotalOmzet">Rp 0</strong></span><span><small>Margin toko</small><strong id="poTotalMargin">Rp 0</strong></span></div>'}<p class="po-editor-note">${warehouseMode?'Detail harga dan margin tidak ditampilkan pada proses gudang. Surat jalan dibuat setelah PO disimpan.':'Harga dan margin diambil dari pricelist B2B yang tersedia. Jumlah stok gudang akan diperiksa saat barang disiapkan untuk surat jalan.'}</p></div>`;const body=$('#poLineBody');const refresh=()=>{let totalQty=0,totalOmzet=0,totalMargin=0;body.querySelectorAll('[data-po-line]').forEach((row,index)=>{row.querySelector('[data-po-no]').textContent=String(index+1);const sku=row.querySelector('[data-po-sku]').value,product=data.products.find(p=>p.sku===sku),sourceProduct=initial.products.find(p=>p.sku===sku),priceProduct=product?{...product,hpp:product.hpp==null||product.hpp===''||!Number.isFinite(Number(product.hpp))?sourceProduct?.hpp:Number(product.hpp),srp:product.srp==null||product.srp===''||!Number.isFinite(Number(product.srp))?sourceProduct?.srp:Number(product.srp)}:sourceProduct,qty=Number(row.querySelector('input[type=number]').value||0),share=Number(data.stores.find(s=>s.code===$('#poStore').value)?.storeShare??35),gross=priceProduct?Number(priceProduct.srp)*qty:0,margin=gross*share/100;row.querySelector('[data-po-sku-label]').textContent=product?.sku||'—';const hppCell=row.querySelector('[data-po-hpp]'),srpCell=row.querySelector('[data-po-srp]'),grossCell=row.querySelector('[data-po-gross]'),marginCell=row.querySelector('[data-po-margin]');if(hppCell)hppCell.textContent=priceProduct?money(priceProduct.hpp):'—';if(srpCell)srpCell.textContent=priceProduct?money(priceProduct.srp):'—';if(grossCell)grossCell.textContent=priceProduct?money(gross):'—';if(marginCell)marginCell.textContent=priceProduct?`${share}% · ${money(margin)}`:'—';totalQty+=qty;totalOmzet+=gross;totalMargin+=margin});const totalQtyEl=$('#poTotalQty'),totalOmzetEl=$('#poTotalOmzet'),totalMarginEl=$('#poTotalMargin');if(totalQtyEl)totalQtyEl.textContent=totalQty.toLocaleString('id-ID')+' unit';if(totalOmzetEl)totalOmzetEl.textContent=money(totalOmzet);if(totalMarginEl)totalMarginEl.textContent=money(totalMargin)};const productOptionsFor=(row,search=row?.querySelector('[data-product-search]'))=>{const id=search?.getAttribute('aria-controls');return(id&&document.getElementById(id))||row?.querySelector('[data-product-options]')};const setProduct=(row,sku)=>{if(!row)return;const product=products.find(p=>p.sku===sku),search=row.querySelector('[data-product-search]'),value=row.querySelector('[data-po-sku]'),list=productOptionsFor(row,search);value.value=product?.sku||'';search.value=product?`${product.name} · ${product.sku}`:'';list.style.display='none';list.removeAttribute('data-portaled');row.querySelector('.po-product-picker').append(list);search.setAttribute('aria-expanded','false');refresh()};const showProductOptions=(row,query='')=>{const search=row?.querySelector('[data-product-search]'),list=productOptionsFor(row,search);if(!search||!list)return;const term=String(query??'').trim().toLocaleLowerCase('id-ID'),tokens=term.split(/\s+/).filter(Boolean),matches=products.filter(p=>{const haystack=[p.sku,p.name,p.barcode,p.category,p.spec].filter(Boolean).join(' ').toLocaleLowerCase('id-ID');return tokens.every(token=>haystack.includes(token))});list._searchOwner=search;list.innerHTML=matches.length?matches.map(p=>`<button type="button" class="po-product-option" role="option" data-product-sku="${esc(p.sku)}"><span>${esc(p.name)}</span><small>${esc(p.sku)}</small></button>`).join(''):'<span class="po-product-empty">Produk tidak ditemukan.</span>';if(list.parentElement!==document.body){document.body.append(list);list.setAttribute('data-portaled','true')}const rect=search.getBoundingClientRect(),viewportWidth=document.documentElement.clientWidth||window.innerWidth,viewportHeight=window.innerHeight,margin=12,gap=6,maxAllowedHeight=Math.max(0,Math.min(260,viewportHeight-margin*2)),width=Math.max(0,Math.min(Math.max(rect.width,300),viewportWidth-margin*2)),left=Math.max(margin,Math.min(rect.left,viewportWidth-width-margin)),availableBelow=Math.max(0,viewportHeight-rect.bottom-gap-margin),availableAbove=Math.max(0,rect.top-gap-margin),openAbove=availableBelow<Math.min(180,maxAllowedHeight)&&availableAbove>availableBelow,maxHeight=Math.min(maxAllowedHeight,openAbove?availableAbove:availableBelow),top=openAbove?rect.top-gap-maxHeight:rect.bottom+gap;list.style.left=`${left}px`;list.style.top=`${top}px`;list.style.width=`${width}px`;list.style.setProperty('max-height',String(maxHeight)+'px','important');list.style.display='block';search.setAttribute('aria-expanded','true')};const addLine=(sku='',qty=1)=>{const key=String(serial++),tr=document.createElement('tr');tr.dataset.poLine=key;tr.innerHTML=`<td><div class="po-row-actions"><button type="button" data-row-action="add" title="Tambah baris">Tambah</button><button type="button" data-row-action="copy" title="Salin baris">Salin</button><button type="button" data-row-action="delete" title="Hapus baris">Hapus</button></div></td><td data-po-no></td><td><div class="po-product-picker"><div class="po-product-search-control"><input type="search" data-product-search autocomplete="off" placeholder="Cari nama produk atau SKU…" aria-label="Cari produk berdasarkan nama atau SKU" aria-autocomplete="list" aria-expanded="false" aria-controls="poProductOptions${key}"><button type="button" class="po-product-search-button" data-product-search-action aria-label="Cari produk">Cari</button></div><input type="hidden" name="poSku${key}" data-po-sku><div class="po-product-options" id="poProductOptions${key}" data-product-options role="listbox" style="display:none"></div></div></td><td data-po-sku-label>—</td>${warehouseMode?'':'<td data-po-hpp>—</td><td data-po-srp>—</td>'}<td><input type="number" name="poQty${key}" min="1" step="1" value="${qty}" required></td>${warehouseMode?'':'<td data-po-gross>—</td><td data-po-margin>—</td>'}`;body.append(tr);const search=tr.querySelector('[data-product-search]'),searchButton=tr.querySelector('[data-product-search-action]');searchButton.addEventListener('mousedown',e=>e.preventDefault());searchButton.addEventListener('click',()=>showProductOptions(tr,search.value));search.addEventListener('focus',()=>showProductOptions(tr,search.value===`${products.find(p=>p.sku===tr.querySelector('[data-po-sku]').value)?.name} · ${tr.querySelector('[data-po-sku]').value}`?'':search.value));search.addEventListener('input',()=>{tr.querySelector('[data-po-sku]').value='';refresh();showProductOptions(tr,search.value)});tr.querySelector('[data-product-options]').addEventListener('mousedown',e=>{if(e.target.closest('[data-product-sku]'))e.preventDefault()});tr.querySelector('[data-product-options]').addEventListener('click',e=>{const option=e.target.closest('[data-product-sku]');if(option)setProduct(tr,option.dataset.productSku)});search.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();const list=productOptionsFor(tr,search);if(list){list.style.display='none';if(list.dataset.portaled){tr.querySelector('.po-product-picker').append(list);list.removeAttribute('data-portaled')}}search.setAttribute('aria-expanded','false');}else if(e.key==='Enter'){e.preventDefault();e.stopPropagation();showProductOptions(tr,search.value)}});tr.querySelector('input[type=number]').addEventListener('input',refresh);if(sku)setProduct(tr,sku);refresh()};body.addEventListener('click',e=>{const option=e.target.closest('[data-product-sku]');if(option){const row=option.closest('[data-po-line]');if(row)setProduct(row,option.dataset.productSku);return}const button=e.target.closest('[data-row-action]');if(!button)return;e.preventDefault();e.stopPropagation();const row=button.closest('[data-po-line]');if(button.dataset.rowAction==='copy')addLine(row.querySelector('[data-po-sku]').value,row.querySelector('input[type=number]').value);else if(button.dataset.rowAction==='add')addLine();else{productOptionsFor(row)?.remove();row.remove();if(!body.querySelector('[data-po-line]'))addLine();refresh()}});$('#poAddLine').onclick=()=>addLine();$('#poStore').value=existing?.store||storesList[0]?.code||'';const syncBranch=(forceAddress=false)=>{const branch=data.stores.find(x=>x.code===$('#poStore').value);if(forceAddress||!$('#poCustomerName').value)$('#poCustomerName').value=branch?.name||'';if(forceAddress||!existing||!$('#poAddress').value)$('#poAddress').value=branch?.address||'';refresh()};$('#poStore').addEventListener('change',()=>syncBranch(true));body.addEventListener('focusout',e=>{const row=e.target.closest('[data-po-line]');if(!row)return;setTimeout(()=>{if(!row.contains(document.activeElement)){const search=row.querySelector('[data-product-search]'),list=productOptionsFor(row,search);if(list){list.style.display='none';if(list.dataset.portaled){row.querySelector('.po-product-picker').append(list);list.removeAttribute('data-portaled')}}search.setAttribute('aria-expanded','false')}},120)});syncBranch();if(existing?.items?.length)existing.items.forEach(x=>addLine(x.sku,orderedQty(x)));else addLine();const lineWrap=$(".po-table-wrap");if(lineWrap)lineWrap.scrollLeft=0}
@@ -369,7 +369,7 @@ function warehouse(){
       const details=po.items.map(item=>{const product=data.products.find(x=>x.sku===item.sku);return '<div class="po-product-summary"><span><strong>'+esc(product?.name||item.sku)+'</strong><small>'+esc(item.sku)+'</small></span><span>'+orderedQty(item)+' unit<small>'+money(Number(item.srpSnapshot||0)*orderedQty(item))+'</small></span></div>'}).join('');
       return '<tr><td><strong>'+esc(po.id)+'</strong><div class="panel-subtitle">'+esc(po.responsible||'')+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong><div class="panel-subtitle">'+date(po.date)+'</div></td><td>'+esc(po.shipTo||'—')+'</td><td><div class="po-product-list">'+details+'</div><div class="panel-subtitle">'+qty.toLocaleString('id-ID')+' unit · omzet SRP '+money(gross)+'</div></td><td>'+statusPill(po.status)+'</td><td>'+actions+'</td></tr>'
     });
-    return heading('Purchase Order','Kelola PO cabang, pengeluaran stok gudang, dan surat jalan B2B.', '<button class="btn btn-light" data-action="export">Ekspor</button><button class="btn btn-primary" data-action="add-purchase-order">Buat Purchase Order</button>')+demoBanner()+'<div class="section-grid"><article class="card mini-card"><small>Purchase Order</small><strong>'+data.shipments.length+'</strong><span>Seluruh PO tersimpan</span></article><article class="card mini-card"><small>Menunggu tindakan</small><strong>'+data.shipments.filter(x=>['Draft','Menunggu verifikasi','Disetujui','Partial','Tidak disetujui','Ditangguhkan'].includes(x.status)).length+'</strong><span>Persetujuan, penangguhan, atau sisa kirim</span></article><article class="card mini-card"><small>Unit keluar gudang</small><strong>'+dispatchedTotal.toLocaleString('id-ID')+'</strong><span>Jumlah aktual pada surat jalan</span></article></div><article class="card table-card">'+toolbar('<select class="filter-select" id="statusFilter"><option>Semua status</option><option>Draft</option><option>Menunggu verifikasi</option><option>Disetujui</option><option>Dikirim</option><option>Partial</option><option>Received</option><option>Rejected</option></select>')+table(['Nomor PO / penanggung jawab','Customer / tanggal PO','Ship to address','Rincian Purchase Order','Status','Tindakan'],rows,'Belum ada Purchase Order. Buat PO untuk memulai proses gudang.','po-list-table')+'</article>'
+    return heading('Purchase Order','Kelola PO cabang, pengeluaran stok gudang, dan surat jalan B2B.', '<button class="btn btn-light" data-action="export">Ekspor Excel</button><button class="btn btn-primary" data-action="add-purchase-order">Buat Purchase Order</button>')+demoBanner()+'<div class="section-grid"><article class="card mini-card"><small>Purchase Order</small><strong>'+data.shipments.length+'</strong><span>Seluruh PO tersimpan</span></article><article class="card mini-card"><small>Menunggu tindakan</small><strong>'+data.shipments.filter(x=>['Draft','Menunggu verifikasi','Disetujui','Partial','Tidak disetujui','Ditangguhkan'].includes(x.status)).length+'</strong><span>Persetujuan, penangguhan, atau sisa kirim</span></article><article class="card mini-card"><small>Unit keluar gudang</small><strong>'+dispatchedTotal.toLocaleString('id-ID')+'</strong><span>Jumlah aktual pada surat jalan</span></article></div><article class="card table-card">'+toolbar('<select class="filter-select" id="statusFilter"><option>Semua status</option><option>Draft</option><option>Menunggu verifikasi</option><option>Disetujui</option><option>Dikirim</option><option>Partial</option><option>Received</option><option>Rejected</option></select>')+table(['Nomor PO / penanggung jawab','Customer / tanggal PO','Ship to address','Rincian Purchase Order','Status','Tindakan'],rows,'Belum ada Purchase Order. Buat PO untuk memulai proses gudang.','po-list-table')+'</article>'
   }
         function sales(){
     const isApproved=s=>!s.status||s.status==='Disetujui'||s.status==='Selesai terjual';
@@ -410,7 +410,7 @@ function warehouse(){
       return `<tr><td><span class="sku">${esc(x.id)}</span></td><td><strong>${esc(storeName(x.store))}</strong></td><td>${date(x.start)}${x.end&&x.end!==x.start?' – '+date(x.end):''}</td><td>${esc(prodName(x.sku))}<div class="panel-subtitle">${esc(x.sku)}</div></td><td>${unitDetails}</td><td>${money(x.gross)}</td><td>${money(x.discount)}</td><td><strong>${money(x.net)}</strong></td><td>${statusPill(x.status||'Disetujui')}</td><td>${action}</td></tr>`;
     });
 
-    return heading('Riwayat','Riwayat surat jalan selesai terjual dari gudang serta rekonsiliasi fisik per cabang dan SKU.','<button class="btn btn-light" data-action="export">Ekspor CSV</button><button class="btn btn-primary" data-action="add-sale">Catat rekonsiliasi</button>')+
+    return heading('Riwayat','Riwayat surat jalan selesai terjual dari gudang serta rekonsiliasi fisik per cabang dan SKU.','<button class="btn btn-light" data-action="export">Ekspor Excel</button><button class="btn btn-primary" data-action="add-sale">Catat rekonsiliasi</button>')+
       demoBanner()+
       '<div class="section-grid warehouse-kpis">'+
         '<article class="card mini-card"><small>Omset bersih tercatat</small><strong>'+money(total)+'</strong><span>Rekonsiliasi tersimpan</span></article>'+
@@ -639,78 +639,166 @@ function warehouse(){
   function toast(msg){let t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),2600)}
   function downloadRecovery(){const raw=localStorage.getItem(`${KEY}-recovery-latest`);if(!raw)return toast('Tidak ada cadangan pemulihan lokal.');try{const blob=new Blob([raw],{type:'application/json'}),link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=`howell-recovery-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);toast('Cadangan konflik diunduh.')}catch(error){toast(error.message)}}
   
-  function downloadExcelCsv(filename, rows){
-    const escapeCell = (val) => {
-      if (val === null || val === undefined) return '""';
-      const s = String(val).trim();
-      return '"' + s.replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
+  function cleanExcelVal(val) {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'number') return val;
+    let s = String(val).trim();
+    return s.replace(/[\u2014\u2013\u2012\u2015]/g, '-')
+            .replace(/[\u2022\u2023\u25E6\u2043\u2219]/g, '-')
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/[\u201C\u201D]/g, '"')
+            .replace(/[\u00A0]/g, ' ')
+            .replace(/â‚¬"/g, '-');
+  }
+
+  function downloadExcelWorkbook(filename, sheets, fallbackCsvRows) {
+    const sanitizeVal = cleanExcelVal;
+
+    // Use XLSX if available for real multi-sheet .xlsx
+    if (typeof window !== 'undefined' && window.XLSX) {
+      try {
+        const XLSX = window.XLSX;
+        const wb = XLSX.utils.book_new();
+        const sheetList = Array.isArray(sheets) ? sheets : [sheets];
+
+        sheetList.forEach(sheetDef => {
+          const sheetName = (sheetDef.name || 'Sheet1').slice(0, 31).replace(/[\\\/?*:\[\]]/g, ' ');
+          const cleanRows = (sheetDef.rows || []).map(r => r.map(sanitizeVal));
+          const ws = XLSX.utils.aoa_to_sheet(cleanRows);
+
+          // Calculate auto column widths
+          const colWidths = [];
+          cleanRows.forEach(row => {
+            row.forEach((cell, cIdx) => {
+              const len = cell != null ? String(cell).length : 0;
+              colWidths[cIdx] = Math.max(colWidths[cIdx] || 10, len + 4);
+            });
+          });
+          ws['!cols'] = colWidths.map(w => ({ wch: Math.min(Math.max(w, 12), 65) }));
+
+          XLSX.utils.book_append_sheet(wb, ws, sheetName);
+        });
+
+        const baseName = filename.replace(/\.(csv|xlsx)$/i, '');
+        XLSX.writeFile(wb, baseName + '.xlsx');
+        return;
+      } catch (err) {
+        console.warn('XLSX export failed, using clean CSV fallback:', err);
+      }
+    }
+
+    // CSV Fallback
+    const rows = fallbackCsvRows || (Array.isArray(sheets) ? sheets[0]?.rows : sheets?.rows) || [];
+    const escapeCsvCell = (val) => {
+      const s = sanitizeVal(val);
+      if (typeof s === 'number') return s;
+      return '"' + String(s).replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
     };
-    const content = '\uFEFFsep=,\r\n' + rows.map(r => r.map(escapeCell).join(',')).join('\r\n');
+    const content = '\uFEFF' + rows.map(r => r.map(escapeCsvCell).join(',')).join('\r\n');
     const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = filename.endsWith('.csv') ? filename : (filename + '.csv');
+    a.download = filename.replace(/\.xlsx$/i, '') + '.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
+  function downloadExcelCsv(filename, rows, sheetName = 'Data') {
+    return downloadExcelWorkbook(filename, [{ name: sheetName, rows: rows }], rows);
+  }
+
   function exportReportsData(){
-    const rows = [];
-    rows.push(['LAPORAN INVENTORI & OPERASIONAL HOWELL', 'Tanggal Ekspor: ' + today]);
-    rows.push([]);
-    rows.push(['=== 1. PRODUK PER KATEGORI ===']);
-    rows.push(['Kategori', 'Jumlah SKU', 'Total Stok Pusat (Unit)']);
+    // Sheet 1: Produk per Kategori
+    const catRows = [
+      ['Kategori Produk', 'Jumlah SKU', 'Total Stok Pusat (Unit)']
+    ];
     const categories = [...new Set(data.products.map(x => x.category || 'Lainnya'))];
     categories.forEach(cat => {
       const prods = data.products.filter(x => (x.category || 'Lainnya') === cat);
       const known = prods.filter(hasStock);
       const qty = known.reduce((n, x) => n + Number(x.stock), 0);
-      rows.push([cat, prods.length, qty]);
+      catRows.push([cat, prods.length, qty]);
     });
-    rows.push([]);
-    rows.push(['=== 2. STATUS DISTRIBUSI PURCHASE ORDER ===']);
-    rows.push(['Status PO', 'Jumlah PO']);
+
+    // Sheet 2: Status Distribusi PO
+    const poRows = [
+      ['Status Purchase Order', 'Jumlah PO']
+    ];
     ['Draft', 'Menunggu verifikasi', 'Disetujui', 'Dikirim', 'Received', 'Partial', 'Rejected'].forEach(st => {
       const count = data.shipments.filter(x => x.status === st).length;
-      rows.push([st, count]);
+      poRows.push([st, count]);
     });
-    rows.push([]);
-    rows.push(['=== 3. STOK KONSINYASI PER CABANG ===']);
-    rows.push(['Cabang', 'Kode SKU', 'Nama Produk', 'Stok Sistem', 'Fisik Opname', 'Selisih (Shrinkage)']);
+
+    // Sheet 3: Stok Cabang Konsinyasi
+    const stockRows = [
+      ['Cabang Retail', 'Kode SKU', 'Nama Produk', 'Stok Sistem (Unit)', 'Fisik Opname (Unit)', 'Selisih / Shrinkage (Unit)']
+    ];
     data.branchStock.forEach(x => {
       const system = branchBalance(x);
       const delta = x.lastShrinkage ?? (x.physical == null ? null : Number(x.physical) - system);
-      rows.push([
+      stockRows.push([
         storeName(x.store),
         x.sku,
         prodName(x.sku),
-        system,
-        x.physical == null ? '—' : x.physical,
-        delta == null ? '—' : (delta > 0 ? ('+' + delta) : delta)
+        Number(system || 0),
+        x.physical == null ? '-' : Number(x.physical),
+        delta == null ? '-' : Number(delta)
       ]);
     });
-    rows.push([]);
-    rows.push(['=== 4. PENJUALAN PER CABANG ===']);
-    rows.push(['Cabang', 'Total Unit Terjual', 'Penjualan Bersih (Rp)']);
+
+    // Sheet 4: Penjualan per Cabang
+    const salesRows = [
+      ['Cabang Retail', 'Total Unit Terjual', 'Penjualan Bersih (Rp)']
+    ];
     const stores = [...new Set(data.sales.map(x => x.store))];
     stores.forEach(st => {
       const sRows = data.sales.filter(x => x.store === st && (!x.status || x.status === 'Disetujui'));
       const u = sRows.reduce((n, x) => n + Number(x.qty || 0), 0);
       const net = sRows.reduce((n, x) => n + Number(x.net || 0), 0);
-      rows.push([storeName(st), u, net]);
+      salesRows.push([storeName(st), u, net]);
     });
-    rows.push([]);
-    rows.push(['=== 5. STATUS REKONSILIASI & INVOICE ===']);
-    rows.push(['Status Invoice', 'Jumlah Invoice', 'Sisa Tagihan (Rp)']);
+
+    // Sheet 5: Status Tagihan & Invoice
+    const invRows = [
+      ['Status Invoice', 'Jumlah Invoice', 'Sisa Tagihan / Payout (Rp)']
+    ];
     ['Unpaid', 'Overdue', 'Partial', 'Paid'].forEach(st => {
       const invs = data.invoices.filter(x => invoiceStatus(x) === st);
       const due = invs.reduce((n, x) => n + Math.max(0, invoicePayout(x) - Number(x.paid || 0)), 0);
-      rows.push([st, invs.length, due]);
+      invRows.push([st, invs.length, due]);
     });
-    downloadExcelCsv('howell-laporan-' + today + '.csv', rows);
+
+    const sheets = [
+      { name: 'Produk per Kategori', rows: catRows },
+      { name: 'Status Distribusi PO', rows: poRows },
+      { name: 'Stok Cabang Konsinyasi', rows: stockRows },
+      { name: 'Penjualan Cabang', rows: salesRows },
+      { name: 'Status Tagihan Invoice', rows: invRows }
+    ];
+
+    const fallbackRows = [
+      ['LAPORAN INVENTORI & OPERASIONAL HOWELL', 'Tanggal: ' + today],
+      [],
+      ['=== 1. PRODUK PER KATEGORI ==='],
+      ...catRows,
+      [],
+      ['=== 2. STATUS DISTRIBUSI PO ==='],
+      ...poRows,
+      [],
+      ['=== 3. STOK CABANG KONSINYASI ==='],
+      ...stockRows,
+      [],
+      ['=== 4. PENJUALAN CABANG ==='],
+      ...salesRows,
+      [],
+      ['=== 5. STATUS TAGIHAN INVOICE ==='],
+      ...invRows
+    ];
+
+    downloadExcelWorkbook('howell-laporan-' + today + '.xlsx', sheets, fallbackRows);
     toast('Laporan lengkap berhasil diekspor ke Excel.');
   }
 
@@ -724,7 +812,7 @@ function warehouse(){
       const srp = Number(p.srp || 0);
       const howellShare = Math.round(srp * 0.65);
       const storeShare = Math.round(srp * 0.35);
-      const stockVal = p.stock == null ? 'Belum opname' : Number(p.stock);
+      const stockVal = p.stock == null ? '-' : Number(p.stock);
       const status = p.stock == null ? 'Belum opname' : p.stock < 10 ? 'Stok Menipis' : 'Tersedia';
       rows.push([
         p.sku || '',
@@ -742,7 +830,7 @@ function warehouse(){
         status
       ]);
     });
-    downloadExcelCsv('howell-master-produk-' + today + '.csv', rows);
+    downloadExcelWorkbook('howell-master-produk-' + today + '.xlsx', [{ name: 'Master Produk', rows: rows }], rows);
     toast('Master produk berhasil diekspor ke Excel.');
   }
 
@@ -752,64 +840,79 @@ function warehouse(){
     const allDispatches = orders.flatMap(po => dispatchesOf(po).map((dispatch, index) => ({ po, dispatch, index })))
       .sort((a, b) => (b.dispatch.date || '').localeCompare(a.dispatch.date || ''));
 
-    const rows = [];
-    rows.push(['=== RIWAYAT SURAT JALAN GUDANG ===']);
-    rows.push([
-      'Nomor Surat Jalan',
-      'Nomor PO',
-      'Tanggal Pengiriman',
-      'Customer / Cabang Tujuan',
-      'Total Quantity Keluar (Unit)',
-      'Status PO',
-      'Rincian Produk & SKU'
-    ]);
+    // Sheet 1: Riwayat Surat Jalan Gudang
+    const sjRows = [
+      [
+        'Nomor Surat Jalan',
+        'Nomor PO',
+        'Tanggal Pengiriman',
+        'Customer / Cabang Tujuan',
+        'Total Quantity Keluar (Unit)',
+        'Status PO',
+        'Rincian Produk & SKU'
+      ]
+    ];
 
     allDispatches.forEach(({ po, dispatch }) => {
       const items = Array.isArray(dispatch.items) ? dispatch.items : [];
       const totalQty = items.reduce((n, it) => n + Number(it.qty || 0), 0);
       const itemDetails = items.map(it => it.sku + ' (' + it.qty + ' unit)').join('; ');
-      rows.push([
-        dispatch.number || '—',
-        po.id || '—',
+      sjRows.push([
+        dispatch.number || '-',
+        po.id || '-',
         dispatch.date || '',
         po.customerName || storeName(po.store),
-        totalQty,
+        Number(totalQty),
         po.status || 'Dikirim',
         itemDetails
       ]);
     });
 
-    rows.push([]);
-    rows.push(['=== PURCHASE ORDER PROSES GUDANG ===']);
-    rows.push([
-      'Nomor PO',
-      'Customer / Cabang',
-      'Tanggal PO',
-      'Alamat Pengiriman',
-      'Total Qty Dipesan',
-      'Total Qty Keluar',
-      'Sisa Belum Keluar',
-      'Status PO'
-    ]);
+    // Sheet 2: Purchase Order Proses Gudang
+    const poRows = [
+      [
+        'Nomor PO',
+        'Customer / Cabang',
+        'Tanggal PO',
+        'Alamat Pengiriman',
+        'Total Qty Dipesan (Unit)',
+        'Total Qty Keluar (Unit)',
+        'Sisa Belum Keluar (Unit)',
+        'Status PO'
+      ]
+    ];
 
     orders.forEach(po => {
       const items = Array.isArray(po.items) ? po.items : [];
       const ordered = items.reduce((a, it) => a + orderedQty(it), 0);
       const dispatched = items.reduce((a, it) => a + dispatchedQty(po, it), 0);
       const remaining = Math.max(0, ordered - dispatched);
-      rows.push([
+      poRows.push([
         po.id || '',
         po.customerName || storeName(po.store),
         po.date || '',
         po.shipTo || '',
-        ordered,
-        dispatched,
-        remaining,
+        Number(ordered),
+        Number(dispatched),
+        Number(remaining),
         po.status || ''
       ]);
     });
 
-    downloadExcelCsv('howell-gudang-surat-jalan-' + today + '.csv', rows);
+    const sheets = [
+      { name: 'Surat Jalan Gudang', rows: sjRows },
+      { name: 'Purchase Order Gudang', rows: poRows }
+    ];
+
+    const fallbackRows = [
+      ['=== RIWAYAT SURAT JALAN GUDANG ==='],
+      ...sjRows,
+      [],
+      ['=== PURCHASE ORDER PROSES GUDANG ==='],
+      ...poRows
+    ];
+
+    downloadExcelWorkbook('howell-gudang-surat-jalan-' + today + '.xlsx', sheets, fallbackRows);
     toast('Data gudang berhasil diekspor ke Excel.');
   }
 
@@ -821,61 +924,63 @@ function warehouse(){
       .filter(x => isSoldPo(x.po))
       .sort((a, b) => (b.dispatch.date || '').localeCompare(a.dispatch.date || ''));
 
-    const rows = [];
-    rows.push(['=== RIWAYAT SURAT JALAN SELESAI TERJUAL ===']);
-    rows.push([
-      'Nomor Surat Jalan',
-      'Nomor PO',
-      'Tanggal',
-      'Customer / Cabang',
-      'Quantity Keluar (Unit)',
-      'Status'
-    ]);
+    // Sheet 1: Riwayat Surat Jalan Selesai Terjual
+    const sjRows = [
+      [
+        'Nomor Surat Jalan',
+        'Nomor PO',
+        'Tanggal',
+        'Customer / Cabang',
+        'Quantity Keluar (Unit)',
+        'Status'
+      ]
+    ];
 
     soldDispatches.forEach(({ po, dispatch }) => {
       const qty = (Array.isArray(dispatch.items) ? dispatch.items : []).reduce((n, it) => n + Number(it.qty || 0), 0);
-      rows.push([
-        dispatch.number || '—',
-        po.id || '—',
+      sjRows.push([
+        dispatch.number || '-',
+        po.id || '-',
         dispatch.date || '',
         po.customerName || storeName(po.store),
-        qty,
+        Number(qty),
         po.status || 'Selesai terjual'
       ]);
     });
 
-    rows.push([]);
-    rows.push(['=== REKONSILIASI PENJUALAN PER CABANG & SKU ===']);
-    rows.push([
-      'Nomor Rekonsiliasi',
-      'Cabang',
-      'Periode Mulai',
-      'Periode Selesai',
-      'Kode SKU',
-      'Nama Produk',
-      'Stok Awal',
-      'Stok Masuk',
-      'Fisik Akhir',
-      'Retur',
-      'Unit Terjual',
-      'Penjualan Kotor (Rp)',
-      'Diskon Retail (Rp)',
-      'Penjualan Bersih (Rp)',
-      'Status Rekonsiliasi'
-    ]);
+    // Sheet 2: Rekonsiliasi Penjualan per Cabang & SKU
+    const recRows = [
+      [
+        'Nomor Rekonsiliasi',
+        'Cabang',
+        'Periode Mulai',
+        'Periode Selesai',
+        'Kode SKU',
+        'Nama Produk',
+        'Stok Awal',
+        'Stok Masuk',
+        'Fisik Akhir',
+        'Retur',
+        'Unit Terjual',
+        'Penjualan Kotor (Rp)',
+        'Diskon Retail (Rp)',
+        'Penjualan Bersih (Rp)',
+        'Status Rekonsiliasi'
+      ]
+    ];
 
     data.sales.forEach(x => {
-      rows.push([
+      recRows.push([
         x.id || '',
         storeName(x.store),
         x.start || '',
         x.end || x.start || '',
         x.sku || '',
         prodName(x.sku),
-        x.openingSnapshot ?? '—',
-        x.incomingSnapshot ?? '—',
-        x.physicalSnapshot ?? '—',
-        x.returnSnapshot ?? '—',
+        x.openingSnapshot != null ? Number(x.openingSnapshot) : 0,
+        x.incomingSnapshot != null ? Number(x.incomingSnapshot) : 0,
+        x.physicalSnapshot != null ? Number(x.physicalSnapshot) : 0,
+        x.returnSnapshot != null ? Number(x.returnSnapshot) : 0,
         Number(x.qty || 0),
         Number(x.gross || 0),
         Number(x.discount || 0),
@@ -884,7 +989,20 @@ function warehouse(){
       ]);
     });
 
-    downloadExcelCsv('howell-riwayat-penjualan-' + today + '.csv', rows);
+    const sheets = [
+      { name: 'Surat Jalan Terjual', rows: sjRows },
+      { name: 'Rekonsiliasi SKU', rows: recRows }
+    ];
+
+    const fallbackRows = [
+      ['=== RIWAYAT SURAT JALAN SELESAI TERJUAL ==='],
+      ...sjRows,
+      [],
+      ['=== REKONSILIASI PENJUALAN PER CABANG & SKU ==='],
+      ...recRows
+    ];
+
+    downloadExcelWorkbook('howell-riwayat-penjualan-' + today + '.xlsx', sheets, fallbackRows);
     toast('Data riwayat berhasil diekspor ke Excel.');
   }
 
@@ -895,117 +1013,103 @@ function warehouse(){
     data.shipments.forEach(po => {
       const items = Array.isArray(po.items) ? po.items : [];
       const ordered = items.reduce((a, it) => a + orderedQty(it), 0);
-      const sent = items.reduce((a, it) => a + dispatchedQty(po, it), 0);
-      const itemDetails = items.map(it => it.sku + ' (' + orderedQty(it) + ' unit)').join('; ');
+      const dispatched = items.reduce((a, it) => a + dispatchedQty(po, it), 0);
+      const itemDetails = items.map(it => it.sku + ' (' + (it.qty || 0) + ' ordered)').join('; ');
       rows.push([
         po.id || '',
         po.customerName || storeName(po.store),
         po.date || '',
         po.eta || '',
         po.shipTo || '',
-        po.responsible || '',
+        po.pic || '',
         itemDetails,
-        ordered,
-        sent,
-        po.status || 'Draft'
+        Number(ordered),
+        Number(dispatched),
+        po.status || ''
       ]);
     });
-    downloadExcelCsv('howell-purchase-order-' + today + '.csv', rows);
+    downloadExcelWorkbook('howell-purchase-order-' + today + '.xlsx', [{ name: 'Purchase Order', rows: rows }], rows);
     toast('Data Purchase Order berhasil diekspor ke Excel.');
   }
 
   function exportInventoryData(){
-    const rows = [];
-    rows.push(['=== STOK GUDANG PUSAT ===']);
-    rows.push(['Kode SKU', 'Barcode', 'Nama Produk', 'Kategori', 'Stok Gudang Pusat (Unit)', 'Status Opname']);
+    const rows = [
+      ['Kode SKU', 'Barcode', 'Nama Produk', 'Kategori', 'Satuan', 'Stok Gudang Pusat (Unit)', 'Fisik Opname Terakhir', 'Selisih Opname', 'Status Stok']
+    ];
     data.products.forEach(p => {
+      const lastCount = (data.counts || []).find(c => c.sku === p.sku);
+      const stock = p.stock == null ? '-' : Number(p.stock);
+      const phys = lastCount?.physical == null ? '-' : Number(lastCount.physical);
+      const diff = (p.stock != null && lastCount?.physical != null) ? (Number(lastCount.physical) - Number(p.stock)) : '-';
+      const status = p.stock == null ? 'Belum opname' : p.stock < 10 ? 'Stok Menipis' : 'Tersedia';
       rows.push([
         p.sku || '',
         p.barcode || '',
         p.name || '',
         p.category || '',
-        p.stock == null ? 'Belum opname' : Number(p.stock),
-        p.stock == null ? 'Belum opname' : 'Sudah opname'
+        p.uom || 'Unit',
+        stock,
+        phys,
+        diff,
+        status
       ]);
     });
-    rows.push([]);
-    rows.push(['=== STOK KONSINYASI PER CABANG ===']);
-    rows.push(['Cabang', 'Kode Cabang', 'Kode SKU', 'Nama Produk', 'Saldo Awal', 'Barang Masuk', 'Terjual', 'Retur / Cacat', 'Stok Akhir Sistem', 'Fisik Opname', 'Selisih (Shrinkage)']);
-    data.branchStock.forEach(x => {
-      const system = branchBalance(x);
-      const delta = x.physical == null ? null : (x.lastShrinkage ?? (x.physical - system));
-      rows.push([
-        storeName(x.store),
-        x.store,
-        x.sku,
-        prodName(x.sku),
-        Number(x.opening || 0),
-        Number(x.incoming || 0),
-        Number(x.sold || 0),
-        Number(x.returns || 0),
-        system,
-        x.physical == null ? '—' : x.physical,
-        delta == null ? '—' : (delta > 0 ? ('+' + delta) : delta)
-      ]);
-    });
-    downloadExcelCsv('howell-stok-inventori-' + today + '.csv', rows);
+    downloadExcelWorkbook('howell-stok-inventori-' + today + '.xlsx', [{ name: 'Stok Inventori', rows: rows }], rows);
     toast('Data stok inventori berhasil diekspor ke Excel.');
   }
 
   function exportInvoicesData(){
     const rows = [
-      ['Nomor Tagihan', 'Cabang Retail', 'Periode Transaksi', 'Tanggal Tagihan', 'Jatuh Tempo', 'Penjualan Bersih (Rp)', 'Komisi Retail (%)', 'Komisi Retail (Rp)', 'Pembayaran Bersih ke Howell (Rp)', 'Status Tagihan', 'Pembayaran Masuk (Rp)', 'Keterangan']
+      ['Nomor Invoice', 'Cabang Retail', 'Periode Rekonsiliasi', 'Jatuh Tempo', 'Penjualan Kotor (Rp)', 'Bagi Hasil Retail (Rp)', 'Tagihan Bersih (Rp)', 'Jumlah Terbayar (Rp)', 'Sisa Payout (Rp)', 'Status Tagihan']
     ];
-    data.invoices.forEach(x => {
-      const payout = Math.round(x.netSales * (1 - x.margin / 100));
-      const retailComm = Math.round(x.netSales * (x.margin / 100));
-      const status = invoiceStatus(x);
-      const period = x.start ? (x.start + ' – ' + x.end) : '—';
+    data.invoices.forEach(inv => {
+      const gross = Number(inv.gross || 0);
+      const fee = Number(inv.fee || 0);
+      const net = invoicePayout(inv);
+      const paid = Number(inv.paid || 0);
+      const balance = Math.max(0, net - paid);
       rows.push([
-        x.id || '',
-        storeName(x.store),
-        period,
-        x.date || '',
-        x.due || '',
-        Number(x.netSales || 0),
-        Number(x.margin || 0),
-        retailComm,
-        payout,
-        status,
-        Number(x.paid || 0),
-        x.proof || (x.status === 'Paid' ? 'Lunas' : 'Belum lunas')
+        inv.id || '',
+        storeName(inv.store),
+        inv.period || '',
+        inv.due || '',
+        gross,
+        fee,
+        net,
+        paid,
+        balance,
+        invoiceStatus(inv)
       ]);
     });
-    downloadExcelCsv('howell-tagihan-invoice-' + today + '.csv', rows);
+    downloadExcelWorkbook('howell-tagihan-invoice-' + today + '.xlsx', [{ name: 'Tagihan & Invoice', rows: rows }], rows);
     toast('Data tagihan berhasil diekspor ke Excel.');
   }
 
   function exportReturnsData(){
     const rows = [
-      ['Nomor RMA', 'Tanggal Retur', 'Cabang Retail', 'Kode SKU', 'Nama Produk', 'Qty Diterima Gudang', 'Qty Diminta Retur', 'Alasan Retur', 'Kondisi Barang', 'Status Retur']
+      ['Nomor Retur (RMA)', 'Cabang Asal', 'Tanggal Retur', 'Kode SKU', 'Nama Produk', 'Jumlah Retur (Unit)', 'Alasan Retur', 'Status Retur']
     ];
-    data.returns.forEach(x => {
+    data.returns.forEach(ret => {
       rows.push([
-        x.id || '',
-        x.date || '',
-        storeName(x.store),
-        x.sku || '',
-        prodName(x.sku),
-        Number(x.receivedQty || 0),
-        Number(x.qty || 0),
-        x.reason || '',
-        x.condition || '',
-        x.status || 'Draft'
+        ret.id || '',
+        storeName(ret.store),
+        ret.date || '',
+        ret.sku || '',
+        prodName(ret.sku),
+        Number(ret.qty || 0),
+        ret.reason || 'Klaim rusak / tidak laku',
+        ret.status || 'Pending'
       ]);
     });
-    downloadExcelCsv('howell-retur-barang-' + today + '.csv', rows);
+    downloadExcelWorkbook('howell-retur-barang-' + today + '.xlsx', [{ name: 'Retur Barang', rows: rows }], rows);
     toast('Data retur barang berhasil diekspor ke Excel.');
   }
 
   function exportTableFallback(){
     const table = $('#pageContent table');
     if (!table) {
-      toast('Tidak ada tabel untuk diekspor.');
+      downloadExcelWorkbook('howell-' + current + '-' + today + '.xlsx', [{ name: current, rows: [['Data kosong']] }]);
+      toast('File ekspor berhasil dibuat.');
       return;
     }
     const rows = [];
@@ -1013,7 +1117,7 @@ function warehouse(){
       const cells = [...tr.cells].map(c => c.innerText.replace(/\r?\n/g, ' ').trim());
       rows.push(cells);
     });
-    downloadExcelCsv('howell-' + current + '-' + today + '.csv', rows);
+    downloadExcelWorkbook('howell-' + current + '-' + today + '.xlsx', [{ name: current, rows: rows }], rows);
     toast('Data tabel berhasil diekspor ke Excel.');
   }
 
@@ -1039,9 +1143,7 @@ function warehouse(){
     }
     if(current==='dashboard'){
       const rows = [
-        ['RINGKASAN OPERASIONAL HOWELL INVENTORY', 'Tanggal: ' + today],
-        [],
-        ['Indikator', 'Nilai'],
+        ['Indikator Operasional', 'Nilai'],
         ['Total SKU Produk', data.products.length],
         ['Total Cabang Retail', data.stores.length],
         ['Total Purchase Order', data.shipments.length],
@@ -1050,7 +1152,7 @@ function warehouse(){
         ['Total Tagihan Invoice', data.invoices.length],
         ['Total Retur Barang', data.returns.length]
       ];
-      downloadExcelCsv('howell-ringkasan-dashboard-' + today + '.csv', rows);
+      downloadExcelWorkbook('howell-ringkasan-dashboard-' + today + '.xlsx', [{ name: 'Ringkasan Operasional', rows: rows }], rows);
       toast('Ringkasan dashboard berhasil diekspor ke Excel.');
       return;
     }
@@ -1205,27 +1307,27 @@ function warehouse(){
     },initialValues);
   };
   function exportStockHistoryCsv(entries){
-    const headers=['Waktu','Produk','SKU','Saldo Sebelum','Saldo Sesudah','Perubahan','Petugas','Sumber'];
+    const headers=['Tanggal & Waktu','Nama Produk','Kode SKU','Saldo Sebelumnya','Saldo Sesudah','Perubahan Unit','Petugas','Keterangan Sumber'];
     const rows=[headers];
-    entries.forEach(entry=>{
+    (entries || []).forEach(entry=>{
       const product=data.products.find(p=>p.sku===entry.sku);
       const when=entry.at||entry.archivedAt||entry.date;
-      const formattedDate=when?new Date(when).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'}):'—';
+      const formattedDate=when?new Date(when).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'}):'-';
       const delta=entry.delta??(entry.previous==null?null:Number(entry.physical)-Number(entry.previous));
-      const deltaStr=delta==null?'—':(delta>0?('+' + delta):String(delta));
+      const deltaVal=delta==null?0:Number(delta);
       rows.push([
         formattedDate,
-        product?.name||entry.sku||'—',
-        entry.sku||'—',
-        entry.previous==null?'Saldo awal':Number(entry.previous),
+        product?.name||entry.sku||'-',
+        entry.sku||'-',
+        entry.previous==null?0:Number(entry.previous),
         entry.physical==null?0:Number(entry.physical),
-        deltaStr,
+        deltaVal,
         entry.actor||'Nama petugas belum tercatat',
         entry.source||'Belum dicatat'
       ]);
     });
-    downloadExcelCsv('riwayat-perubahan-stok-' + today + '.csv', rows);
-    toast('File ekspor riwayat perubahan stok berhasil dibuat.');
+    downloadExcelWorkbook('riwayat-perubahan-stok-'+today+'.xlsx',[{name:'Riwayat Perubahan Stok',rows}],rows);
+    toast('Riwayat perubahan stok berhasil diekspor ke Excel.');
   }
 
   function renderStockHistoryPanel(){
@@ -1335,7 +1437,7 @@ function warehouse(){
           <option value="all"${stockHistoryLimit==='all'?' selected':''}>Semua data (${allEntries.length.toLocaleString('id-ID')})</option>
         </select>
         <button type="button" class="btn btn-light btn-small" id="stockHistoryToggleAll">${isAll?'Persempit ke 10':`Lihat semua (${allEntries.length.toLocaleString('id-ID')})`}</button>
-        <button type="button" class="btn btn-light btn-small" id="stockHistoryExport" title="Ekspor riwayat perubahan stok ke CSV">Ekspor CSV</button>
+        <button type="button" class="btn btn-light btn-small" id="stockHistoryExport" title="Ekspor riwayat perubahan stok ke Excel">Ekspor Excel</button>
       </div>
     </div>
     <div class="table-wrap stock-history-wrap">
