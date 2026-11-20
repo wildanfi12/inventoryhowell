@@ -29,7 +29,7 @@
     const importedProducts=source.products.map(src=>{const old=(legacy.products||[]).find(x=>x.sku===src.sku),count=(legacy.counts||[]).find(x=>x.sku===src.sku);return{...src,barcode:old?.barcode||src.barcode,brand:old?.brand||src.brand,stock:count?.physical??(legacy.seedVersion>=2&&old?.stock!=null?old.stock:null),stockSource:old?.stockSource||count?.source||null}});const normalizedExtraStores=extraStores.map(x=>({...x,term:x.term||'Bulanan',supplierShare:x.supplierShare??65,storeShare:x.storeShare??35,effectiveDate:x.effectiveDate||'',agreementStatus:x.agreementStatus||'Perlu perjanjian'}));const importedStores=source.paperclipBranches.map(src=>{const old=(legacy.stores||[]).find(x=>x.code===src.code);return old?{...src,...old,code:src.code,network:old.network||src.network,region:old.region||src.region,term:old.term||src.term,supplierShare:old.supplierShare??src.supplierShare,storeShare:old.storeShare??src.storeShare,effectiveDate:old.effectiveDate||'',agreementStatus:old.agreementStatus||'Perlu perjanjian'}:src});data={...data,products:[...importedProducts,...extraProducts],stores:[...importedStores,...normalizedExtraStores],shipments,sales:sales.map(x=>({...x,status:x.status||'Disetujui'})),invoices,returns,branchStock:branchStock.filter(x=>data.stores.some(y=>y.code===x.store)||keepStores.some(y=>y.code===x.store)),counts:(legacy.counts||[]),countHistory:(legacy.countHistory||[]),audit,demo:false,seedVersion:2};
   }
   try{localStorage.setItem(KEY,JSON.stringify(data))}catch(error){console.warn('Data Howell gagal disimpan di cache browser saat aplikasi dimulai:',error);}
-  const pageNames={dashboard:'Ringkasan',inventory:'Stok & Opname',warehouse:'Gudang','sales-history':'Riwayat Penjualan',products:'Master Produk',stores:'Cabang Retail',shipments:'Purchase Order',sales:'Penjualan',invoices:'Tagihan & Pembayaran',returns:'Retur Barang',reports:'Laporan',settings:'Pengaturan'};
+  const pageNames={dashboard:'Ringkasan',inventory:'Stok & Opname',warehouse:'Gudang','sales-history':'Riwayat',products:'Master Produk',stores:'Cabang Retail',shipments:'Purchase Order',sales:'Riwayat',invoices:'Tagihan & Pembayaran',returns:'Retur Barang',reports:'Laporan',settings:'Pengaturan'};
   const portalRole=window.HOWELL_PORTAL_ROLE||'admin';
   const allowedPages=portalRole==='warehouse'?new Set(['warehouse','sales-history','inventory','returns']):null;
   let current=portalRole==='warehouse'?'warehouse':'dashboard',query='',statusFilter='Semua status',modalMode=null,chartPeriod='week',stockHistoryLimit=10,stockHistoryQuery='',warehouseDispatchTab='active',salesViewTab='all';
@@ -155,13 +155,13 @@
     const rows=soldDispatches.map(({po,dispatch,index})=>{
       const actionButtons='<div class="po-actions warehouse-dispatch-actions">'+
         '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="'+index+'" data-id="'+esc(po.id)+'">Cetak surat jalan</button>'+
-        (portalRole==='admin'?'<button type="button" class="btn btn-light btn-small" data-page="sales" title="Buka transaksi di Laporan Penjualan">Lihat di Penjualan</button>':'')+
+        (portalRole==='admin'?'<button type="button" class="btn btn-light btn-small" data-page="sales" title="Buka transaksi di menu Riwayat">Lihat di Riwayat</button>':'')+
         '<button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>'+
       '</div>';
       return '<tr><td><strong>'+esc(dispatch.number||'—')+'</strong><div class="panel-subtitle">PO '+esc(po.id)+' · '+date(dispatch.date)+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong></td><td>'+(Array.isArray(dispatch.items)?dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0).toLocaleString('id-ID')+' unit</td><td>'+statusPill(po.status)+'</td><td>'+actionButtons+'</td></tr>';
     });
 
-    return heading('Riwayat Penjualan','Daftar surat jalan dan pengeluaran barang gudang yang telah selesai terjual.',
+    return heading('Riwayat','Daftar surat jalan dan pengeluaran barang gudang yang telah selesai terjual.',
       '<button class="btn btn-light" data-page="warehouse">Buka Gudang</button>'+
       (portalRole==='admin'?'<button class="btn btn-light" data-page="sales">Buka Laporan Penjualan</button>':'')
     )+demoBanner()+
@@ -216,8 +216,8 @@ function warehouse(){
       const actionButtons='<div class="po-actions warehouse-dispatch-actions">'+
         '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="'+index+'" data-id="'+esc(po.id)+'">Cetak surat jalan</button>'+
         (isSold
-          ?'<button type="button" class="btn btn-light btn-small" data-page="sales" title="Buka transaksi di Laporan Penjualan">Lihat di Penjualan</button><button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>'
-          :'<button type="button" class="btn btn-primary btn-small" data-action="mark-po-sold" data-id="'+esc(po.id)+'" title="Tandai pesanan selesai terjual dan catat ke menu Penjualan">Selesai terjual (Done)</button><button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'" title="Ubah status pengiriman">Ubah status</button>'
+          ?'<button type="button" class="btn btn-light btn-small" data-page="sales" title="Buka transaksi di menu Riwayat">Lihat di Riwayat</button><button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>'
+          :'<button type="button" class="btn btn-primary btn-small" data-action="mark-po-sold" data-id="'+esc(po.id)+'" title="Tandai pesanan selesai terjual dan catat ke menu Riwayat">Selesai terjual (Done)</button><button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'" title="Ubah status pengiriman">Ubah status</button>'
         )+'</div>';
       return '<tr><td><strong>'+esc(dispatch.number||'—')+'</strong><div class="panel-subtitle">PO '+esc(po.id)+' · '+date(dispatch.date)+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong></td><td>'+(Array.isArray(dispatch.items)?dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0).toLocaleString('id-ID')+' unit</td><td>'+statusPill(po.status)+'</td><td>'+actionButtons+'</td></tr>';
     });
@@ -230,7 +230,7 @@ function warehouse(){
       '</button>'+
       '<button type="button" class="warehouse-tab-btn '+(warehouseDispatchTab==='sold'?'active':'')+'" data-warehouse-tab="sold" role="tab" aria-selected="'+(warehouseDispatchTab==='sold')+'">'+
         '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19V5M4 19h17M7 15l4-4 3 2 6-7"/></svg>'+
-        '<span>Riwayat Penjualan</span>'+
+        '<span>Riwayat</span>'+
         '<b class="tab-badge gold">'+soldDispatches.length+'</b>'+
       '</button>'+
       '<button type="button" class="warehouse-tab-btn '+(warehouseDispatchTab==='all'?'active':'')+'" data-warehouse-tab="all" role="tab" aria-selected="'+(warehouseDispatchTab==='all')+'">'+
@@ -243,13 +243,13 @@ function warehouse(){
     const queueGuide=queue.length?'':`<div class="warehouse-guidance"><div><strong>Belum ada PO untuk diproses</strong><p>PO yang sudah dibuat oleh tim admin/marketing akan muncul di sini setelah tersimpan di database bersama.</p></div>${portalRole==='admin'?'<button class="btn btn-light btn-small" data-page="shipments">Buka Purchase Order</button>':''}</div>`;
 
     return heading('Gudang','Proses PO yang disetujui, catat barang keluar, dan buat surat jalan.',
-      '<button class="btn btn-light" data-page="sales-history">Riwayat Penjualan ('+soldDispatches.length+')</button><button class="btn btn-light" data-page="inventory">Buka Stok & Opname</button>'
+      '<button class="btn btn-light" data-page="sales-history">Riwayat ('+soldDispatches.length+')</button><button class="btn btn-light" data-page="inventory">Buka Stok & Opname</button>'
     )+demoBanner()+
     '<div class="section-grid warehouse-kpis">'+
       '<article class="card mini-card"><small>PO berjalan</small><strong>'+activeQueue.length+'</strong><span>Masih memiliki quantity yang belum keluar</span></article>'+
       '<article class="card mini-card"><small>PO siap dikirim</small><strong>'+ready.length+'</strong><span>Sudah disetujui dan dapat dibuatkan surat jalan</span></article>'+
       '<article class="card mini-card"><small>Unit belum keluar</small><strong>'+outstanding.toLocaleString('id-ID')+'</strong><span>Sisa quantity pada PO yang berjalan</span></article>'+
-      '<article class="card mini-card warehouse-kpi-sold" data-page="sales-history" style="cursor:pointer" title="Buka menu Riwayat Penjualan"><small>Riwayat Penjualan</small><strong>'+soldDispatches.length+' SJ</strong><span>'+totalSoldUnits.toLocaleString('id-ID')+' unit selesai terjual</span></article>'+
+      '<article class="card mini-card warehouse-kpi-sold" data-page="sales-history" style="cursor:pointer" title="Buka menu Riwayat"><small>Riwayat</small><strong>'+soldDispatches.length+' SJ</strong><span>'+totalSoldUnits.toLocaleString('id-ID')+' unit selesai terjual</span></article>'+
     '</div>'+
     queueGuide+
     '<article class="card table-card warehouse-queue"><div class="table-toolbar"><div><div class="panel-title">Purchase Order untuk gudang</div><div class="panel-subtitle">PO yang dibuat langsung tercatat di sini. Atur statusnya; surat jalan tersedia setelah PO disetujui.</div></div></div>'+table(['Nomor PO / penanggung jawab','Customer / tanggal PO','Alamat pengiriman','Produk dan quantity','Status','Tindakan'],queueRows,'Belum ada PO yang masih memiliki quantity untuk diproses.')+'</article>'+
@@ -394,10 +394,10 @@ function warehouse(){
       if(portalRole==='admin')actionButtons.push(canEdit?'<button type="button" class="btn btn-light btn-small" data-action="edit-purchase-order" data-id="'+esc(po.id)+'" title="Buka formulir untuk mengubah PO">Edit</button>':'<button type="button" class="btn btn-light btn-small po-edit-disabled" data-action="edit-purchase-order-locked" data-id="'+esc(po.id)+'" aria-disabled="true" title="Klik untuk melihat alasan">Edit terkunci</button>');
       if(portalRole==='admin')actionButtons.push('<button class="btn btn-danger btn-small" data-action="delete-purchase-order" data-id="'+esc(po.id)+'">Hapus PO</button>');
       if(['Selesai terjual','Done','Terjual'].includes(po.status)){
-        actionButtons.push('<button class="link-btn" data-page="sales" title="Buka transaksi di Laporan Penjualan">Lihat di Penjualan</button>');
+        actionButtons.push('<button class="link-btn" data-page="sales" title="Buka transaksi di menu Riwayat">Lihat di Riwayat</button>');
         actionButtons.push('<button class="link-btn" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>');
       } else if(['Dikirim','In Transit','Dalam proses','Pending'].includes(po.status)){
-        actionButtons.push('<button class="btn btn-primary btn-small" data-action="mark-po-sold" data-id="'+esc(po.id)+'" title="Tandai pesanan selesai terjual & otomatis masuk ke Penjualan">Selesai terjual</button>');
+        actionButtons.push('<button class="btn btn-primary btn-small" data-action="mark-po-sold" data-id="'+esc(po.id)+'" title="Tandai pesanan selesai terjual & otomatis masuk ke Riwayat">Selesai terjual</button>');
         actionButtons.push('<button class="link-btn" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>');
       }
       const actions=actionButtons.length?'<div class="po-actions">'+actionButtons.join('')+'</div>':'';
@@ -484,7 +484,7 @@ function warehouse(){
         table(['Nomor rekonsiliasi','Cabang','Periode','SKU & produk','Rincian hitung unit','Penjualan kotor','Diskon retail','Penjualan bersih','Status','Tindakan'],skuRows)+
       '</article>':'';
 
-    return heading('Penjualan','Riwayat surat jalan selesai terjual dari gudang serta rekonsiliasi fisik per cabang dan SKU.','<button class="btn btn-light" data-action="export">Ekspor CSV</button><button class="btn btn-primary" data-action="add-sale">Catat rekonsiliasi</button>')+
+    return heading('Riwayat','Riwayat surat jalan selesai terjual dari gudang serta rekonsiliasi fisik per cabang dan SKU.','<button class="btn btn-light" data-action="export">Ekspor CSV</button><button class="btn btn-primary" data-action="add-sale">Catat rekonsiliasi</button>')+
       '<div class="section-grid sales-kpis">'+
         '<article class="card mini-card"><small>Omset bersih tercatat</small><strong>'+money(total)+'</strong><span>Rekonsiliasi tersimpan</span></article>'+
         '<article class="card mini-card"><small>Unit terjual</small><strong>'+totalUnits+'</strong><span>Hanya laporan disetujui</span></article>'+
@@ -604,7 +604,7 @@ function warehouse(){
       recordSalesFromPo(po);
       recordAudit('status-change','purchase-order',po.id,{previousStatus:prev,status:'Selesai terjual',autoSalesRecorded:true});
       data.demo=false;save();render();
-      toast(`PO ${po.id} ditandai Selesai Terjual! Data penjualan otomatis tampil di menu Penjualan.`);
+      toast(`PO ${po.id} ditandai Selesai Terjual! Data tercatat otomatis di menu Riwayat.`);
       return;
     }
     if(action==='update-po-dispatch-status'){
@@ -617,7 +617,7 @@ function warehouse(){
           label: 'Status pesanan / pengiriman',
           required: true,
           items: [
-            { value: 'Selesai terjual', label: 'Selesai terjual (Done) · Otomatis masuk ke Penjualan' },
+            { value: 'Selesai terjual', label: 'Selesai terjual (Done) · Otomatis masuk ke Riwayat' },
             { value: 'Dalam proses', label: 'Dalam proses · Pengiriman / display toko' },
             { value: 'Pending', label: 'Pending · Menunggu konfirmasi toko' },
             { value: 'Dikirim', label: 'Dikirim · Barang keluar dari gudang' }
@@ -631,7 +631,7 @@ function warehouse(){
         if(values.note)po.dispatchStatusNote=String(values.note).trim();
         if(['Selesai terjual','Done','Terjual'].includes(next)){
           recordSalesFromPo(po);
-          toast(`PO ${po.id} ditandai Selesai Terjual! Data penjualan telah otomatis tampil di menu Penjualan.`);
+          toast(`PO ${po.id} ditandai Selesai Terjual! Data telah otomatis tampil di menu Riwayat.`);
         }else{
           removeSalesFromPo(po.id);
           toast(`Status PO ${po.id} diubah menjadi ${next}.`);
