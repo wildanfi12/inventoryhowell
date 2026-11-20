@@ -32,7 +32,7 @@
   const pageNames={dashboard:'Ringkasan',inventory:'Stok & Opname',warehouse:'Gudang','sales-history':'Riwayat',products:'Master Produk',stores:'Cabang Retail',shipments:'Purchase Order',sales:'Riwayat',invoices:'Tagihan & Pembayaran',returns:'Retur Barang',reports:'Laporan',settings:'Pengaturan'};
   const portalRole=window.HOWELL_PORTAL_ROLE||'admin';
   const allowedPages=portalRole==='warehouse'?new Set(['warehouse','sales-history','inventory','returns']):null;
-  let current=portalRole==='warehouse'?'warehouse':'dashboard',query='',statusFilter='Semua status',modalMode=null,chartPeriod='week',stockHistoryLimit=10,stockHistoryQuery='',warehouseDispatchTab='active',salesViewTab='all';
+  let current=portalRole==='warehouse'?'warehouse':'dashboard',query='',statusFilter='Semua status',modalMode=null,chartPeriod='week',stockHistoryLimit=10,stockHistoryQuery='',warehouseDispatchTab='active',salesViewTab='waybills';
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const money=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
   const date=s=>s?new Date(s+'T00:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}):'—';
@@ -406,7 +406,7 @@ function warehouse(){
     });
     return heading('Purchase Order','Kelola PO cabang, pengeluaran stok gudang, dan surat jalan B2B.', '<button class="btn btn-light" data-action="export">Ekspor</button><button class="btn btn-primary" data-action="add-purchase-order">Buat Purchase Order</button>')+demoBanner()+'<div class="section-grid"><article class="card mini-card"><small>Purchase Order</small><strong>'+data.shipments.length+'</strong><span>Seluruh PO tersimpan</span></article><article class="card mini-card"><small>Menunggu tindakan</small><strong>'+data.shipments.filter(x=>['Draft','Menunggu verifikasi','Disetujui','Partial','Tidak disetujui','Ditangguhkan'].includes(x.status)).length+'</strong><span>Persetujuan, penangguhan, atau sisa kirim</span></article><article class="card mini-card"><small>Unit keluar gudang</small><strong>'+dispatchedTotal.toLocaleString('id-ID')+'</strong><span>Jumlah aktual pada surat jalan</span></article></div><article class="card table-card">'+toolbar('<select class="filter-select" id="statusFilter"><option>Semua status</option><option>Draft</option><option>Menunggu verifikasi</option><option>Disetujui</option><option>Dikirim</option><option>Partial</option><option>Received</option><option>Rejected</option></select>')+table(['Nomor PO / penanggung jawab','Customer / tanggal PO','Ship to address','Rincian Purchase Order','Status','Tindakan'],rows,'Belum ada Purchase Order. Buat PO untuk memulai proses gudang.','po-list-table')+'</article>'
   }
-    function sales(){
+      function sales(){
     const isApproved=s=>!s.status||s.status==='Disetujui'||s.status==='Selesai terjual';
     const total=data.sales.filter(isApproved).reduce((a,x)=>a+Number(x.net||0),0);
     const totalUnits=data.sales.filter(isApproved).reduce((a,x)=>a+Number(x.qty||0),0);
@@ -420,12 +420,27 @@ function warehouse(){
     const soldDispatches=allDispatches.filter(x=>isSoldPo(x.po));
 
     const waybillRows=soldDispatches.map(({po,dispatch,index})=>{
+      const qty=(Array.isArray(dispatch.items)?dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0);
       const actionButtons='<div class="po-actions warehouse-dispatch-actions">'+
-        '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="'+index+'" data-id="'+esc(po.id)+'">Cetak surat jalan</button>'+
-        '<button type="button" class="btn btn-light btn-small" data-action="scroll-to-sku-reconciliation" data-po-id="'+esc(po.id)+'" title="Lihat rincian rekonsiliasi SKU pada tabel di bawah">Rincian SKU</button>'+
-        '<button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>'+
+        '<button type="button" class="btn btn-light btn-small waybill-print-action waybill-action-btn" data-action="print-waybill" data-dispatch-index="'+index+'" data-id="'+esc(po.id)+'" title="Cetak Surat Jalan">'+
+          '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>'+
+          '<span>Cetak surat jalan</span>'+
+        '</button>'+
+        '<button type="button" class="btn btn-light btn-small waybill-action-btn" data-action="scroll-to-sku-reconciliation" data-po-id="'+esc(po.id)+'" title="Lihat rincian rekonsiliasi produk SKU">'+
+          '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 12l2 2 4-4M7.8 21h8.4c1.1 0 2-.9 2-2V9a2 2 0 0 0-2-2H5.8a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h2m0-14V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'+
+          '<span>Rincian SKU</span>'+
+        '</button>'+
+        '<button type="button" class="btn btn-light btn-small waybill-action-btn" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'" title="Ubah status pengiriman atau penjualan">'+
+          '<span>Ubah status</span>'+
+        '</button>'+
       '</div>';
-      return '<tr><td><strong>'+esc(dispatch.number||'—')+'</strong><div class="panel-subtitle">PO '+esc(po.id)+' · '+date(dispatch.date)+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong></td><td>'+(Array.isArray(dispatch.items)?dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0).toLocaleString('id-ID')+' unit</td><td>'+statusPill(po.status)+'</td><td>'+actionButtons+'</td></tr>';
+      return '<tr>'+
+        '<td><div class="sj-badge">'+esc(dispatch.number||'—')+'</div><div class="panel-subtitle">PO '+esc(po.id)+' · '+date(dispatch.date)+'</div></td>'+
+        '<td><strong>'+esc(po.customerName||storeName(po.store))+'</strong><div class="panel-subtitle">'+esc(storeName(po.store))+'</div></td>'+
+        '<td><span class="qty-pill"><strong>'+qty.toLocaleString('id-ID')+'</strong> unit</span></td>'+
+        '<td>'+statusPill(po.status)+'</td>'+
+        '<td>'+actionButtons+'</td>'+
+      '</tr>';
     });
 
     const periodKey=x=>`${x.store}|${x.start}|${x.end}`;
@@ -436,24 +451,24 @@ function warehouse(){
       const hasInvoice=invoiceKeys.has(periodKey(x));
       let action=x.status==='Menunggu persetujuan'?`<button class="link-btn" data-action="approve-sale" data-id="${esc(x.id)}">Setujui rekonsiliasi</button>`:approved&&!hasInvoice?`<button class="link-btn" data-action="create-period-invoice" data-id="${esc(x.id)}">Buat invoice periode</button>`:hasInvoice?`Invoice ${esc(data.invoices.find(i=>i.periodKey===periodKey(x))?.id||'dibuat')}`:(x.sourcePo?'<span class="pill green">Selesai</span>':'—');
       const unitDetails=(x.openingSnapshot!=null&&x.incomingSnapshot!=null)?`${Number(x.openingSnapshot||0)} + ${Number(x.incomingSnapshot||0)} − ${Number(x.physicalSnapshot||0)} − ${Number(x.returnSnapshot||0)} = <strong>${Number(x.qty||0)}</strong> unit`:`<strong>${Number(x.qty||0)}</strong> unit terjual${x.sourcePo?`<div class="panel-subtitle">PO ${esc(x.sourcePo)}${x.sourceDispatch?' · '+esc(x.sourceDispatch):''}</div>`:''}`;
-      return `<tr><td><span class="sku">${esc(x.id)}</span></td><td><strong>${esc(storeName(x.store))}</strong></td><td>${date(x.start)}${x.end&&x.end!==x.start?' – '+date(x.end):''}</td><td>${esc(prodName(x.sku))}<div class="panel-subtitle">${esc(x.sku)}</div></td><td>${unitDetails}</td><td>${money(x.gross)}</td><td>${money(x.discount)}</td><td><strong>${money(x.net)}</strong></td><td>${statusPill(x.status||'Disetujui')}</td><td>${action}</td></tr>`;
+      return `<tr><td><span class="sku">${esc(x.id)}</span></td><td><strong>${esc(storeName(x.store))}</strong></td><td>${date(x.start)}${x.end&&x.end!==x.start?' – '+date(x.end):''}</td><td><strong>${esc(prodName(x.sku))}</strong><div class="panel-subtitle">${esc(x.sku)}</div></td><td>${unitDetails}</td><td style="text-align:right">${money(x.gross)}</td><td style="text-align:right">${money(x.discount)}</td><td style="text-align:right"><strong>${money(x.net)}</strong></td><td>${statusPill(x.status||'Disetujui')}</td><td>${action}</td></tr>`;
     });
 
-    const tabsNav='<div class="warehouse-tabs-nav" role="tablist" aria-label="Tampilan Penjualan" style="margin-bottom:14px">'+
-      '<button type="button" class="warehouse-tab-btn '+(salesViewTab==='all'?'active':'')+'" data-sales-tab="all" role="tab" aria-selected="'+(salesViewTab==='all')+'">'+
-        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>'+
-        '<span>Semua Data</span>'+
-        '<b class="tab-badge">'+(soldDispatches.length+skuRows.length)+'</b>'+
+    const tabsNav='<div class="sales-tabs-nav" role="tablist" aria-label="Tampilan Riwayat">'+
+      '<button type="button" class="sales-tab-btn '+(salesViewTab==='waybills'?'active':'')+'" data-sales-tab="waybills" role="tab" aria-selected="'+(salesViewTab==='waybills')+'">'+
+        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 12l2 2 4-4M7.8 21h8.4c1.1 0 2-.9 2-2V9a2 2 0 0 0-2-2H5.8a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h2m0-14V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'+
+        '<span>Surat Jalan Terjual</span>'+
+        '<b class="tab-badge">'+soldDispatches.length+'</b>'+
       '</button>'+
-      '<button type="button" class="warehouse-tab-btn '+(salesViewTab==='waybills'?'active':'')+'" data-sales-tab="waybills" role="tab" aria-selected="'+(salesViewTab==='waybills')+'">'+
-        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4M7.8 21h8.4c1.1 0 2-.9 2-2V9a2 2 0 0 0-2-2H5.8a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h2m0-14V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'+
-        '<span>Riwayat Surat Jalan (Stok Terjual)</span>'+
-        '<b class="tab-badge gold">'+soldDispatches.length+'</b>'+
-      '</button>'+
-      '<button type="button" class="warehouse-tab-btn '+(salesViewTab==='reconciliation'?'active':'')+'" data-sales-tab="reconciliation" role="tab" aria-selected="'+(salesViewTab==='reconciliation')+'">'+
-        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h17M7 15l4-4 3 2 6-7"/></svg>'+
+      '<button type="button" class="sales-tab-btn '+(salesViewTab==='reconciliation'?'active':'')+'" data-sales-tab="reconciliation" role="tab" aria-selected="'+(salesViewTab==='reconciliation')+'">'+
+        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19V5M4 19h17M7 15l4-4 3 2 6-7"/></svg>'+
         '<span>Rekonsiliasi SKU</span>'+
-        '<b class="tab-badge blue">'+skuRows.length+'</b>'+
+        '<b class="tab-badge">'+skuRows.length+'</b>'+
+      '</button>'+
+      '<button type="button" class="sales-tab-btn '+(salesViewTab==='all'?'active':'')+'" data-sales-tab="all" role="tab" aria-selected="'+(salesViewTab==='all')+'">'+
+        '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>'+
+        '<span>Semua Transaksi</span>'+
+        '<b class="tab-badge">'+(soldDispatches.length+skuRows.length)+'</b>'+
       '</button>'+
     '</div>';
 
@@ -461,18 +476,36 @@ function warehouse(){
       '<article class="card table-card warehouse-dispatches" style="margin-bottom:16px">'+
         '<div class="table-toolbar warehouse-dispatches-toolbar">'+
           '<div>'+
-            '<div class="panel-title">Riwayat Penjualan (Stok Terjual)</div>'+
-            '<div class="panel-subtitle">Daftar surat jalan dan barang keluar dari gudang yang telah selesai terjual.</div>'+
+            '<div class="panel-title">Riwayat Surat Jalan Terjual</div>'+
+            '<div class="panel-subtitle">Daftar surat jalan gudang yang telah selesai terjual ke toko dan cabang retail.</div>'+
           '</div>'+
           '<div class="table-toolbar-actions">'+
-            '<span class="pill green">'+soldDispatches.length+' Surat Jalan Selesai</span>'+
+            '<span class="pill green font-weight-600">✓ '+soldDispatches.length+' Surat Jalan Selesai</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="table-toolbar" style="padding-top:0">'+
+          '<div class="toolbar-left">'+
+            '<div class="search">'+
+              '<svg class="table-search-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.6"></circle><path d="m10.2 10.2 3.1 3.1"></path></svg>'+
+              '<input id="waybillSearch" type="search" placeholder="Cari nomor surat jalan, customer, PO..." aria-label="Cari surat jalan" />'+
+            '</div>'+
+          '</div>'+
+          '<div class="toolbar-right">'+
+            '<button class="btn btn-light btn-small" data-action="export">Ekspor CSV</button>'+
           '</div>'+
         '</div>'+
         table(['Nomor surat jalan','Customer','Quantity keluar','Status PO','Tindakan & Dokumen'],waybillRows,'Belum ada surat jalan yang berstatus selesai terjual.','warehouse-dispatches-table')+
       '</article>':'';
 
     const reconciliationSection=(salesViewTab==='all'||salesViewTab==='reconciliation')?
-      '<div class="excel-source-note sales-sku-reconciliation">Barang terjual = stok awal periode + stok masuk − stok fisik akhir − retur terkonfirmasi. Harga retail dan bagi hasil disimpan sebagai snapshot pada saat laporan dibuat.</div>'+
+      '<div class="sales-callout-note sales-sku-reconciliation">'+
+        '<div class="callout-icon">'+
+          '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'+
+        '</div>'+
+        '<div>'+
+          '<strong>Perhitungan Otomatis Rekonsiliasi:</strong> Barang terjual = Saldo awal periode + Masuk gudang − Fisik akhir − Retur terkonfirmasi. Harga retail dan bagi hasil disimpan sebagai snapshot saat pesanan disetujui.'+
+        '</div>'+
+      '</div>'+
       '<article class="card table-card">'+
         '<div class="table-toolbar">'+
           '<div>'+
@@ -485,11 +518,27 @@ function warehouse(){
       '</article>':'';
 
     return heading('Riwayat','Riwayat surat jalan selesai terjual dari gudang serta rekonsiliasi fisik per cabang dan SKU.','<button class="btn btn-light" data-action="export">Ekspor CSV</button><button class="btn btn-primary" data-action="add-sale">Catat rekonsiliasi</button>')+
-      '<div class="section-grid sales-kpis">'+
-        '<article class="card mini-card"><small>Omset bersih tercatat</small><strong>'+money(total)+'</strong><span>Rekonsiliasi tersimpan</span></article>'+
-        '<article class="card mini-card"><small>Unit terjual</small><strong>'+totalUnits+'</strong><span>Hanya laporan disetujui</span></article>'+
-        '<article class="card mini-card"><small>Surat jalan selesai</small><strong>'+soldDispatches.length+' SJ</strong><span>Barang keluar terkonfirmasi</span></article>'+
-        '<article class="card mini-card"><small>Menunggu persetujuan</small><strong>'+pendingCount+'</strong><span>Perlu ditinjau sebelum tutup periode</span></article>'+
+      '<div class="sales-kpis">'+
+        '<article class="sales-kpi-card kpi-revenue">'+
+          '<div class="kpi-header"><span class="kpi-label">Omset Bersih Tercatat</span></div>'+
+          '<div class="kpi-value">'+money(total)+'</div>'+
+          '<div class="kpi-footer">Rekonsiliasi tersimpan</div>'+
+        '</article>'+
+        '<article class="sales-kpi-card kpi-units">'+
+          '<div class="kpi-header"><span class="kpi-label">Unit Terjual</span></div>'+
+          '<div class="kpi-value">'+totalUnits.toLocaleString('id-ID')+'</div>'+
+          '<div class="kpi-footer">Hanya laporan disetujui</div>'+
+        '</article>'+
+        '<article class="sales-kpi-card kpi-dispatches">'+
+          '<div class="kpi-header"><span class="kpi-label">Surat Jalan Selesai</span></div>'+
+          '<div class="kpi-value">'+soldDispatches.length+' SJ</div>'+
+          '<div class="kpi-footer">Barang keluar terkonfirmasi</div>'+
+        '</article>'+
+        '<article class="sales-kpi-card kpi-pending">'+
+          '<div class="kpi-header"><span class="kpi-label">Menunggu Persetujuan</span></div>'+
+          '<div class="kpi-value">'+pendingCount+'</div>'+
+          '<div class="kpi-footer">Perlu ditinjau sebelum tutup periode</div>'+
+        '</article>'+
       '</div>'+
       tabsNav+
       waybillSection+
@@ -554,6 +603,14 @@ function warehouse(){
       query=tokens.join(' ');
     };
     search?.addEventListener('input',applyTableFilters);
+    const waybillSearchInput=$('#waybillSearch');
+    waybillSearchInput?.addEventListener('input',()=>{
+      const tokens=String(waybillSearchInput.value||'').trim().toLocaleLowerCase('id-ID').split(/\s+/).filter(Boolean);
+      $$('.warehouse-dispatches-table tbody tr').forEach(row=>{
+        const text=row.textContent.toLocaleLowerCase('id-ID');
+        row.style.display=tokens.every(token=>text.includes(token))?'':'none';
+      });
+    });
     category?.addEventListener('change',applyTableFilters);
     status?.addEventListener('change',applyTableFilters);
     $('#inventoryExpandAll')?.addEventListener('click',()=>$$('.inventory-category').filter(section=>!section.hidden).forEach(section=>{section.open=true}));

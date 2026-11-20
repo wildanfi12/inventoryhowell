@@ -1059,12 +1059,197 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .stock-history-table{min-width:680px!important;table-layout:auto!important}
 }
 
+/* Professional Riwayat View Styling */
+.sales-kpis {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  margin-bottom: 18px !important;
+}
+@media (max-width: 1080px) {
+  .sales-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width: 560px) {
+  .sales-kpis {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
 
-/* Sales KPI and Tabs styling */
-.sales-kpis{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin-bottom:14px!important}
-@media(max-width:1080px){.sales-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:560px){.sales-kpis{grid-template-columns:minmax(0,1fr)!important}}
-.warehouse-tab-btn.active[data-sales-tab="waybills"]{background:#FFF9E6!important;color:#7A5C00!important;border-color:#F4C63D!important}
-.warehouse-tab-btn.active[data-sales-tab="waybills"] .tab-badge{background:#F4C63D;color:#17191C}
-.warehouse-tab-btn.active[data-sales-tab="reconciliation"]{background:#EEF4FF!important;color:#1D4ED8!important;border-color:#93C5FD!important}
-.warehouse-tab-btn.active[data-sales-tab="reconciliation"] .tab-badge{background:#2563EB;color:#FFFFFF}
+.sales-kpi-card {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 10px !important;
+  padding: 16px 18px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  min-height: 96px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all 0.15s ease !important;
+}
+.sales-kpi-card:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+  transform: translateY(-1px);
+}
+.sales-kpi-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+.sales-kpi-card.kpi-revenue::before { background: #10B981 !important; }
+.sales-kpi-card.kpi-units::before { background: #3B82F6 !important; }
+.sales-kpi-card.kpi-dispatches::before { background: #F59E0B !important; }
+.sales-kpi-card.kpi-pending::before { background: #94A3B8 !important; }
+
+.sales-kpi-card .kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sales-kpi-card .kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #64748B;
+  text-transform: uppercase;
+}
+.sales-kpi-card .kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 6px 0 2px 0;
+  letter-spacing: -0.02em;
+}
+.sales-kpi-card .kpi-footer {
+  font-size: 11.5px;
+  color: #94A3B8;
+}
+
+/* Modern Segmented Tab Bar */
+.sales-tabs-nav {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: #F1F5F9 !important;
+  padding: 4px !important;
+  border-radius: 8px !important;
+  border: 1px solid #E2E8F0 !important;
+  margin-bottom: 16px !important;
+}
+.sales-tab-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 7px 16px !important;
+  font-family: inherit !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  height: 34px !important;
+  line-height: 1 !important;
+}
+.sales-tab-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.7) !important;
+  color: #0F172A !important;
+}
+.sales-tab-btn.active {
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07) !important;
+}
+.sales-tab-btn .tab-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  padding: 0 6px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 999px !important;
+  background: #E2E8F0 !important;
+  color: #475569 !important;
+}
+.sales-tab-btn.active .tab-badge {
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+}
+.sales-tab-btn.active[data-sales-tab="waybills"] .tab-badge {
+  background: #F4C63D !important;
+  color: #17191C !important;
+}
+
+/* Badges and cell styling */
+.sj-badge {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0F172A;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 5px;
+  padding: 2px 8px;
+  display: inline-block;
+  letter-spacing: 0.02em;
+}
+.qty-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  background: #F1F5F9;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #334155;
+  font-weight: 500;
+}
+.qty-pill strong {
+  font-weight: 700;
+  color: #0F172A;
+}
+
+/* Elegant callout banner */
+.sales-callout-note {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 12px 16px !important;
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+  border-left: 4px solid #3B82F6 !important;
+  border-radius: 8px !important;
+  margin-bottom: 16px !important;
+  color: #334155 !important;
+  font-size: 12.5px !important;
+  line-height: 1.5 !important;
+}
+.sales-callout-note .callout-icon {
+  color: #3B82F6;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Action button improvements */
+.waybill-action-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 5px 11px !important;
+  font-size: 11.5px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+}
