@@ -29,9 +29,9 @@
     const importedProducts=source.products.map(src=>{const old=(legacy.products||[]).find(x=>x.sku===src.sku),count=(legacy.counts||[]).find(x=>x.sku===src.sku);return{...src,barcode:old?.barcode||src.barcode,brand:old?.brand||src.brand,stock:count?.physical??(legacy.seedVersion>=2&&old?.stock!=null?old.stock:null),stockSource:old?.stockSource||count?.source||null}});const normalizedExtraStores=extraStores.map(x=>({...x,term:x.term||'Bulanan',supplierShare:x.supplierShare??65,storeShare:x.storeShare??35,effectiveDate:x.effectiveDate||'',agreementStatus:x.agreementStatus||'Perlu perjanjian'}));const importedStores=source.paperclipBranches.map(src=>{const old=(legacy.stores||[]).find(x=>x.code===src.code);return old?{...src,...old,code:src.code,network:old.network||src.network,region:old.region||src.region,term:old.term||src.term,supplierShare:old.supplierShare??src.supplierShare,storeShare:old.storeShare??src.storeShare,effectiveDate:old.effectiveDate||'',agreementStatus:old.agreementStatus||'Perlu perjanjian'}:src});data={...data,products:[...importedProducts,...extraProducts],stores:[...importedStores,...normalizedExtraStores],shipments,sales:sales.map(x=>({...x,status:x.status||'Disetujui'})),invoices,returns,branchStock:branchStock.filter(x=>data.stores.some(y=>y.code===x.store)||keepStores.some(y=>y.code===x.store)),counts:(legacy.counts||[]),countHistory:(legacy.countHistory||[]),audit,demo:false,seedVersion:2};
   }
   try{localStorage.setItem(KEY,JSON.stringify(data))}catch(error){console.warn('Data Howell gagal disimpan di cache browser saat aplikasi dimulai:',error);}
-  const pageNames={dashboard:'Ringkasan',inventory:'Stok & Opname',warehouse:'Gudang',products:'Master Produk',stores:'Cabang Retail',shipments:'Purchase Order',sales:'Laporan Penjualan',invoices:'Tagihan & Pembayaran',returns:'Retur Barang',reports:'Laporan',settings:'Pengaturan'};
+  const pageNames={dashboard:'Ringkasan',inventory:'Stok & Opname',warehouse:'Gudang','sales-history':'Riwayat Penjualan',products:'Master Produk',stores:'Cabang Retail',shipments:'Purchase Order',sales:'Laporan Penjualan',invoices:'Tagihan & Pembayaran',returns:'Retur Barang',reports:'Laporan',settings:'Pengaturan'};
   const portalRole=window.HOWELL_PORTAL_ROLE||'admin';
-  const allowedPages=portalRole==='warehouse'?new Set(['warehouse','inventory','returns']):null;
+  const allowedPages=portalRole==='warehouse'?new Set(['warehouse','sales-history','inventory','returns']):null;
   let current=portalRole==='warehouse'?'warehouse':'dashboard',query='',statusFilter='Semua status',modalMode=null,chartPeriod='week',stockHistoryLimit=10,stockHistoryQuery='',warehouseDispatchTab='active';
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const money=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
@@ -142,7 +142,42 @@
     data.sales = data.sales.filter(s => s.sourcePo !== poId);
   }
 
-  function warehouse(){
+    function salesHistory(){
+    const orders=Array.isArray(data.shipments)?data.shipments:[];
+    const dispatchesOf=po=>Array.isArray(po?.dispatches)?po.dispatches:[];
+    const isSoldPo=po=>['Selesai terjual','Done','Terjual'].includes(po?.status);
+    const allDispatches=orders.flatMap(po=>dispatchesOf(po).map((dispatch,index)=>({po,dispatch,index}))).sort((a,b)=>(b.dispatch.date||'').localeCompare(a.dispatch.date||''));
+    const soldDispatches=allDispatches.filter(x=>isSoldPo(x.po));
+    const totalSoldUnits=soldDispatches.reduce((sum,x)=>sum+(Array.isArray(x.dispatch.items)?x.dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0),0);
+    const uniqueCustomers=new Set(soldDispatches.map(x=>x.po.customerName||storeName(x.po.store)).filter(Boolean));
+    const avgUnits=soldDispatches.length?Math.round(totalSoldUnits/soldDispatches.length):0;
+
+    const rows=soldDispatches.map(({po,dispatch,index})=>{
+      const actionButtons='<div class="po-actions warehouse-dispatch-actions">'+
+        '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="'+index+'" data-id="'+esc(po.id)+'">Cetak surat jalan</button>'+
+        (portalRole==='admin'?'<button type="button" class="btn btn-light btn-small" data-page="sales" title="Buka transaksi di Laporan Penjualan">Lihat di Penjualan</button>':'')+
+        '<button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>'+
+      '</div>';
+      return '<tr><td><strong>'+esc(dispatch.number||'—')+'</strong><div class="panel-subtitle">PO '+esc(po.id)+' · '+date(dispatch.date)+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong></td><td>'+(Array.isArray(dispatch.items)?dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0).toLocaleString('id-ID')+' unit</td><td>'+statusPill(po.status)+'</td><td>'+actionButtons+'</td></tr>';
+    });
+
+    return heading('Riwayat Penjualan','Daftar surat jalan dan pengeluaran barang gudang yang telah selesai terjual.',
+      '<button class="btn btn-light" data-page="warehouse">Buka Gudang</button>'+
+      (portalRole==='admin'?'<button class="btn btn-light" data-page="sales">Buka Laporan Penjualan</button>':'')
+    )+demoBanner()+
+    '<div class="section-grid warehouse-kpis">'+
+      '<article class="card mini-card"><small>Surat Jalan Terjual</small><strong>'+soldDispatches.length+' SJ</strong><span>Status selesai terjual</span></article>'+
+      '<article class="card mini-card"><small>Total Unit Terjual</small><strong>'+totalSoldUnits.toLocaleString('id-ID')+'</strong><span>Akumulasi barang keluar</span></article>'+
+      '<article class="card mini-card"><small>Customer Terlayani</small><strong>'+uniqueCustomers.size+'</strong><span>Customer & cabang tujuan</span></article>'+
+      '<article class="card mini-card"><small>Rata-rata per Surat Jalan</small><strong>'+avgUnits.toLocaleString('id-ID')+' unit</strong><span>Kuantitas per pengiriman</span></article>'+
+    '</div>'+
+    '<article class="card table-card warehouse-dispatches">'+
+      toolbar('<select class="filter-select" id="salesHistoryCustomerFilter"><option>Semua customer</option>'+[...uniqueCustomers].map(c=>'<option>'+esc(c)+'</option>').join('')+'</select>')+
+      table(['Nomor surat jalan','Customer','Quantity keluar','Status PO','Tindakan & Dokumen'],rows,'Belum ada riwayat penjualan dari gudang.')+
+    '</article>';
+  }
+
+function warehouse(){
     const orders=Array.isArray(data.shipments)?data.shipments:[];
     const itemsOf=po=>Array.isArray(po?.items)?po.items:[];
     const dispatchesOf=po=>Array.isArray(po?.dispatches)?po.dispatches:[];
@@ -208,13 +243,13 @@
     const queueGuide=queue.length?'':`<div class="warehouse-guidance"><div><strong>Belum ada PO untuk diproses</strong><p>PO yang sudah dibuat oleh tim admin/marketing akan muncul di sini setelah tersimpan di database bersama.</p></div>${portalRole==='admin'?'<button class="btn btn-light btn-small" data-page="shipments">Buka Purchase Order</button>':''}</div>`;
 
     return heading('Gudang','Proses PO yang disetujui, catat barang keluar, dan buat surat jalan.',
-      '<button class="btn btn-light" data-warehouse-tab="sold">Riwayat Penjualan ('+soldDispatches.length+')</button><button class="btn btn-light" data-page="inventory">Buka Stok & Opname</button>'
+      '<button class="btn btn-light" data-page="sales-history">Riwayat Penjualan ('+soldDispatches.length+')</button><button class="btn btn-light" data-page="inventory">Buka Stok & Opname</button>'
     )+demoBanner()+
     '<div class="section-grid warehouse-kpis">'+
       '<article class="card mini-card"><small>PO berjalan</small><strong>'+activeQueue.length+'</strong><span>Masih memiliki quantity yang belum keluar</span></article>'+
       '<article class="card mini-card"><small>PO siap dikirim</small><strong>'+ready.length+'</strong><span>Sudah disetujui dan dapat dibuatkan surat jalan</span></article>'+
       '<article class="card mini-card"><small>Unit belum keluar</small><strong>'+outstanding.toLocaleString('id-ID')+'</strong><span>Sisa quantity pada PO yang berjalan</span></article>'+
-      '<article class="card mini-card warehouse-kpi-sold" data-warehouse-tab="sold" style="cursor:pointer" title="Klik untuk membuka Riwayat Penjualan"><small>Riwayat Penjualan</small><strong>'+soldDispatches.length+' SJ</strong><span>'+totalSoldUnits.toLocaleString('id-ID')+' unit selesai terjual</span></article>'+
+      '<article class="card mini-card warehouse-kpi-sold" data-page="sales-history" style="cursor:pointer" title="Buka menu Riwayat Penjualan"><small>Riwayat Penjualan</small><strong>'+soldDispatches.length+' SJ</strong><span>'+totalSoldUnits.toLocaleString('id-ID')+' unit selesai terjual</span></article>'+
     '</div>'+
     queueGuide+
     '<article class="card table-card warehouse-queue"><div class="table-toolbar"><div><div class="panel-title">Purchase Order untuk gudang</div><div class="panel-subtitle">PO yang dibuat langsung tercatat di sini. Atur statusnya; surat jalan tersedia setelah PO disetujui.</div></div></div>'+table(['Nomor PO / penanggung jawab','Customer / tanggal PO','Alamat pengiriman','Produk dan quantity','Status','Tindakan'],queueRows,'Belum ada PO yang masih memiliki quantity untuk diproses.')+'</article>'+
@@ -402,7 +437,7 @@
   function render(){
     normalizeRuntimeData();
     normalizeCatalogNames();
-    let map={dashboard,inventory,warehouse,products,stores,shipments,sales,invoices,returns,reports,settings};
+    let map={dashboard,inventory,warehouse,'sales-history':salesHistory,products,stores,shipments,sales,invoices,returns,reports,settings};
     try{$('#pageContent').innerHTML=map[current]()}catch(error){console.error(`Halaman ${pageNames[current]||current} gagal dimuat:`,error);$('#pageContent').innerHTML=`<section class="card page-error" role="alert"><strong>Halaman ${esc(pageNames[current]||current)} belum dapat dimuat.</strong><p>Terjadi kesalahan saat menyiapkan data halaman. Muat ulang aplikasi atau buka halaman lain, lalu coba kembali.</p><button class="btn btn-light btn-small" data-action="reload-page">Coba lagi</button></section>`}
     if(current==='inventory'&&portalRole!=='warehouse'){
       let rows=data.branchStock.map(x=>{let system=branchBalance(x),delta=x.physical==null?null:(x.lastShrinkage??(x.physical-system));return `<tr><td><strong>${esc(storeName(x.store))}</strong><div class="panel-subtitle">${esc(x.store)}</div></td><td>${esc(prodName(x.sku))}<div class="panel-subtitle">${esc(x.sku)}</div></td><td>${x.opening}</td><td>${x.incoming}</td><td>${x.sold}</td><td>${x.returns}</td><td><strong>${system}</strong></td><td>${x.physical==null?'—':x.physical}</td><td>${delta==null?'—':`${delta>0?'+':''}${delta}`}</td><td><button class="link-btn" data-action="count-branch" data-id="${esc(x.store+'|'+x.sku)}">Opname</button></td></tr>`});
@@ -410,13 +445,7 @@
     }
     $('#crumbCurrent').textContent=pageNames[current];
     $$('.nav-item').forEach(x=>{
-      if(x.dataset.warehouseTab==='sold'){
-        x.classList.toggle('active',current==='warehouse'&&warehouseDispatchTab==='sold');
-      }else if(x.dataset.page==='warehouse'){
-        x.classList.toggle('active',current==='warehouse'&&warehouseDispatchTab!=='sold');
-      }else{
-        x.classList.toggle('active',x.dataset.page===current);
-      }
+      x.classList.toggle('active', x.dataset.page === current);
     });
     const lowStockBadge=$('#lowStockBadge');if(lowStockBadge){const count=data.products.filter(p=>hasStock(p)&&p.stock<10).length;lowStockBadge.textContent=count;lowStockBadge.hidden=count===0}const invoiceBadge=$('#invoiceBadge');if(invoiceBadge){const count=data.invoices.filter(i=>i.status!=='Paid').length;invoiceBadge.textContent=count;invoiceBadge.hidden=count===0}bindDynamic();
   }
