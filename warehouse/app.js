@@ -1207,7 +1207,7 @@ function warehouse(){
            .document-title{margin:0.5mm 0!important;padding:0.3mm 0!important;border-bottom:1.5px solid #000!important;text-align:center!important;width:212mm!important}
            .document-title h1{margin:0!important;font-size:${dynDocTitle}!important;font-weight:700!important;letter-spacing:0.04em!important;line-height:1.15!important}
            .document-title p{margin:0.2mm 0 0!important;font-size:${dynFont}!important;font-weight:700!important;line-height:1.15!important}
-           .meta{display:grid!important;grid-template-columns:42% 58%!important;gap:0.5mm 4mm!important;margin-bottom:0.5mm!important;width:212mm!important}
+           .meta{display:grid!important;grid-template-columns:37% 63%!important;gap:0.5mm 4mm!important;margin-bottom:0.5mm!important;width:212mm!important}
            .meta-group{display:grid!important;grid-template-columns:minmax(28mm,auto) 1fr!important;gap:${dynMetaGap}!important;align-content:start!important;min-width:0!important}
            .meta-group h2{grid-column:1/-1!important;margin:0 0 1px!important;padding-bottom:1px!important;border-bottom:1px solid #000!important;font-size:${dynFont}!important;font-weight:700!important;line-height:1.15!important}
            .meta-group span{font-size:${dynFont}!important;font-weight:700!important;white-space:nowrap!important;line-height:1.15!important;color:#000!important}
