@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#FFFFFF" />
   <title>Howell Inventory · Portal Gudang</title>
   <link rel="icon" type="image/png" href="assets/howell-mark-color.png?v=20261118-howell-favicon-color-2" />
-  <link rel="stylesheet" href="styles.css?v=20261112-search-5" />
-  <link rel="stylesheet" href="theme-light.css?v=20261118-po-pill-search-14" />
+  <link rel="stylesheet" href="styles.css?v=20261120-lang-i18n-1" />
+  <link rel="stylesheet" href="theme-light.css?v=20261120-lang-i18n-1" />
   <style>
     body.warehouse-portal .sidebar { position:fixed; }
     body.warehouse-portal .nav-group-preferences { display:none; }
@@ -32,7 +32,7 @@
       <div class="sidebar-bottom"><div class="profile"><div class="avatar">G</div><div class="profile-info"><strong>Portal Gudang</strong><small>Akses operasional</small></div></div></div>
     </aside>
     <main class="main-area">
-      <header class="topbar"><button class="top-text-button menu-toggle" id="menuToggle" aria-label="Buka menu">Menu</button><div class="crumb"><span>HOWELL</span><b>/</b><strong id="crumbCurrent">Gudang</strong></div><div class="top-actions"><div class="global-search"><input id="globalSearch" aria-label="Cari" /><button id="globalSearchSubmit" type="button">Cari</button></div><button class="top-icon-button" id="filterButton">Filter</button><select id="topPeriod"><option value="week">Minggu ini</option></select><button class="top-icon-button notification" id="notificationButton">Notifikasi</button><div class="top-profile"><div class="top-avatar">G</div><div><strong>Portal Gudang</strong><small>Operator</small></div></div></div></header>
+      <header class="topbar"><button class="top-text-button menu-toggle" id="menuToggle" aria-label="Buka menu">Menu</button><div class="crumb"><span>HOWELL</span><b>/</b><strong id="crumbCurrent">Gudang</strong></div><div class="top-actions"><div class="global-search"><input id="globalSearch" aria-label="Cari" /><button id="globalSearchSubmit" type="button">Cari</button></div><div class="top-lang-wrapper" id="langWrapper"><button type="button" class="top-lang-button" id="langButton" aria-label="Pilih bahasa / Select language / 选择语言" title="Pilih Bahasa (ID / EN / ZH)" aria-expanded="false" aria-haspopup="true"><svg class="lang-globe-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg><span class="lang-code-text" id="langCurrentCode">ID</span><svg class="lang-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="top-lang-dropdown" id="langMenu" role="menu" aria-hidden="true"><button type="button" class="top-lang-item active" data-lang="id" role="menuitem"><span class="lang-item-flag">🇮🇩</span><span class="lang-item-text"><strong>Bahasa Indonesia</strong><small>Bahasa sistem</small></span><span class="lang-item-check" aria-hidden="true">✓</span></button><button type="button" class="top-lang-item" data-lang="en" role="menuitem"><span class="lang-item-flag">🇬🇧</span><span class="lang-item-text"><strong>English</strong><small>System language</small></span><span class="lang-item-check" aria-hidden="true">✓</span></button><button type="button" class="top-lang-item" data-lang="zh" role="menuitem"><span class="lang-item-flag">🇨🇳</span><span class="lang-item-text"><strong>中文 (Mandarin)</strong><small>简体中文界面</small></span><span class="lang-item-check" aria-hidden="true">✓</span></button></div></div><select id="topPeriod"><option value="week">Minggu ini</option></select><button class="top-icon-button notification" id="notificationButton">Notifikasi</button><div class="top-profile"><div class="top-avatar">G</div><div><strong>Portal Gudang</strong><small>Operator</small></div></div></div></header>
       <section class="page-content" id="pageContent"></section>
       <footer class="footer"><span>© 2026 Howell Inventory · Portal Gudang</span><span id="syncStatus" title="Memeriksa database…"><span class="status-dot"></span><span id="syncStatusText">Memeriksa database…</span></span></footer>
     </main>
@@ -44,7 +44,7 @@
   <script src="assets/product-image-map.js?v=20261111-ean13-2"></script>
   <script src="assets/howell-runtime-config.js?v=20261111-vps-db-1"></script>
   <script src="assets/xlsx.full.min.js"></script>
-  <script src="app.js?v=20261118-watermark-center-28"></script>
+  <script src="app.js?v=20261120-lang-i18n-1"></script>
 </body>
 </html>
 

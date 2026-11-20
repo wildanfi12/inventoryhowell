@@ -29,13 +29,736 @@
     const importedProducts=source.products.map(src=>{const old=(legacy.products||[]).find(x=>x.sku===src.sku),count=(legacy.counts||[]).find(x=>x.sku===src.sku);return{...src,barcode:old?.barcode||src.barcode,brand:old?.brand||src.brand,stock:count?.physical??(legacy.seedVersion>=2&&old?.stock!=null?old.stock:null),stockSource:old?.stockSource||count?.source||null}});const normalizedExtraStores=extraStores.map(x=>({...x,term:x.term||'Bulanan',supplierShare:x.supplierShare??65,storeShare:x.storeShare??35,effectiveDate:x.effectiveDate||'',agreementStatus:x.agreementStatus||'Perlu perjanjian'}));const importedStores=source.paperclipBranches.map(src=>{const old=(legacy.stores||[]).find(x=>x.code===src.code);return old?{...src,...old,code:src.code,network:old.network||src.network,region:old.region||src.region,term:old.term||src.term,supplierShare:old.supplierShare??src.supplierShare,storeShare:old.storeShare??src.storeShare,effectiveDate:old.effectiveDate||'',agreementStatus:old.agreementStatus||'Perlu perjanjian'}:src});data={...data,products:[...importedProducts,...extraProducts],stores:[...importedStores,...normalizedExtraStores],shipments,sales:sales.map(x=>({...x,status:x.status||'Disetujui'})),invoices,returns,branchStock:branchStock.filter(x=>data.stores.some(y=>y.code===x.store)||keepStores.some(y=>y.code===x.store)),counts:(legacy.counts||[]),countHistory:(legacy.countHistory||[]),audit,demo:false,seedVersion:2};
   }
   try{localStorage.setItem(KEY,JSON.stringify(data))}catch(error){console.warn('Data Howell gagal disimpan di cache browser saat aplikasi dimulai:',error);}
-  const pageNames={dashboard:'Ringkasan',inventory:'Stok & Opname',warehouse:'Gudang','sales-history':'Riwayat',products:'Master Produk',stores:'Cabang Retail',shipments:'Purchase Order',sales:'Riwayat',invoices:'Tagihan & Pembayaran',returns:'Retur Barang',reports:'Laporan',settings:'Pengaturan'};
+  const pageNames = {
+    get dashboard() { return t('menu_dashboard', 'Ringkasan'); },
+    get inventory() { return t('menu_inventory', 'Stok & Opname'); },
+    get warehouse() { return t('menu_warehouse', 'Gudang'); },
+    get 'sales-history'() { return t('menu_history', 'Riwayat'); },
+    get products() { return t('menu_products', 'Master Produk'); },
+    get stores() { return t('menu_stores', 'Cabang Retail'); },
+    get shipments() { return t('menu_shipments', 'Purchase Order'); },
+    get sales() { return t('menu_history', 'Riwayat'); },
+    get invoices() { return t('menu_invoices', 'Tagihan & Pembayaran'); },
+    get returns() { return t('menu_returns', 'Retur'); },
+    get reports() { return t('menu_reports', 'Laporan'); },
+    get settings() { return t('menu_settings', 'Pengaturan'); }
+  };
   const portalRole=window.HOWELL_PORTAL_ROLE||'admin';
   const allowedPages=portalRole==='warehouse'?new Set(['warehouse','sales-history','inventory','returns']):null;
+  // === MULTI-LANGUAGE SYSTEM (ID / EN / ZH) ===
+  const I18N = {
+    id: {
+      // Nav & Sections
+      nav_main: 'UTAMA',
+      nav_operations: 'OPERASIONAL',
+      menu_dashboard: 'Ringkasan',
+      menu_products: 'Master Produk',
+      menu_stores: 'Cabang Retail',
+      menu_shipments: 'Purchase Order',
+      menu_warehouse: 'Gudang',
+      menu_inventory: 'Stok & Opname',
+      menu_history: 'Riwayat',
+      menu_returns: 'Retur',
+      menu_reports: 'Laporan',
+      menu_settings: 'Pengaturan',
+      menu_invoices: 'Tagihan & Pembayaran',
+
+      // Topbar
+      search_placeholder: 'Cari produk, SKU, transaksi…',
+      search_btn: 'Cari',
+      scan_btn: 'Pindai',
+      period_week: 'Minggu ini',
+      period_month: 'Bulan ini',
+      notification: 'Notifikasi',
+      role_admin: 'Administrator',
+      role_warehouse: 'Operator Gudang',
+      no_notifications: 'Tidak ada notifikasi baru.',
+      lang_changed: 'Bahasa diubah ke Bahasa Indonesia',
+
+      // Common actions
+      export_excel: 'Ekspor Excel',
+      add_product: 'Tambah produk',
+      add_store: 'Tambah cabang',
+      create_po: 'Buat Purchase Order',
+      record_recon: 'Catat rekonsiliasi',
+      start_stocktake: 'Mulai opname gudang',
+      branch_stocktake: 'Opname cabang',
+      scan_ean13: 'Pindai EAN-13',
+      view_all: 'Lihat semua',
+      save_data: 'Simpan data',
+      cancel: 'Batal',
+      close: 'Tutup',
+      edit: 'Edit',
+      delete: 'Hapus',
+      print_waybill: 'Cetak surat jalan',
+      view_sales: 'Lihat di Riwayat',
+      sku_details: 'Rincian SKU',
+      change_status: 'Ubah status',
+      mark_sold: 'Selesai terjual (Done)',
+      all_categories: 'Semua kategori',
+      all_statuses: 'Semua status',
+      empty_data: 'Belum ada data',
+
+      // Riwayat Page
+      history_title: 'Riwayat',
+      history_subtitle: 'Riwayat surat jalan selesai terjual dari gudang serta rekonsiliasi fisik per cabang dan SKU.',
+      history_tab_sold: 'Surat Jalan Terjual',
+      history_tab_sku: 'Rekonsiliasi SKU',
+      history_tab_all: 'Semua Transaksi',
+      history_kpi_net: 'OMSET BERSIH TERCATAT',
+      history_kpi_units: 'UNIT TERJUAL',
+      history_kpi_waybills: 'SURAT JALAN SELESAI',
+      history_kpi_pending: 'MENUNGGU PERSETUJUAN',
+      history_sub_recon: 'Rekonsiliasi tersimpan',
+      history_sub_approved: 'Hanya laporan disetujui',
+      history_sub_confirmed: 'Barang keluar terkonfirmasi',
+      history_sub_review: 'Perlu ditinjau sebelum tutup periode',
+      history_banner: 'Barang terjual = stok awal periode + stok masuk − stok fisik akhir − retur terkonfirmasi. Harga retail dan bagi hasil disimpan sebagai snapshot pada saat laporan dibuat.',
+
+      // Gudang Page
+      warehouse_title: 'Gudang',
+      warehouse_subtitle: 'Pengelolaan penerimaan, pengeluaran surat jalan, dan stok opname gudang pusat.',
+      warehouse_po_heading: 'Purchase Order untuk gudang',
+      warehouse_po_sub: 'PO yang dibuat langsung tercatat di sini. Atur statusnya; surat jalan tersedia setelah PO disetujui.',
+      warehouse_history_heading: 'Riwayat surat jalan',
+      warehouse_history_sub: 'Pengeluaran terbaru yang sudah disimpan dari Gudang.',
+
+      // Dashboard
+      dash_title: 'Ringkasan',
+      dash_kpi_total_stock: 'TOTAL STOK',
+      dash_kpi_in_transit: 'DALAM PENGIRIMAN',
+      dash_kpi_branches: 'TOTAL CABANG',
+      dash_kpi_total_sales: 'TOTAL PENJUALAN',
+      dash_posisi_stok: 'Posisi persediaan',
+      dash_need_attention: 'PERLU PERHATIAN',
+      dash_low_stock: 'Stok menipis',
+      dash_recent_trans: 'Transaksi terbaru',
+      dash_sales_perf: 'Performa penjualan',
+      dash_center_wh: 'Gudang pusat',
+      dash_branch: 'Cabang',
+      dash_shipment: 'Pengiriman',
+      dash_overview: 'HOWELL INVENTORY OVERVIEW',
+
+      // Master Produk
+      products_title: 'Master Produk',
+      products_sub: 'Katalog dari seluruh sheet master, dipasangkan dengan pricelist B2B Howell.',
+
+      // Cabang Retail
+      stores_title: 'Cabang Retail',
+      stores_sub: 'Kelola jaringan toko konsinyasi yang menerima produk Howell.',
+
+      // Shipments / PO
+      shipments_title: 'Purchase Order',
+      shipments_sub: 'Daftar pesanan barang ke cabang retail konsinyasi.',
+
+      // Inventory
+      inventory_title: 'Stok & Opname',
+      inventory_sub: 'Lakukan opname fisik gudang pusat dan bandingkan saldo cabang.',
+
+      // Reports
+      reports_title: 'Laporan',
+      reports_sub: 'Ringkasan inventori, cabang, distribusi, penjualan, dan rekonsiliasi dari data tersimpan.',
+
+      // Returns
+      returns_title: 'Retur Barang',
+      returns_sub: 'Kelola retur barang rusak atau klaim dari cabang retail.',
+
+      // Settings
+      settings_title: 'Pengaturan',
+      settings_sub: 'Kelola data Howell Inventory dan status sinkronisasi server.',
+
+      // Table Columns
+      col_waybill_no: 'NOMOR SURAT JALAN',
+      col_po_no: 'NOMOR PO',
+      col_customer: 'CUSTOMER',
+      col_date: 'TANGGAL',
+      col_qty_out: 'QUANTITY KELUAR',
+      col_po_status: 'STATUS PO',
+      col_actions: 'TINDAKAN & DOKUMEN',
+      col_recon_no: 'NOMOR REKONSILIASI',
+      col_branch: 'CABANG',
+      col_period: 'PERIODE',
+      col_sku_prod: 'SKU & PRODUK',
+      col_calc_details: 'RINCIAN HITUNG UNIT',
+      col_gross_sales: 'PENJUALAN KOTOR',
+      col_retail_discount: 'DISKON RETAIL',
+      col_net_sales: 'PENJUALAN BERSIH',
+      col_status: 'STATUS',
+      col_product: 'PRODUK',
+      col_sku: 'SKU',
+      col_category: 'KATEGORI',
+      col_hpp: 'HPP+10%',
+      col_srp: 'SRP / HET',
+      col_store_share: 'Porsi Paperclip',
+      col_central_stock: 'Stok pusat',
+      col_address: 'ALAMAT PENGIRIMAN',
+      col_pic: 'PENANGGUNG JAWAB',
+      col_po_no_pic: 'NOMOR PO / PENANGGUNG JAWAB',
+      col_customer_date: 'CUSTOMER / TANGGAL PO',
+      col_prod_qty: 'PRODUK DAN QUANTITY',
+
+      // Statuses
+      st_approved: 'Disetujui',
+      st_sold: 'Selesai terjual',
+      st_shipped: 'Dikirim',
+      st_received: 'Diterima',
+      st_in_progress: 'Dalam proses',
+      st_pending: 'Pending',
+      st_rejected: 'Tidak disetujui',
+      st_suspended: 'Ditangguhkan',
+      st_available: 'Tersedia',
+      st_low: 'Stok Menipis',
+      st_uncounted: 'Belum opname',
+      st_draft: 'Draft',
+      st_partial: 'Sebagian (Partial)',
+      col_invoice_no: "Nomor tagihan",
+      col_retail_branch: "Cabang retail",
+      col_invoice_date: "Tanggal tagihan",
+      col_due_date: "Jatuh tempo",
+      col_retail_commission: "Komisi retail",
+      col_net_to_howell: "Pembayaran bersih ke Howell",
+      col_payment_received: "Pembayaran masuk",
+      col_total: "Total",
+      col_notes: "Catatan",
+      search_data: "Cari data...",
+      empty_subtitle: "Tambahkan data untuk mulai melacak aktivitas.",
+      history_waybills_sub: "Pengeluaran terbaru yang sudah selesai terjual dari Gudang.",
+      approve_recon: "Setujui rekonsiliasi",
+      create_invoice: "Buat invoice periode",
+      unit_suffix: " unit",
+      sj_suffix: " SJ",
+      btn_shipments: "Buka Purchase Order",
+      btn_inventory: "Buka Stok & Opname",
+      po_active: "PO berjalan",
+      po_active_sub: "Masih memiliki quantity yang belum keluar",
+      po_ready: "PO siap dikirim",
+      po_ready_sub: "Sudah disetujui dan dapat dibuatkan surat jalan",
+      po_outstanding: "Unit belum keluar",
+      po_outstanding_sub: "Sisa quantity pada PO yang berjalan",
+      wh_sold_units_sub: "unit selesai terjual",
+    },
+    en: {
+      // Nav & Sections
+      nav_main: 'MAIN',
+      nav_operations: 'OPERATIONS',
+      menu_dashboard: 'Dashboard',
+      menu_products: 'Master Products',
+      menu_stores: 'Retail Branches',
+      menu_shipments: 'Purchase Order',
+      menu_warehouse: 'Warehouse',
+      menu_inventory: 'Stock & Opname',
+      menu_history: 'History',
+      menu_returns: 'Returns',
+      menu_reports: 'Reports',
+      menu_settings: 'Settings',
+      menu_invoices: 'Billing & Invoices',
+
+      // Topbar
+      search_placeholder: 'Search products, SKU, transactions…',
+      search_btn: 'Search',
+      scan_btn: 'Scan',
+      period_week: 'This week',
+      period_month: 'This month',
+      notification: 'Notifications',
+      role_admin: 'Administrator',
+      role_warehouse: 'Warehouse Operator',
+      no_notifications: 'No new notifications.',
+      lang_changed: 'Language changed to English',
+
+      // Common actions
+      export_excel: 'Export Excel',
+      add_product: 'Add product',
+      add_store: 'Add branch',
+      create_po: 'Create Purchase Order',
+      record_recon: 'Record reconciliation',
+      start_stocktake: 'Start warehouse count',
+      branch_stocktake: 'Branch count',
+      scan_ean13: 'Scan EAN-13',
+      view_all: 'View all',
+      save_data: 'Save data',
+      cancel: 'Cancel',
+      close: 'Close',
+      edit: 'Edit',
+      delete: 'Delete',
+      print_waybill: 'Print waybill',
+      view_sales: 'View in History',
+      sku_details: 'SKU details',
+      change_status: 'Change status',
+      mark_sold: 'Mark sold (Done)',
+      all_categories: 'All categories',
+      all_statuses: 'All statuses',
+      empty_data: 'No data available',
+
+      // Riwayat Page
+      history_title: 'History',
+      history_subtitle: 'History of sold waybills dispatched from warehouse and physical reconciliation per branch & SKU.',
+      history_tab_sold: 'Sold Waybills',
+      history_tab_sku: 'SKU Reconciliation',
+      history_tab_all: 'All Transactions',
+      history_kpi_net: 'RECORDED NET REVENUE',
+      history_kpi_units: 'UNITS SOLD',
+      history_kpi_waybills: 'COMPLETED WAYBILLS',
+      history_kpi_pending: 'PENDING APPROVAL',
+      history_sub_recon: 'Saved reconciliation',
+      history_sub_approved: 'Approved reports only',
+      history_sub_confirmed: 'Confirmed dispatched goods',
+      history_sub_review: 'Review needed before period close',
+      history_banner: 'Sold goods = initial period stock + incoming stock − final physical stock − confirmed returns. Retail price and revenue shares are saved as snapshot when report is created.',
+
+      // Gudang Page
+      warehouse_title: 'Warehouse',
+      warehouse_subtitle: 'Management of receipts, waybill dispatch, and central warehouse stock opname.',
+      warehouse_po_heading: 'Purchase Orders for warehouse',
+      warehouse_po_sub: 'Created POs are recorded here immediately. Set status; waybills are available once PO is approved.',
+      warehouse_history_heading: 'Waybill history',
+      warehouse_history_sub: 'Recent dispatches saved from Warehouse.',
+
+      // Dashboard
+      dash_title: 'Dashboard',
+      dash_kpi_total_stock: 'TOTAL STOCK',
+      dash_kpi_in_transit: 'IN TRANSIT',
+      dash_kpi_branches: 'TOTAL BRANCHES',
+      dash_kpi_total_sales: 'TOTAL SALES',
+      dash_posisi_stok: 'Inventory position',
+      dash_need_attention: 'NEEDS ATTENTION',
+      dash_low_stock: 'Low stock',
+      dash_recent_trans: 'Recent transactions',
+      dash_sales_perf: 'Sales performance',
+      dash_center_wh: 'Central warehouse',
+      dash_branch: 'Branch',
+      dash_shipment: 'Dispatch',
+      dash_overview: 'HOWELL INVENTORY OVERVIEW',
+
+      // Master Produk
+      products_title: 'Master Products',
+      products_sub: 'Catalog from master sheets paired with Howell B2B pricelist.',
+
+      // Cabang Retail
+      stores_title: 'Retail Branches',
+      stores_sub: 'Manage consignment retail stores carrying Howell products.',
+
+      // Shipments / PO
+      shipments_title: 'Purchase Order',
+      shipments_sub: 'List of purchase orders to consignment retail branches.',
+
+      // Inventory
+      inventory_title: 'Stock & Stocktake',
+      inventory_sub: 'Perform physical stocktake for central warehouse and compare branch balances.',
+
+      // Reports
+      reports_title: 'Reports',
+      reports_sub: 'Summary of inventory, branches, distribution, sales, and reconciliation from saved data.',
+
+      // Returns
+      returns_title: 'Returns',
+      returns_sub: 'Manage damaged returns or claims from retail stores.',
+
+      // Settings
+      settings_title: 'Settings',
+      settings_sub: 'Manage Howell Inventory data and server synchronization status.',
+
+      // Table Columns
+      col_waybill_no: 'WAYBILL NUMBER',
+      col_po_no: 'PO NUMBER',
+      col_customer: 'CUSTOMER',
+      col_date: 'DATE',
+      col_qty_out: 'DISPATCHED QTY',
+      col_po_status: 'PO STATUS',
+      col_actions: 'ACTIONS & DOCUMENTS',
+      col_recon_no: 'RECONCILIATION NO',
+      col_branch: 'BRANCH',
+      col_period: 'PERIOD',
+      col_sku_prod: 'SKU & PRODUCT',
+      col_calc_details: 'CALCULATION DETAILS',
+      col_gross_sales: 'GROSS SALES',
+      col_retail_discount: 'RETAIL DISCOUNT',
+      col_net_sales: 'NET SALES',
+      col_status: 'STATUS',
+      col_product: 'PRODUCT',
+      col_sku: 'SKU',
+      col_category: 'CATEGORY',
+      col_hpp: 'COST+10%',
+      col_srp: 'SRP / RETAIL',
+      col_store_share: 'Paperclip Share',
+      col_central_stock: 'Central stock',
+      col_address: 'SHIPPING ADDRESS',
+      col_pic: 'PERSON IN CHARGE',
+      col_po_no_pic: 'PO NUMBER / PIC',
+      col_customer_date: 'CUSTOMER / PO DATE',
+      col_prod_qty: 'PRODUCTS AND QUANTITY',
+
+      // Statuses
+      st_approved: 'Approved',
+      st_sold: 'Sold (Done)',
+      st_shipped: 'Shipped',
+      st_received: 'Received',
+      st_in_progress: 'In Progress',
+      st_pending: 'Pending',
+      st_rejected: 'Rejected',
+      st_suspended: 'Suspended',
+      st_available: 'In Stock',
+      st_low: 'Low Stock',
+      st_uncounted: 'Uncounted',
+      st_draft: 'Draft',
+      st_partial: 'Partial',
+      col_invoice_no: "Invoice No",
+      col_retail_branch: "Retail Branch",
+      col_invoice_date: "Invoice Date",
+      col_due_date: "Due Date",
+      col_retail_commission: "Retail Commission",
+      col_net_to_howell: "Net to Howell",
+      col_payment_received: "Payment Received",
+      col_total: "Total",
+      col_notes: "Notes",
+      search_data: "Search data...",
+      empty_subtitle: "Add data to start tracking activity.",
+      history_waybills_sub: "Recent dispatches marked as sold from Warehouse.",
+      approve_recon: "Approve reconciliation",
+      create_invoice: "Create period invoice",
+      unit_suffix: " units",
+      sj_suffix: " Waybills",
+      btn_shipments: "Open Purchase Orders",
+      btn_inventory: "Open Stock & Stocktake",
+      po_active: "Active POs",
+      po_active_sub: "Has remaining quantity to be dispatched",
+      po_ready: "Ready for Dispatch",
+      po_ready_sub: "Approved and ready for waybill creation",
+      po_outstanding: "Units Pending Dispatch",
+      po_outstanding_sub: "Remaining quantity across active POs",
+      wh_sold_units_sub: "units marked as sold",
+    },
+    zh: {
+      // Nav & Sections
+      nav_main: '主要',
+      nav_operations: '运营管理',
+      menu_dashboard: '概览',
+      menu_products: '产品主数据',
+      menu_stores: '零售网点',
+      menu_shipments: '采购订单',
+      menu_warehouse: '仓库管理',
+      menu_inventory: '库存与盘点',
+      menu_history: '销售历史',
+      menu_returns: '退货管理',
+      menu_reports: '报表分析',
+      menu_settings: '系统设置',
+      menu_invoices: '账单与付款',
+
+      // Topbar
+      search_placeholder: '搜索产品、SKU、交易…',
+      search_btn: '搜索',
+      scan_btn: '扫码',
+      period_week: '本周',
+      period_month: '本月',
+      notification: '通知',
+      role_admin: '系统管理员',
+      role_warehouse: '仓库操作员',
+      no_notifications: '暂无新通知。',
+      lang_changed: '语言已切换为中文 (Mandarin)',
+
+      // Common actions
+      export_excel: '导出 Excel',
+      add_product: '新增产品',
+      add_store: '新增门店',
+      create_po: '创建采购订单',
+      record_recon: '记录对账',
+      start_stocktake: '开始仓库盘点',
+      branch_stocktake: '门店盘点',
+      scan_ean13: '扫描 EAN-13',
+      view_all: '查看全部',
+      save_data: '保存数据',
+      cancel: '取消',
+      close: '关闭',
+      edit: '编辑',
+      delete: '删除',
+      print_waybill: '打印出库运单',
+      view_sales: '在历史中查看',
+      sku_details: 'SKU 详情',
+      change_status: '修改状态',
+      mark_sold: '确认售出 (Done)',
+      all_categories: '全部类别',
+      all_statuses: '全部状态',
+      empty_data: '暂无数据',
+
+      // Riwayat Page
+      history_title: '销售与出库历史',
+      history_subtitle: '已完成售出的出库运单及各门店与SKU的实物对账记录。',
+      history_tab_sold: '已售出库单',
+      history_tab_sku: 'SKU 对账明细',
+      history_tab_all: '全部交易',
+      history_kpi_net: '已记录净营业额',
+      history_kpi_units: '已售出数量',
+      history_kpi_waybills: '已完成运单',
+      history_kpi_pending: '等待审批',
+      history_sub_recon: '已保存对账',
+      history_sub_approved: '仅已批准报告',
+      history_sub_confirmed: '已确认出库商品',
+      history_sub_review: '结账前需审核',
+      history_banner: '已售商品 = 期初库存 + 入库 − 期末实物库存 − 确认退货。零售价与分成比例在生成报告时保存为快照。',
+
+      // Gudang Page
+      warehouse_title: '仓库管理',
+      warehouse_subtitle: '中心仓库入库、出库运单签发及库存实物盘点管理。',
+      warehouse_po_heading: '仓库采购订单处理',
+      warehouse_po_sub: '新建采购订单将直接显示在此处。审核通过后即可创建出库运单。',
+      warehouse_history_heading: '出库运单历史',
+      warehouse_history_sub: '中心仓库近期保存的出库单记录。',
+
+      // Dashboard
+      dash_title: '概览',
+      dash_kpi_total_stock: '总库存',
+      dash_kpi_in_transit: '运输在途',
+      dash_kpi_branches: '合作门店总数',
+      dash_kpi_total_sales: '总销售额',
+      dash_posisi_stok: '库存分布状况',
+      dash_need_attention: '需关注事项',
+      dash_low_stock: '库存紧张',
+      dash_recent_trans: '最新交易记录',
+      dash_sales_perf: '销售业绩趋势',
+      dash_center_wh: '中心仓库',
+      dash_branch: '门店',
+      dash_shipment: '出库发货',
+      dash_overview: 'HOWELL INVENTORY OVERVIEW',
+
+      // Master Produk
+      products_title: '产品主数据',
+      products_sub: '来自主表的产品目录，对应 Howell B2B 价格清单。',
+
+      // Cabang Retail
+      stores_title: '零售网点',
+      stores_sub: '管理销售 Howell 产品的代销门店网络。',
+
+      // Shipments / PO
+      shipments_title: '采购订单',
+      shipments_sub: '发往代销零售门店的采购订单列表。',
+
+      // Inventory
+      inventory_title: '库存与盘点',
+      inventory_sub: '执行中心仓库实物盘点并核对门店账面余额。',
+
+      // Reports
+      reports_title: '报表分析',
+      reports_sub: '基于系统保存数据的库存、门店、配送、销售及对账统计分析。',
+
+      // Returns
+      returns_title: '退货管理',
+      returns_sub: '管理来自零售门店的破损退货或退货申请。',
+
+      // Settings
+      settings_title: '系统设置',
+      settings_sub: '管理 Howell Inventory 数据与服务器同步状态。',
+
+      // Table Columns
+      col_waybill_no: '出库运单号',
+      col_po_no: '采购订单号',
+      col_customer: '客户 / 目标门店',
+      col_date: '日期',
+      col_qty_out: '出库数量',
+      col_po_status: '订单状态',
+      col_actions: '操作与单据',
+      col_recon_no: '对账单编号',
+      col_branch: '门店',
+      col_period: '结算周期',
+      col_sku_prod: 'SKU 与产品名称',
+      col_calc_details: '核算明细',
+      col_gross_sales: '销售总额',
+      col_retail_discount: '零售折扣',
+      col_net_sales: '净销售额',
+      col_status: '状态',
+      col_product: '产品',
+      col_sku: 'SKU',
+      col_category: '产品分类',
+      col_hpp: '成本价+10%',
+      col_srp: '建议零售价 (HET)',
+      col_store_share: '门店分成比例',
+      col_central_stock: '中心仓库库存',
+      col_address: '送货地址',
+      col_pic: '负责人',
+      col_po_no_pic: '采购订单 / 负责人',
+      col_customer_date: '客户 / 订单日期',
+      col_prod_qty: '产品与出库数量',
+
+      // Statuses
+      st_approved: '已批准',
+      st_sold: '已售出 (Done)',
+      st_shipped: '已发货',
+      st_received: '已收货',
+      st_in_progress: '处理中',
+      st_pending: '待处理',
+      st_rejected: '已拒绝',
+      st_suspended: '已暂停',
+      st_available: '库存充足',
+      st_low: '库存告急',
+      st_uncounted: '尚未盘点',
+      st_draft: '草稿',
+      st_partial: '部分处理',
+      col_invoice_no: "账单编号",
+      col_retail_branch: "零售网点",
+      col_invoice_date: "账单日期",
+      col_due_date: "到期日",
+      col_retail_commission: "零售分成",
+      col_net_to_howell: "Howell 净结算",
+      col_payment_received: "实收金额",
+      col_total: "合计",
+      col_notes: "备注",
+      search_data: "搜索数据...",
+      empty_subtitle: "添加数据以开始跟踪业务。",
+      history_waybills_sub: "中心仓库最新确认已售出的出库单。",
+      approve_recon: "批准对账",
+      create_invoice: "创建周期账单",
+      unit_suffix: " 件",
+      sj_suffix: " 张运单",
+      btn_shipments: "查看采购订单",
+      btn_inventory: "查看库存与盘点",
+      po_active: "在途采购订单",
+      po_active_sub: "仍有尚未发运出库的数量",
+      po_ready: "待发运订单",
+      po_ready_sub: "已批准并可创建出库单",
+      po_outstanding: "待出库数量",
+      po_outstanding_sub: "在途订单剩余待发运数量",
+      wh_sold_units_sub: "件商品已确认售出",
+    }
+  };
+
+  let currentLang = (typeof localStorage !== 'undefined' && localStorage.getItem('howell-lang')) || 'id';
+
+  function t(key, fallback = '') {
+    return I18N[currentLang]?.[key] || I18N['id']?.[key] || fallback || key;
+  }
+
+  function translateStatus(s) {
+    if (!s) return '';
+    const map = {
+      'Disetujui': t('st_approved', 'Disetujui'),
+      'Selesai terjual': t('st_sold', 'Selesai terjual'),
+      'Done': t('st_sold', 'Done'),
+      'Terjual': t('st_sold', 'Terjual'),
+      'Dikirim': t('st_shipped', 'Dikirim'),
+      'Received': t('st_received', 'Diterima'),
+      'Diterima': t('st_received', 'Diterima'),
+      'In Transit': t('st_shipped', 'In Transit'),
+      'Dalam proses': t('st_in_progress', 'Dalam proses'),
+      'Proses': t('st_in_progress', 'Proses'),
+      'Pending': t('st_pending', 'Pending'),
+      'Tidak disetujui': t('st_rejected', 'Tidak disetujui'),
+      'Ditangguhkan': t('st_suspended', 'Ditangguhkan'),
+      'Tersedia': t('st_available', 'Tersedia'),
+      'Stok Menipis': t('st_low', 'Stok Menipis'),
+      'Belum opname': t('st_uncounted', 'Belum opname'),
+      'Draft': t('st_draft', 'Draft'),
+      'Partial': t('st_partial', 'Partial')
+    };
+    return map[s] || s;
+  }
+
+  function setLanguage(lang) {
+    if (!['id', 'en', 'zh'].includes(lang)) lang = 'id';
+    currentLang = lang;
+    try { localStorage.setItem('howell-lang', lang); } catch (e) {}
+    updateDomLanguage();
+    render();
+    toast(t('lang_changed', 'Bahasa diperbarui.'));
+  }
+
+  function updateDomLanguage() {
+    // 1. Language selector UI
+    const codeEl = $('#langCurrentCode');
+    if (codeEl) codeEl.textContent = currentLang.toUpperCase();
+    $$('.top-lang-item').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === currentLang);
+    });
+
+    // 2. Sidebar Navigation Items
+    const navTitles = {
+      dashboard: t('menu_dashboard', 'Ringkasan'),
+      products: t('menu_products', 'Master Produk'),
+      stores: t('menu_stores', 'Cabang Retail'),
+      shipments: t('menu_shipments', 'Purchase Order'),
+      warehouse: t('menu_warehouse', 'Gudang'),
+      inventory: t('menu_inventory', 'Stok & Opname'),
+      sales: t('menu_history', 'Riwayat'),
+      returns: t('menu_returns', 'Retur'),
+      reports: t('menu_reports', 'Laporan'),
+      settings: t('menu_settings', 'Pengaturan')
+    };
+
+    $$('.nav-item').forEach(btn => {
+      const p = btn.dataset.page;
+      if (navTitles[p]) {
+        btn.setAttribute('title', navTitles[p]);
+        btn.setAttribute('aria-label', navTitles[p]);
+        const span = btn.querySelector('span');
+        if (span) span.textContent = navTitles[p];
+      }
+    });
+
+    // 3. Sidebar Nav Group Labels
+    const navLabels = $$('.nav-label');
+    if (navLabels[0]) navLabels[0].textContent = t('nav_main', 'UTAMA');
+    if (navLabels[1]) navLabels[1].textContent = t('nav_operations', 'OPERASIONAL');
+
+    // 4. Header Crumb
+    const crumb = $('#crumbCurrent');
+    if (crumb) crumb.textContent = navTitles[current] || current;
+
+    // 5. Header Search & Scan Controls
+    const searchInput = $('#globalSearch');
+    if (searchInput) searchInput.setAttribute('placeholder', t('search_placeholder', 'Cari produk, SKU, transaksi…'));
+    const searchBtn = $('#globalSearchSubmit');
+    if (searchBtn) searchBtn.textContent = t('search_btn', 'Cari');
+    const scanSpan = $('#barcodeScanOpen span');
+    if (scanSpan) scanSpan.textContent = t('scan_btn', 'Pindai');
+
+    // 6. Header Period Filter
+    const optWeek = $('#topPeriod option[value="week"]');
+    if (optWeek) optWeek.textContent = t('period_week', 'Minggu ini');
+    const optMonth = $('#topPeriod option[value="month"]');
+    if (optMonth) optMonth.textContent = t('period_month', 'Bulan ini');
+
+    // 7. Profile Subtitle
+    const profRole = $('.top-profile small');
+    if (profRole) profRole.textContent = (portalRole === 'warehouse' ? t('role_warehouse', 'Operator Gudang') : t('role_admin', 'Administrator'));
+  }
+
+  function initLanguageSwitcher() {
+    const wrapper = $('#langWrapper');
+    const button = $('#langButton');
+    const menu = $('#langMenu');
+    if (!wrapper || !button || !menu) return;
+
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = menu.classList.toggle('is-open');
+      button.setAttribute('aria-expanded', String(open));
+    });
+
+    menu.addEventListener('click', (e) => {
+      const item = e.target.closest('.top-lang-item');
+      if (item && item.dataset.lang) {
+        menu.classList.remove('is-open');
+        button.setAttribute('aria-expanded', 'false');
+        setLanguage(item.dataset.lang);
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!wrapper.contains(e.target)) {
+        menu.classList.remove('is-open');
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        menu.classList.remove('is-open');
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
   let current=portalRole==='warehouse'?'warehouse':'dashboard',query='',statusFilter='Semua status',modalMode=null,chartPeriod='week',stockHistoryLimit=10,stockHistoryQuery='',warehouseDispatchTab='active',salesViewTab='waybills';
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-  const money=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
-  const date=s=>s?new Date(s+'T00:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}):'—';
+  const money=n=>'Rp '+Number(n||0).toLocaleString(currentLang==='en'?'en-US':(currentLang==='zh'?'zh-CN':'id-ID'));
+  const date=s=>s?new Date(s+'T00:00:00').toLocaleDateString(currentLang==='en'?'en-US':(currentLang==='zh'?'zh-CN':'id-ID'),{day:'2-digit',month:'short',year:'numeric'}):'-';
   const storeName=id=>data.stores.find(x=>x.code===id)?.name||id;
   const prodName=id=>{const name=data.products.find(x=>x.sku===id)?.name||id;return id==='HW05'?String(name).replace(/\s+WHITE$/i,''):name};
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -71,12 +794,46 @@
   const invoicePayout=x=>Math.round(Number(x.netSales||0)*(1-Number(x.margin||0)/100));
   const invoiceStatus=x=>Number(x.paid||0)>=invoicePayout(x)?'Paid':x.due<today?'Overdue':Number(x.paid||0)>0?'Partial':'Unpaid';
   const pill=(label,tone)=>`<span class="pill ${tone}">${esc(label)}</span>`;
-  const statusPill=s=>pill(s,({'Disetujui':'blue','Menunggu verifikasi':'amber','Menunggu persetujuan':'amber','Menunggu konfirmasi cabang':'amber','Tidak disetujui':'red','Ditangguhkan':'amber','Dalam perjalanan':'blue','Dikirim':'blue','Draft':'gray','Paid':'green','Received':'green','Diterima':'green','In Transit':'blue','Partial':'amber','Unpaid':'red','Overdue':'red','Rejected':'red','Pending':'amber','Repairable':'amber','Scrap/Musnah':'red','Re-sellable':'green','Selesai terjual':'green','Done':'green','Terjual':'green','Dalam proses':'blue','Proses':'blue','Pending':'amber'}[s]||'gray'));
+  const statusPill=s=>pill(translateStatus(s),({'Disetujui':'blue','Menunggu verifikasi':'amber','Menunggu persetujuan':'amber','Menunggu konfirmasi cabang':'amber','Tidak disetujui':'red','Ditangguhkan':'amber','Dalam perjalanan':'blue','Dikirim':'blue','Draft':'gray','Paid':'green','Received':'green','Diterima':'green','In Transit':'blue','Partial':'amber','Unpaid':'red','Overdue':'red','Rejected':'red','Pending':'amber','Repairable':'amber','Scrap/Musnah':'red','Re-sellable':'green','Selesai terjual':'green','Done':'green','Terjual':'green','Dalam proses':'blue','Proses':'blue','Pending':'amber'}[s]||'gray'));
   const button=(label,action,cls='btn-light')=>`<button class="btn ${cls} btn-small" data-action="${action}">${label}</button>`;
   function orderedQty(item){return Number(item?.orderedQty??item?.qty??0)}
   function dispatchedQty(order,item){return Number(item?.dispatchedQty??(order?.stockDispatched?item?.qty:0))}
   function demoBanner(){return data.demo?`<div class="demo-banner"><span class="demo-tag">DEMO</span><span><b>Data pratinjau.</b> Angka dan nama pada halaman ini hanya contoh dan tersimpan di browser ini.</span><button data-action="dismiss-demo">Sembunyikan</button></div>`:''}
-  function heading(title,sub,actions=''){return `<div class="page-heading"><div><span class="eyebrow">HOWELL INVENTORY / ${esc(title.toUpperCase())}</span><h1>${esc(title)}</h1><p>${sub}</p></div><div class="heading-actions">${actions}</div></div>`}
+  function heading(title, sub, actions='') {
+    const headingMap = {
+      'Riwayat': { title: t('history_title', 'Riwayat'), sub: t('history_subtitle', sub) },
+      'Gudang': { title: t('warehouse_title', 'Gudang'), sub: t('warehouse_subtitle', sub) },
+      'Ringkasan': { title: t('dash_title', 'Ringkasan'), sub: t('dash_subtitle', sub) },
+      'Master Produk': { title: t('products_title', 'Master Produk'), sub: t('products_sub', sub) },
+      'Cabang Retail': { title: t('stores_title', 'Cabang Retail'), sub: t('stores_sub', sub) },
+      'Purchase Order': { title: t('shipments_title', 'Purchase Order'), sub: t('shipments_sub', sub) },
+      'Stok & Opname': { title: t('inventory_title', 'Stok & Opname'), sub: t('inventory_sub', sub) },
+      'Retur Barang': { title: t('returns_title', 'Retur Barang'), sub: t('returns_sub', sub) },
+      'Laporan': { title: t('reports_title', 'Laporan'), sub: t('reports_sub', sub) },
+      'Pengaturan': { title: t('settings_title', 'Pengaturan'), sub: t('settings_sub', sub) },
+      'Tagihan & Pembayaran': { title: t('menu_invoices', 'Tagihan & Pembayaran'), sub: sub }
+    };
+    const mapped = headingMap[title];
+    const trTitle = mapped ? mapped.title : title;
+    const trSub = mapped ? mapped.sub : sub;
+
+    let trActions = actions || '';
+    if (trActions) {
+      trActions = trActions
+        .replace(/>Ekspor Excel</g, '>' + t('export_excel', 'Ekspor Excel') + '<')
+        .replace(/>Ekspor CSV</g, '>' + t('export_excel', 'Ekspor CSV') + '<')
+        .replace(/>Ekspor</g, '>' + t('export_excel', 'Ekspor') + '<')
+        .replace(/>Tambah produk</g, '>' + t('add_product', 'Tambah produk') + '<')
+        .replace(/>Tambah cabang</g, '>' + t('add_store', 'Tambah cabang') + '<')
+        .replace(/>Buat Purchase Order</g, '>' + t('create_po', 'Buat Purchase Order') + '<')
+        .replace(/>Catat rekonsiliasi</g, '>' + t('record_recon', 'Catat rekonsiliasi') + '<')
+        .replace(/>Mulai opname gudang</g, '>' + t('start_stocktake', 'Mulai opname gudang') + '<')
+        .replace(/>Opname cabang</g, '>' + t('branch_stocktake', 'Opname cabang') + '<')
+        .replace(/>Pindai EAN-13</g, '>' + t('scan_ean13', 'Pindai EAN-13') + '<');
+    }
+
+    return '<div class="page-heading"><div><span class="eyebrow">HOWELL INVENTORY / ' + esc(trTitle.toUpperCase()) + '</span><h1>' + esc(trTitle) + '</h1><p>' + trSub + '</p></div><div class="heading-actions">' + trActions + '</div></div>';
+  }
   function kpi(label,value,note){return `<article class="card kpi-card"><div class="kpi-top">${label}</div><div class="kpi-value">${value}</div><div class="kpi-foot">${note}</div></article>`}
   function chart(){let end=new Date(),monthly=chartPeriod==='month',start=monthly?new Date(end.getFullYear(),end.getMonth()-5,1):new Date(end);if(!monthly)start.setDate(end.getDate()-41);let bins=Array.from({length:6},(_,i)=>({start:monthly?new Date(start.getFullYear(),start.getMonth()+i,1):new Date(start.getFullYear(),start.getMonth(),start.getDate()+i*7),value:0}));data.sales.filter(s=>!s.status||s.status==='Disetujui').forEach(s=>{let d=new Date((s.end||s.start)+'T00:00:00');let i=monthly?(d.getFullYear()-start.getFullYear())*12+d.getMonth()-start.getMonth():Math.floor((d-start)/(7*86400000));if(i>=0&&i<6)bins[i].value+=Number(s.net||0)});let max=Math.max(...bins.map(x=>x.value));if(!max)return `<div class="chart-empty">Belum cukup data penjualan untuk menampilkan tren.</div>`;let points=bins.map((b,i)=>({x:48+i*62,y:154-(b.value/max)*112,label:b.start.toLocaleDateString('id-ID',{day:'2-digit',month:'short'})})),line=points.map(p=>`${p.x},${p.y}`).join(' '),area=`48,164 ${line} 358,164`;return `<div class="chart-summary"><strong>${money(bins.reduce((n,b)=>n+b.value,0))}</strong><span>penjualan bersih · 6 minggu</span></div><div class="chart-wrap"><svg viewBox="0 0 380 190" preserveAspectRatio="none" role="img" aria-label="Penjualan bersih mingguan berdasarkan laporan tersimpan"><line class="chart-grid" x1="42" y1="40" x2="366" y2="40"/><line class="chart-grid" x1="42" y1="94" x2="366" y2="94"/><line class="chart-grid" x1="42" y1="148" x2="366" y2="148"/><text class="chart-label" x="0" y="43">${money(max).replace('Rp ','')}</text><text class="chart-label" x="0" y="97">${money(max/2).replace('Rp ','')}</text><polygon class="chart-area" points="${area}"/><polyline class="chart-line" points="${line}" fill="none"/>${points.map((p,i)=>`<circle class="chart-dot" cx="${p.x}" cy="${p.y}" r="3"/><text class="chart-label" x="${p.x-17}" y="181">${p.label}</text>`).join('')}</svg></div><div class="chart-legend"><span><i class="legend-dot"></i>Penjualan bersih aktual</span></div>`}
   function stockInfographic(){
@@ -90,8 +847,68 @@
     const known=data.products.filter(p=>p.stock!=null&&Number.isFinite(Number(p.stock))),center=known.reduce((n,p)=>n+Number(p.stock),0),branch=data.branchStock.reduce((n,x)=>n+Math.max(0,branchBalance(x)),0),dispatch=data.shipments.filter(x=>['Dikirim','In Transit','Partial'].includes(x.status)).reduce((n,po)=>n+po.items.reduce((a,item)=>a+Math.max(0,dispatchedQty(po,item)-Number(item.receivedQty||0)),0),0),total=center+branch+dispatch,discrepancies=data.counts.filter(x=>x.physical!=null&&data.products.find(p=>p.sku===x.sku)?.stock!=null&&Number(x.physical)!==Number(data.products.find(p=>p.sku===x.sku)?.stock)).length,low=known.filter(p=>Number(p.stock)<10).sort((a,b)=>a.stock-b.stock),products=[...(known.length?known:data.products)].filter(p=>!p.priceConflict).sort((a,b)=>{const sA=a.stock!=null&&Number.isFinite(Number(a.stock))?Number(a.stock):Infinity,sB=b.stock!=null&&Number.isFinite(Number(b.stock))?Number(b.stock):Infinity;if(sA!==sB)return sA-sB;const pDiff=Number(Boolean(window.HOWELL_PRODUCT_IMAGES?.[b.sku]))-Number(Boolean(window.HOWELL_PRODUCT_IMAGES?.[a.sku]));if(pDiff!==0)return pDiff;return(a.name||'').localeCompare(b.name||'')}).slice(0,3),transactions=[...data.shipments.flatMap(s=>s.items.map(i=>({id:s.id,product:prodName(i.sku),branch:storeName(s.store),type:'Pengiriman',qty:i.qty,date:s.date,status:s.status}))),...data.sales.map(s=>({id:s.id,product:prodName(s.sku),branch:storeName(s.store),type:'Laporan penjualan',qty:s.qty,date:s.end,status:s.status||'Disetujui'})),...data.returns.map(x=>({id:x.id,product:prodName(x.sku),branch:storeName(x.store),type:'Retur barang',qty:x.qty,date:x.date,status:x.status}))].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,6),segmentTotal=Math.max(1,total),pct=n=>`${(n/segmentTotal*100).toFixed(1)}%`,stockValue=known.length?total.toLocaleString('id-ID'):'—';
     return `${demoBanner()}<section class="ware-dashboard"><div class="dash-left"><div class="dash-kpis">${kpi('TOTAL STOK',stockValue,known.length?`${known.length} SKU sudah diopname`:`${data.products.length} SKU · opname awal belum dilakukan`)}${kpi('DALAM PENGIRIMAN',dispatch.toLocaleString('id-ID'),`${data.shipments.filter(s=>['Dikirim','In Transit','Partial'].includes(s.status)).length} surat jalan aktif`)}${kpi('TOTAL CABANG',data.stores.length,'Cabang terdaftar')}${kpi('TOTAL PENJUALAN',money(data.sales.filter(s=>s.status==='Disetujui').reduce((n,s)=>n+Number(s.net||0),0)),'Akumulasi laporan tersimpan')}</div><article class="card capacity-card"><div class="card-topline"><div><small>HOWELL INVENTORY OVERVIEW</small><h2>Posisi persediaan</h2></div><button class="subtle-icon" data-action="go-inventory" aria-label="Buka stok">•••</button></div><div class="capacity-total"><strong>${stockValue}</strong><span>${known.length?'unit dalam jaringan':'saldo awal belum dicatat'}</span></div>${known.length?`<div class="capacity-bar" role="img" aria-label="Gudang pusat ${pct(center)}, cabang ${pct(branch)}, perjalanan ${pct(dispatch)}"><i class="bar-center" style="width:${pct(center)}"></i><i class="bar-branch" style="width:${pct(branch)}"></i><i class="bar-dispatch" style="width:${pct(dispatch)}"></i></div><div class="capacity-legend"><span><i class="center-dot"></i>Gudang pusat <b>${center.toLocaleString('id-ID')}</b></span><span><i class="branch-dot"></i>Cabang <b>${branch.toLocaleString('id-ID')}</b></span><span><i class="dispatch-dot"></i>Pengiriman <b>${dispatch.toLocaleString('id-ID')}</b></span></div>`:`<div class="excel-source-note">Jumlah stok tidak ada pada workbook. Lakukan opname fisik untuk memulai saldo.</div>`}<div class="insight-box"><small>INVENTORY INSIGHT</small><strong>${known.length?(low.length?`${low.length} SKU membutuhkan perhatian`:'Persediaan terpantau'):'Opname awal diperlukan'}</strong><p>${discrepancies?`${discrepancies} selisih opname tercatat. Tinjau perbedaan stok.`:known.length?'Pantau alokasi stok pusat dan cabang dari satu ringkasan.':'Data produk dan cabang sudah dimuat; saldo stok menunggu hasil hitung fisik.'}</p><button class="btn btn-dark" data-action="go-inventory">${known.length?'Lihat stok':'Mulai opname'}</button></div><div class="capacity-reminder"><span>${known.length?'Opname belum dicatat':'SKU menunggu opname'}</span><b>${data.products.length-known.length} SKU</b></div></article></div><div class="dash-center"><section class="product-showcase"><div class="section-heading"><div><small>MASTER PRODUK</small><h2>Produk Howell</h2></div><button class="text-action" data-page="products">Lihat semua</button></div><div class="product-card-row">${products.map(p=>`<button class="product-card" data-action="edit-product" data-id="${esc(p.sku)}"><span class="product-card-meta"><span>${esc(p.category)}</span><span>${esc(p.sku)}</span></span><span class="product-art">${productPhoto(p.sku)}</span><strong>${esc(p.name)}</strong><small>${p.priceReady?money(p.srp)+' SRP':'Harga belum tersedia'}${p.stock!=null?` · <b style="color:#d97706;font-weight:700">Stok ${Number(p.stock)} ${esc(p.uom||'unit')}</b>`:''}</small></button>`).join('')}</div></section><article class="card low-stock-card"><div class="section-heading"><div><small>PERLU PERHATIAN</small><h2>Stok menipis <span>${known.length?low.length:'—'}</span></h2></div><button class="text-action" data-action="view-low-stock">Lihat stok rendah</button></div><p class="threshold-note">Penanda saat ini: stok di bawah 10 unit</p>${known.length?(low.length?`<div class="low-stock-list">${low.slice(0,4).map(p=>`<button class="low-stock-row" data-action="edit-product" data-id="${esc(p.sku)}"><span class="low-stock-mark"></span><span><strong>${esc(p.name)}</strong><small>${esc(p.sku)} · ${esc(p.category)}</small></span><b>${p.stock} ${esc(p.uom)}</b></button>`).join('')}</div>`:'<div class="chart-empty">Tidak ada SKU di bawah ambang 10 unit.</div>'):'<div class="chart-empty">Hasil stok rendah muncul setelah opname awal.</div>'}</article></div><article class="card sales-card"><div class="section-heading"><div><small>ANALITIK PENJUALAN</small><h2>Performa penjualan</h2></div><button class="text-action" data-page="sales">Laporan</button></div><div class="sales-switch"><span>Penjualan bersih</span><span>Unit terjual</span></div>${chart()}</article><article class="card transaction-card"><div class="section-heading"><div><small>AKTIVITAS GUDANG</small><h2>Transaksi terbaru</h2></div><button class="text-action" data-page="reports">Buka laporan</button></div>${table(['Nomor transaksi','Produk / aktivitas','Cabang','Jenis','Kuantitas','Tanggal','Status'],transactions.map(t=>`<tr><td><span class="sku">${esc(t.id)}</span></td><td><strong>${esc(t.product)}</strong></td><td>${esc(t.branch)}</td><td>${esc(t.type)}</td><td>${t.qty} unit</td><td>${date(t.date)}</td><td>${statusPill(t.status)}</td></tr>`),'Belum ada transaksi')}</article></section>`
   }
-  function table(headers,rows,empty='Belum ada data untuk ditampilkan.',className=''){return `<div class="table-wrap"><table${className?' class="'+esc(className)+'"':''}><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${headers.length}"><div class="empty-state"><strong>${empty}</strong><span>Tambahkan data untuk mulai melacak aktivitas.</span></div></td></tr>`}</tbody></table></div>`}
-  function toolbar(extra=''){return `<div class="table-toolbar"><div class="toolbar-left"><div class="search"><svg class="table-search-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.6"></circle><path d="m10.2 10.2 3.1 3.1"></path></svg><input id="tableSearch" type="search" aria-label="Cari data" placeholder="Cari data..." value="${esc(query)}" /></div>${extra}</div><div class="toolbar-right"><button class="btn btn-light btn-small" data-action="export">Ekspor Excel</button></div></div>`}
+  const colKeyMap = {
+    'nomor surat jalan': 'col_waybill_no',
+    'customer': 'col_customer',
+    'quantity keluar': 'col_qty_out',
+    'status po': 'col_po_status',
+    'tindakan & dokumen': 'col_actions',
+    'nomor rekonsiliasi': 'col_recon_no',
+    'cabang': 'col_branch',
+    'periode': 'col_period',
+    'sku & produk': 'col_sku_prod',
+    'rincian hitung unit': 'col_calc_details',
+    'penjualan kotor': 'col_gross_sales',
+    'diskon retail': 'col_retail_discount',
+    'penjualan bersih': 'col_net_sales',
+    'status': 'col_status',
+    'tindakan': 'col_actions',
+    'produk': 'col_product',
+    'sku': 'col_sku',
+    'kategori': 'col_category',
+    'hpp': 'col_hpp',
+    'het': 'col_srp',
+    'share toko': 'col_store_share',
+    'gudang pusat': 'col_central_stock',
+    'alamat': 'col_address',
+    'pic': 'col_pic',
+    'po / pic': 'col_po_no_pic',
+    'customer / tanggal': 'col_customer_date',
+    'produk & jumlah kirim': 'col_prod_qty',
+    'total': 'col_total',
+    'catatan': 'col_notes',
+    'nomor tagihan': 'col_invoice_no',
+    'cabang retail': 'col_retail_branch',
+    'tanggal tagihan': 'col_invoice_date',
+    'jatuh tempo': 'col_due_date',
+    'komisi retail': 'col_retail_commission',
+    'pembayaran bersih ke howell': 'col_net_to_howell',
+    'pembayaran masuk': 'col_payment_received',
+    'validasi / tindakan': 'col_actions'
+  };
+
+  function table(headers, rows, empty = t('empty_data', 'Belum ada data untuk ditampilkan.'), className = '') {
+    const trHeaders = headers.map(h => {
+      const clean = String(h).trim().toLowerCase();
+      const k = colKeyMap[clean];
+      return k ? t(k, h) : h;
+    });
+    return '<div class="table-wrap"><table' + (className ? ' class="' + esc(className) + '"' : '') + '><thead><tr>' +
+      trHeaders.map(h => '<th>' + h + '</th>').join('') +
+      '</tr></thead><tbody>' +
+      (rows.length ? rows.join('') : '<tr><td colspan="' + headers.length + '"><div class="empty-state"><strong>' + empty + '</strong><span>' + t('empty_subtitle', 'Tambahkan data untuk mulai melacak aktivitas.') + '</span></div></td></tr>') +
+      '</tbody></table></div>';
+  }
+
+  function toolbar(extra='') {
+    let trExtra = extra || '';
+    if (trExtra) {
+      trExtra = trExtra
+        .replace(/>Semua kategori</g, '>' + t('all_categories', 'Semua kategori') + '<')
+        .replace(/>Semua status</g, '>' + t('all_statuses', 'Semua status') + '<');
+    }
+    return '<div class="table-toolbar"><div class="toolbar-left"><div class="search"><svg class="table-search-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.6"></circle><path d="m10.2 10.2 3.1 3.1"></path></svg><input id="tableSearch" type="search" aria-label="' + esc(t('search_data', 'Cari data')) + '" placeholder="' + esc(t('search_data', 'Cari data...')) + '" value="' + esc(query) + '" /></div>' + trExtra + '</div><div class="toolbar-right"><button class="btn btn-light btn-small" data-action="export">' + t('export_excel', 'Ekspor Excel') + '</button></div></div>';
+  }
   function recordSalesFromPo(po){
     data.sales ||= [];
     data.sales = data.sales.filter(s => s.sourcePo !== po.id);
@@ -154,9 +971,9 @@
 
     const rows=soldDispatches.map(({po,dispatch,index})=>{
       const actionButtons='<div class="po-actions warehouse-dispatch-actions">'+
-        '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="'+index+'" data-id="'+esc(po.id)+'">Cetak surat jalan</button>'+
-        (portalRole==='admin'?'<button type="button" class="btn btn-light btn-small" data-page="sales" title="Buka transaksi di menu Riwayat">Lihat di Riwayat</button>':'')+
-        '<button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>'+
+        '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="' + index + '" data-id="' + esc(po.id) + '">' + t('print_waybill', 'Cetak surat jalan') + '</button>'+
+        (portalRole==='admin'?'<button type="button" class="btn btn-light btn-small" data-page="sales" title="Buka transaksi di menu Riwayat">' + t('view_sales', 'Lihat di Riwayat') + '</button>':'')+
+        '<button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="' + esc(po.id) + '">' + t('change_status', 'Ubah status') + '</button>'+
       '</div>';
       return '<tr><td><strong>'+esc(dispatch.number||'—')+'</strong><div class="panel-subtitle">PO '+esc(po.id)+' · '+date(dispatch.date)+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong></td><td>'+(Array.isArray(dispatch.items)?dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0).toLocaleString('id-ID')+' unit</td><td>'+statusPill(po.status)+'</td><td>'+actionButtons+'</td></tr>';
     });
@@ -186,7 +1003,7 @@ function warehouse(){
     const ready=queue.filter(po=>['Disetujui','Partial'].includes(po.status));
     const activeQueue=queue.filter(po=>!['Tidak disetujui','Ditangguhkan'].includes(po.status));
     const outstanding=activeQueue.reduce((n,po)=>n+itemsOf(po).reduce((a,item)=>a+Math.max(0,orderedQty(item)-dispatchedQty(po,item)),0),0);
-    const queueRows=queue.map(po=>{const pending=itemsOf(po).filter(item=>orderedQty(item)>dispatchedQty(po,item)),details=pending.map(item=>{const product=data.products.find(x=>x.sku===item.sku),ordered=orderedQty(item),sent=dispatchedQty(po,item),remaining=Math.max(0,ordered-sent);return '<div class="warehouse-queue-item"><span class="warehouse-product"><strong>'+esc(product?.name||item.sku)+'</strong><small>'+esc(item.sku)+'</small></span><span><small>Qty PO</small><b>'+ordered.toLocaleString('id-ID')+'</b></span><span><small>Sudah keluar</small><b>'+sent.toLocaleString('id-ID')+'</b></span><span><small>Sisa PO</small><b>'+remaining.toLocaleString('id-ID')+'</b></span></div>'}).join('');const statusAction='<button class="btn btn-light btn-small" data-action="update-warehouse-po-status" data-id="'+esc(po.id)+'">Ubah status</button>';const dispatchAction=['Disetujui','Partial'].includes(po.status)?'<button class="btn btn-primary btn-small" data-action="dispatch-po" data-id="'+esc(po.id)+'">'+(dispatchesOf(po).length?'Buat surat jalan berikutnya':'Buat surat jalan')+'</button>':'';const action='<div class="po-actions warehouse-po-actions">'+statusAction+dispatchAction+'</div>';return '<tr><td><strong>'+esc(po.id)+'</strong><div class="panel-subtitle">'+esc(po.responsible||'')+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong><div class="panel-subtitle">'+date(po.date)+'</div></td><td>'+esc(po.shipTo||'Alamat belum diisi')+'</td><td>'+details+'</td><td>'+statusPill(po.status)+'</td><td>'+action+'</td></tr>'});
+    const queueRows=queue.map(po=>{const pending=itemsOf(po).filter(item=>orderedQty(item)>dispatchedQty(po,item)),details=pending.map(item=>{const product=data.products.find(x=>x.sku===item.sku),ordered=orderedQty(item),sent=dispatchedQty(po,item),remaining=Math.max(0,ordered-sent);return '<div class="warehouse-queue-item"><span class="warehouse-product"><strong>'+esc(product?.name||item.sku)+'</strong><small>'+esc(item.sku)+'</small></span><span><small>Qty PO</small><b>'+ordered.toLocaleString('id-ID')+'</b></span><span><small>Sudah keluar</small><b>'+sent.toLocaleString('id-ID')+'</b></span><span><small>Sisa PO</small><b>'+remaining.toLocaleString('id-ID')+'</b></span></div>'}).join('');const statusAction='<button class="btn btn-light btn-small" data-action="update-warehouse-po-status" data-id="' + esc(po.id) + '">' + t('change_status', 'Ubah status') + '</button>';const dispatchAction=['Disetujui','Partial'].includes(po.status)?'<button class="btn btn-primary btn-small" data-action="dispatch-po" data-id="'+esc(po.id)+'">'+(dispatchesOf(po).length?'Buat surat jalan berikutnya':'Buat surat jalan')+'</button>':'';const action='<div class="po-actions warehouse-po-actions">'+statusAction+dispatchAction+'</div>';return '<tr><td><strong>'+esc(po.id)+'</strong><div class="panel-subtitle">'+esc(po.responsible||'')+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong><div class="panel-subtitle">'+date(po.date)+'</div></td><td>'+esc(po.shipTo||'Alamat belum diisi')+'</td><td>'+details+'</td><td>'+statusPill(po.status)+'</td><td>'+action+'</td></tr>'});
 
     const isSoldPo=po=>['Selesai terjual','Done','Terjual'].includes(po?.status);
     const allDispatches=orders.flatMap(po=>dispatchesOf(po).map((dispatch,index)=>({po,dispatch,index}))).sort((a,b)=>(b.dispatch.date||'').localeCompare(a.dispatch.date||''));
@@ -197,10 +1014,10 @@ function warehouse(){
     const dispatchedRows=allDispatches.map(({po,dispatch,index})=>{
       const isSold=isSoldPo(po);
       const actionButtons='<div class="po-actions warehouse-dispatch-actions">'+
-        '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="'+index+'" data-id="'+esc(po.id)+'">Cetak surat jalan</button>'+
+        '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="' + index + '" data-id="' + esc(po.id) + '">' + t('print_waybill', 'Cetak surat jalan') + '</button>'+
         (isSold
-          ?'<button type="button" class="btn btn-light btn-small" data-page="sales" title="Buka transaksi di menu Riwayat">Lihat di Riwayat</button><button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>'
-          :'<button type="button" class="btn btn-primary btn-small" data-action="mark-po-sold" data-id="'+esc(po.id)+'" title="Tandai pesanan selesai terjual dan catat ke menu Riwayat">Selesai terjual (Done)</button><button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'" title="Ubah status pengiriman">Ubah status</button>'
+          ?'<button type="button" class="btn btn-light btn-small" data-page="sales" title="Buka transaksi di menu Riwayat">' + t('view_sales', 'Lihat di Riwayat') + '</button><button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">' + t('change_status', 'Ubah status') + '</button>'
+          :'<button type="button" class="btn btn-primary btn-small" data-action="mark-po-sold" data-id="' + esc(po.id) + '" title="Tandai pesanan selesai terjual dan catat ke menu Riwayat">' + t('mark_sold', 'Selesai terjual (Done)') + '</button><button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="' + esc(po.id) + '" title="Ubah status pengiriman">' + t('change_status', 'Ubah status') + '</button>'
         )+'</div>';
       return '<tr><td><strong>'+esc(dispatch.number||'—')+'</strong><div class="panel-subtitle">PO '+esc(po.id)+' · '+date(dispatch.date)+'</div></td><td><strong>'+esc(po.customerName||storeName(po.store))+'</strong></td><td>'+(Array.isArray(dispatch.items)?dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0).toLocaleString('id-ID')+' unit</td><td>'+statusPill(po.status)+'</td><td>'+actionButtons+'</td></tr>';
     });
@@ -211,10 +1028,10 @@ function warehouse(){
       '<button class="btn btn-light" data-page="sales-history">Riwayat ('+soldDispatches.length+')</button><button class="btn btn-light" data-page="inventory">Buka Stok & Opname</button>'
     )+demoBanner()+
     '<div class="section-grid warehouse-kpis">'+
-      '<article class="card mini-card"><small>PO berjalan</small><strong>'+activeQueue.length+'</strong><span>Masih memiliki quantity yang belum keluar</span></article>'+
-      '<article class="card mini-card"><small>PO siap dikirim</small><strong>'+ready.length+'</strong><span>Sudah disetujui dan dapat dibuatkan surat jalan</span></article>'+
-      '<article class="card mini-card"><small>Unit belum keluar</small><strong>'+outstanding.toLocaleString('id-ID')+'</strong><span>Sisa quantity pada PO yang berjalan</span></article>'+
-      '<article class="card mini-card warehouse-kpi-sold" data-page="sales-history" style="cursor:pointer" title="Buka menu Riwayat"><small>Riwayat</small><strong>'+soldDispatches.length+' SJ</strong><span>'+totalSoldUnits.toLocaleString('id-ID')+' unit selesai terjual</span></article>'+
+      '<article class="card mini-card"><small>' + t('po_active', 'PO berjalan') + '</small><strong>' + activeQueue.length + '</strong><span>' + t('po_active_sub', 'Masih memiliki quantity yang belum keluar') + '</span></article>' +
+      '<article class="card mini-card"><small>' + t('po_ready', 'PO siap dikirim') + '</small><strong>' + ready.length + '</strong><span>' + t('po_ready_sub', 'Sudah disetujui dan dapat dibuatkan surat jalan') + '</span></article>' +
+      '<article class="card mini-card"><small>' + t('po_outstanding', 'Unit belum keluar') + '</small><strong>' + outstanding.toLocaleString(currentLang === 'en' ? 'en-US' : (currentLang === 'zh' ? 'zh-CN' : 'id-ID')) + '</strong><span>' + t('po_outstanding_sub', 'Sisa quantity pada PO yang berjalan') + '</span></article>' +
+      '<article class="card mini-card warehouse-kpi-sold" data-page="sales-history" style="cursor:pointer" title="Buka menu Riwayat"><small>' + t('menu_history', 'Riwayat') + '</small><strong>' + soldDispatches.length + t('sj_suffix', ' SJ') + '</strong><span>' + totalSoldUnits.toLocaleString(currentLang === 'en' ? 'en-US' : (currentLang === 'zh' ? 'zh-CN' : 'id-ID')) + ' ' + t('wh_sold_units_sub', 'unit selesai terjual') + '</span></article>'+
     '</div>'+
     queueGuide+
     '<article class="card table-card warehouse-queue"><div class="table-toolbar"><div><div class="panel-title">Purchase Order untuk gudang</div><div class="panel-subtitle">PO yang dibuat langsung tercatat di sini. Atur statusnya; surat jalan tersedia setelah PO disetujui.</div></div></div>'+table(['Nomor PO / penanggung jawab','Customer / tanggal PO','Alamat pengiriman','Produk dan quantity','Status','Tindakan'],queueRows,'Belum ada PO yang masih memiliki quantity untuk diproses.')+'</article>'+
@@ -359,11 +1176,11 @@ function warehouse(){
       if(portalRole==='admin')actionButtons.push(canEdit?'<button type="button" class="btn btn-light btn-small" data-action="edit-purchase-order" data-id="'+esc(po.id)+'" title="Buka formulir untuk mengubah PO">Edit</button>':'<button type="button" class="btn btn-light btn-small po-edit-disabled" data-action="edit-purchase-order-locked" data-id="'+esc(po.id)+'" aria-disabled="true" title="Klik untuk melihat alasan">Edit terkunci</button>');
       if(portalRole==='admin')actionButtons.push('<button class="btn btn-danger btn-small" data-action="delete-purchase-order" data-id="'+esc(po.id)+'">Hapus PO</button>');
       if(['Selesai terjual','Done','Terjual'].includes(po.status)){
-        actionButtons.push('<button class="link-btn" data-page="sales" title="Buka transaksi di menu Riwayat">Lihat di Riwayat</button>');
-        actionButtons.push('<button class="link-btn" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>');
+        actionButtons.push('<button class="link-btn" data-page="sales" title="Buka transaksi di menu Riwayat">' + t('view_sales', 'Lihat di Riwayat') + '</button>');
+        actionButtons.push('<button class="link-btn" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">' + t('change_status', 'Ubah status') + '</button>');
       } else if(['Dikirim','In Transit','Dalam proses','Pending'].includes(po.status)){
         actionButtons.push('<button class="btn btn-primary btn-small" data-action="mark-po-sold" data-id="'+esc(po.id)+'" title="Tandai pesanan selesai terjual & otomatis masuk ke Riwayat">Selesai terjual</button>');
-        actionButtons.push('<button class="link-btn" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>');
+        actionButtons.push('<button class="link-btn" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">' + t('change_status', 'Ubah status') + '</button>');
       }
       const actions=actionButtons.length?'<div class="po-actions">'+actionButtons.join('')+'</div>':'';
       const details=po.items.map(item=>{const product=data.products.find(x=>x.sku===item.sku);return '<div class="po-product-summary"><span><strong>'+esc(product?.name||item.sku)+'</strong><small>'+esc(item.sku)+'</small></span><span>'+orderedQty(item)+' unit<small>'+money(Number(item.srpSnapshot||0)*orderedQty(item))+'</small></span></div>'}).join('');
@@ -387,13 +1204,13 @@ function warehouse(){
     const waybillRows=soldDispatches.map(({po,dispatch,index})=>{
       const qty=(Array.isArray(dispatch.items)?dispatch.items:[]).reduce((n,item)=>n+Number(item.qty||0),0);
       const actionButtons='<div class="po-actions warehouse-dispatch-actions">'+
-        '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="'+index+'" data-id="'+esc(po.id)+'">Cetak surat jalan</button>'+
-        '<button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">Ubah status</button>'+
+        '<button type="button" class="btn btn-light btn-small waybill-print-action" data-action="print-waybill" data-dispatch-index="' + index + '" data-id="' + esc(po.id) + '">' + t('print_waybill', 'Cetak surat jalan') + '</button>'+
+        '<button type="button" class="btn btn-light btn-small" data-action="update-po-dispatch-status" data-id="'+esc(po.id)+'">' + t('change_status', 'Ubah status') + '</button>'+
       '</div>';
       return '<tr>'+
         '<td><strong>'+esc(dispatch.number||'—')+'</strong><div class="panel-subtitle">PO '+esc(po.id)+' · '+date(dispatch.date)+'</div></td>'+
         '<td><strong>'+esc(po.customerName||storeName(po.store))+'</strong></td>'+
-        '<td>'+qty.toLocaleString('id-ID')+' unit</td>'+
+        '<td>' + qty.toLocaleString(currentLang === 'en' ? 'en-US' : (currentLang === 'zh' ? 'zh-CN' : 'id-ID')) + t('unit_suffix', ' unit') + '</td>'+
         '<td>'+statusPill(po.status)+'</td>'+
         '<td>'+actionButtons+'</td>'+
       '</tr>';
@@ -413,16 +1230,16 @@ function warehouse(){
     return heading('Riwayat','Riwayat surat jalan selesai terjual dari gudang serta rekonsiliasi fisik per cabang dan SKU.','<button class="btn btn-light" data-action="export">Ekspor Excel</button><button class="btn btn-primary" data-action="add-sale">Catat rekonsiliasi</button>')+
       demoBanner()+
       '<div class="section-grid warehouse-kpis">'+
-        '<article class="card mini-card"><small>Omset bersih tercatat</small><strong>'+money(total)+'</strong><span>Rekonsiliasi tersimpan</span></article>'+
-        '<article class="card mini-card"><small>Unit terjual</small><strong>'+totalUnits+'</strong><span>Hanya laporan disetujui</span></article>'+
-        '<article class="card mini-card"><small>Surat jalan selesai</small><strong>'+soldDispatches.length+' SJ</strong><span>Barang keluar terkonfirmasi</span></article>'+
-        '<article class="card mini-card"><small>Menunggu persetujuan</small><strong>'+pendingCount+'</strong><span>Perlu ditinjau sebelum tutup periode</span></article>'+
+        '<article class="card mini-card"><small>' + t('history_kpi_net', 'Omset bersih tercatat') + '</small><strong>' + money(total) + '</strong><span>' + t('history_sub_recon', 'Rekonsiliasi tersimpan') + '</span></article>' +
+        '<article class="card mini-card"><small>' + t('history_kpi_units', 'Unit terjual') + '</small><strong>' + totalUnits.toLocaleString(currentLang === 'en' ? 'en-US' : (currentLang === 'zh' ? 'zh-CN' : 'id-ID')) + '</strong><span>' + t('history_sub_approved', 'Hanya laporan disetujui') + '</span></article>' +
+        '<article class="card mini-card"><small>' + t('history_kpi_waybills', 'Surat jalan selesai') + '</small><strong>' + soldDispatches.length + t('sj_suffix', ' SJ') + '</strong><span>' + t('history_sub_confirmed', 'Barang keluar terkonfirmasi') + '</span></article>' +
+        '<article class="card mini-card"><small>' + t('history_kpi_pending', 'Menunggu persetujuan') + '</small><strong>' + pendingCount + '</strong><span>' + t('history_sub_review', 'Perlu ditinjau sebelum tutup periode') + '</span></article>'+
       '</div>'+
       '<article class="card table-card">'+
-        '<div class="table-toolbar"><div><div class="panel-title">Riwayat surat jalan</div><div class="panel-subtitle">Pengeluaran terbaru yang sudah selesai terjual dari Gudang.</div></div></div>'+
+        '<div class="table-toolbar"><div><div class="panel-title">' + t('warehouse_history_heading', 'Riwayat surat jalan') + '</div><div class="panel-subtitle">' + t('history_waybills_sub', 'Pengeluaran terbaru yang sudah selesai terjual dari Gudang.') + '</div></div></div>'+
         table(['Nomor surat jalan','Customer','Quantity keluar','Status PO','Tindakan & Dokumen'],waybillRows,'Belum ada surat jalan yang selesai terjual.','warehouse-dispatches-table')+
       '</article>'+
-      '<div class="excel-source-note">Barang terjual = stok awal periode + stok masuk − stok fisik akhir − retur terkonfirmasi. Harga retail dan bagi hasil disimpan sebagai snapshot pada saat laporan dibuat.</div>'+
+      '<div class="excel-source-note">' + t('history_banner', 'Barang terjual = stok awal periode + stok masuk − stok fisik akhir − retur terkonfirmasi. Harga retail dan bagi hasil disimpan sebagai snapshot pada saat laporan dibuat.') + '</div>'+
       '<article class="card table-card">'+
         toolbar()+
         table(['Nomor rekonsiliasi','Cabang','Periode','SKU & produk','Rincian hitung unit','Penjualan kotor','Diskon retail','Penjualan bersih','Status','Tindakan'],skuRows)+
@@ -456,6 +1273,7 @@ function warehouse(){
     data.shipments=data.shipments.filter(Boolean).map(po=>({...po,items:Array.isArray(po.items)?po.items:[],dispatches:Array.isArray(po.dispatches)?po.dispatches:[]}));
   }
   function render(){
+    updateDomLanguage();
     normalizeRuntimeData();
     normalizeCatalogNames();
     let map={dashboard,inventory,warehouse,'sales-history':salesHistory,products,stores,shipments,sales,invoices,returns,reports,settings};
@@ -1567,7 +2385,8 @@ function warehouse(){
     }let el=e.target.closest('[data-action]');if(el){if(el.dataset.action==='reload-page'){render();return}if(el.dataset.action==='print-waybill'&&el.dataset.dispatchIndex!==undefined){if(current!=='warehouse'&&current!=='sales'&&current!=='sales-history')return toast('Surat jalan hanya dapat dicetak dari halaman Gudang atau Penjualan.');openWaybillPrintOptions(el.dataset.id,Number(el.dataset.dispatchIndex));return}if(el.dataset.action==='edit-store'){closePaperclipPopup();if($('#modalBackdrop').classList.contains('open'))closeModal()}doAction(el.dataset.action,el.dataset.id,el);return}});
   document.addEventListener('input',e=>{if(e.target.id!=='paperclipBranchSearch')return;const term=e.target.value.trim().toLocaleLowerCase('id-ID');document.querySelectorAll('#paperclipBranchList .paperclip-branch-row').forEach(row=>{row.hidden=!row.dataset.branchSearch.includes(term)})});
   document.addEventListener('change',async e=>{const input=e.target;if(input.id!=='backupImportInput')return;const file=input.files?.[0];if(!file)return;try{if(file.size>20*1024*1024)throw new Error('Backup terlalu besar');const restored=JSON.parse(await file.text()),keys=['products','stores','shipments','sales','invoices','returns','branchStock','counts','countHistory','audit'];if(!restored||keys.some(key=>!Array.isArray(restored[key]))||restored.products.some(x=>!x||typeof x.sku!=='string')||restored.stores.some(x=>!x||typeof x.code!=='string')||restored.shipments.some(x=>!x||typeof x.id!=='string'||!Array.isArray(x.items)))throw new Error('Invalid Howell backup');if(!confirm(`Pulihkan ${restored.products.length} SKU, ${restored.stores.length} cabang, dan ${restored.shipments.length} PO dari file ini? Data lokal saat ini akan diganti; salinan lokal akan dibuat terlebih dahulu.`))return;const old=localStorage.getItem(KEY);if(old)localStorage.setItem(KEY+'-pre-restore-'+Date.now(),old);localStorage.setItem(KEY,JSON.stringify(restored));data={...structuredClone(initial),...restored};render();toast('Cadangan berhasil dipulihkan.')}catch(error){console.error('Pemulihan cadangan gagal:',error);toast('Cadangan tidak dapat dipulihkan. Periksa format JSON dan ruang penyimpanan browser.')}finally{input.value=''}});
-  $('#modalClose').onclick=closeModal;$('#modalCancel').onclick=closeModal;$('#modalBackdrop').addEventListener('click',e=>{if(e.target===$('#modalBackdrop')&&!e.currentTarget.classList.contains('po-create-workspace'))closeModal()});$('#modalForm').addEventListener('submit',e=>{e.preventDefault();if(syncEnabled&&(!syncReady||syncBlocked))return toast(syncBlocked?'Sinkronisasi terkunci karena konflik data. Muat ulang dan tinjau data server sebelum melanjutkan.':'Database VPS belum siap. Perubahan dinonaktifkan agar tidak hanya tersimpan di browser.');if(!modalMode)return;const missing=[...(e.currentTarget.querySelectorAll?.('.searchable-product-select')||[])].find(w=>w.querySelector('input').required&&!w.querySelector('select').value);if(missing){toast('Pilih produk dari hasil pencarian nama atau SKU.');missing.querySelector('input').focus();return}let values=Object.fromEntries(new FormData(e.currentTarget).entries());modalMode.submit(values)});$('#menuToggle').onclick=()=>{$('#sidebar').classList.add('open');$('#overlay').classList.add('show')};$('#closeMenu').onclick=$('#overlay').onclick=()=>{$('#sidebar').classList.remove('open');$('#overlay').classList.remove('show')};$('#notificationButton').onclick=()=>toast('Tidak ada notifikasi baru.');$('#filterButton').onclick=()=>{go('inventory');$$('tbody tr').forEach(row=>{if(!row.querySelector('.qty-low'))row.style.display='none'})};$('#globalSearchSubmit').addEventListener('click',runGlobalSearch);$('#globalSearch').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();runGlobalSearch()}});$('#topPeriod').addEventListener('change',e=>{chartPeriod=e.currentTarget.value;if(current==='dashboard')render()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closePaperclipPopup()}});
+  initLanguageSwitcher();
+  $('#modalClose').onclick=closeModal;$('#modalCancel').onclick=closeModal;$('#modalBackdrop').addEventListener('click',e=>{if(e.target===$('#modalBackdrop')&&!e.currentTarget.classList.contains('po-create-workspace'))closeModal()});$('#modalForm').addEventListener('submit',e=>{e.preventDefault();if(syncEnabled&&(!syncReady||syncBlocked))return toast(syncBlocked?'Sinkronisasi terkunci karena konflik data. Muat ulang dan tinjau data server sebelum melanjutkan.':'Database VPS belum siap. Perubahan dinonaktifkan agar tidak hanya tersimpan di browser.');if(!modalMode)return;const missing=[...(e.currentTarget.querySelectorAll?.('.searchable-product-select')||[])].find(w=>w.querySelector('input').required&&!w.querySelector('select').value);if(missing){toast('Pilih produk dari hasil pencarian nama atau SKU.');missing.querySelector('input').focus();return}let values=Object.fromEntries(new FormData(e.currentTarget).entries());modalMode.submit(values)});$('#menuToggle').onclick=()=>{$('#sidebar').classList.add('open');$('#overlay').classList.add('show')};$('#closeMenu').onclick=$('#overlay').onclick=()=>{$('#sidebar').classList.remove('open');$('#overlay').classList.remove('show')};$('#notificationButton').onclick=()=>toast('Tidak ada notifikasi baru.');// filterButton replaced with language switcher$('#globalSearchSubmit').addEventListener('click',runGlobalSearch);$('#globalSearch').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();runGlobalSearch()}});$('#topPeriod').addEventListener('change',e=>{chartPeriod=e.currentTarget.value;if(current==='dashboard')render()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closePaperclipPopup()}});
   function removeUntitledColumn(){document.querySelectorAll('.excel-catalog table').forEach(table=>{const header=[...table.querySelectorAll('thead th')].findIndex(cell=>/^Kolom F(?:\s*\(tanpa judul\))?$/i.test(cell.textContent.trim())||cell.title==='Kolom F');if(header<0)return;table.querySelectorAll('tr').forEach(row=>{if(row.children[header])row.children[header].remove()})})}
   new MutationObserver(removeUntitledColumn).observe($('#pageContent'),{childList:true,subtree:true});removeUntitledColumn();
   let barcodeCameraStream=null,barcodeCameraFrame=null;
