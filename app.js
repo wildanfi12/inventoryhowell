@@ -236,6 +236,29 @@
       po_outstanding: "Unit belum keluar",
       po_outstanding_sub: "Sisa quantity pada PO yang berjalan",
       wh_sold_units_sub: "unit selesai terjual",
+      settings_vps_title: "Status Server & Database VPS",
+      settings_vps_ok: "API database bersama aktif dan tersambung. Seluruh perubahan transaksi (produk, PO, surat jalan, dan stok) tersimpan aman di server VPS.",
+      settings_vps_err: "API database VPS belum tersambung. Perubahan saat ini tersimpan sementara di browser lokal; periksa koneksi sebelum melanjutkan transaksi.",
+      settings_vps_status_ok: "Terhubung (Online)",
+      settings_vps_status_err: "Belum Terhubung",
+      settings_backup_title: "Cadangan & Pemulihan Data",
+      settings_backup_sub: "Kelola salinan cadangan data operasional atau pulihkan data dari file cadangan JSON.",
+      settings_db_active: "Database bersama aktif",
+      settings_db_local: "Penyimpanan lokal",
+      settings_btn_backup: "Cadangkan data JSON",
+      settings_btn_restore: "Pulihkan cadangan JSON",
+      settings_btn_recovery: "Unduh cadangan konflik lokal",
+      settings_schema_title: "Skema Persediaan Konsinyasi",
+      settings_schema_sub: "Saldo persediaan retail konsinyasi dihitung per cabang dan SKU: <b>Stok Akhir = Stok Awal + Pengiriman Masuk (Surat Jalan) − Penjualan Selesai − Retur</b>. Opname fisik dilakukan periodik untuk mencocokkan stok sistem dengan stok fisik riil di cabang.",
+      settings_audit_title: "Riwayat Aktivitas & Audit Perubahan",
+      settings_audit_sub: "Catatan transaksi dan perubahan status tersimpan di sistem",
+      settings_audit_empty: "Belum ada catatan aktivitas.",
+      audit_entries: "entri",
+      col_time: "Waktu",
+      col_actor: "Aktor",
+      col_action: "Aksi",
+      col_object: "Objek",
+      col_details: "Rincian",
     },
     en: {
       // Nav & Sections
@@ -426,6 +449,29 @@
       po_outstanding: "Units Pending Dispatch",
       po_outstanding_sub: "Remaining quantity across active POs",
       wh_sold_units_sub: "units marked as sold",
+      settings_vps_title: "VPS Server & Database Status",
+      settings_vps_ok: "Shared database API is connected and active. All operational data (products, POs, waybills, and stock) are securely saved to the VPS server.",
+      settings_vps_err: "VPS database API is not connected. Changes are currently stored locally in browser; please check connection before processing transactions.",
+      settings_vps_status_ok: "Connected (Online)",
+      settings_vps_status_err: "Disconnected",
+      settings_backup_title: "Data Backup & Recovery",
+      settings_backup_sub: "Manage operational data backups or restore data from a valid JSON backup file.",
+      settings_db_active: "Shared database active",
+      settings_db_local: "Local browser storage",
+      settings_btn_backup: "Backup data JSON",
+      settings_btn_restore: "Restore JSON backup",
+      settings_btn_recovery: "Download conflict backup",
+      settings_schema_title: "Consignment Inventory Schema",
+      settings_schema_sub: "Consignment retail stock balance calculation per branch & SKU: <b>Ending Stock = Initial Stock + Inbound Waybills − Recorded Sales − Returns</b>. Periodic physical stocktake reconciles system stock with actual store inventory.",
+      settings_audit_title: "Activity History & Audit Trail",
+      settings_audit_sub: "Saved transaction and status change records in system",
+      settings_audit_empty: "No audit records yet.",
+      audit_entries: "entries",
+      col_time: "Time",
+      col_actor: "Actor",
+      col_action: "Action",
+      col_object: "Object",
+      col_details: "Details",
     },
     zh: {
       // Nav & Sections
@@ -616,6 +662,29 @@
       po_outstanding: "待出库数量",
       po_outstanding_sub: "在途订单剩余待发运数量",
       wh_sold_units_sub: "件商品已确认售出",
+      settings_vps_title: "VPS 服务器与数据库状态",
+      settings_vps_ok: "共享数据库 API 已成功连接并运行。所有业务数据（产品、采购订单、出库运单和库存）均已安全保存至 VPS 服务器。",
+      settings_vps_err: "VPS 数据库 API 未连接。当前变更仅暂存在浏览器本地；在恢复连接前请谨慎操作。",
+      settings_vps_status_ok: "已连接 (在线)",
+      settings_vps_status_err: "未连接",
+      settings_backup_title: "数据备份与恢复",
+      settings_backup_sub: "创建业务数据备份或从 JSON 备份文件恢复数据。",
+      settings_db_active: "共享数据库已激活",
+      settings_db_local: "本地浏览器存储",
+      settings_btn_backup: "备份数据 JSON",
+      settings_btn_restore: "恢复 JSON 备份",
+      settings_btn_recovery: "下载本地冲突备份",
+      settings_schema_title: "代销库存核算规则",
+      settings_schema_sub: "各门店与 SKU 代销库存核算公式：<b>期末库存 = 期初库存 + 入库发货 (运单) − 确认销售 − 退货</b>。定期开展实物盘点以核对系统账面库存与门店实际库存。",
+      settings_audit_title: "操作日志与变更审计",
+      settings_audit_sub: "系统保存的交易与状态变更审计记录",
+      settings_audit_empty: "暂无操作审计记录。",
+      audit_entries: "条记录",
+      col_time: "时间",
+      col_actor: "操作者",
+      col_action: "操作",
+      col_object: "对象",
+      col_details: "明细",
     }
   };
 
@@ -884,7 +953,12 @@
     'komisi retail': 'col_retail_commission',
     'pembayaran bersih ke howell': 'col_net_to_howell',
     'pembayaran masuk': 'col_payment_received',
-    'validasi / tindakan': 'col_actions'
+    'validasi / tindakan': 'col_actions',
+    'waktu': 'col_time',
+    'aktor': 'col_actor',
+    'aksi': 'col_action',
+    'objek': 'col_object',
+    'rincian': 'col_details'
   };
 
   function table(headers, rows, empty = t('empty_data', 'Belum ada data untuk ditampilkan.'), className = '') {
@@ -1349,7 +1423,46 @@ function warehouse(){
   }
   function invoices(){let due=data.invoices.reduce((a,x)=>a+Math.max(0,x.netSales*(1-x.margin/100)-x.paid),0);let rows=data.invoices.map(x=>{let payout=Math.round(x.netSales*(1-x.margin/100));let status=invoiceStatus(x);return `<tr><td><span class="sku">${esc(x.id)}</span></td><td><strong>${esc(storeName(x.store))}</strong>${x.start?`<div class="panel-subtitle">${date(x.start)} – ${date(x.end)}</div>`:''}</td><td>${date(x.date)}</td><td>${date(x.due)}</td><td>${money(x.netSales)}</td><td>${money(Math.round(x.netSales*x.margin/100))}<div class="panel-subtitle">${x.margin}%</div></td><td class="invoice-total">${money(payout)}</td><td>${statusPill(status)}</td><td>${x.paid?money(x.paid):'—'}</td><td>${x.status!=='Paid'?`<button class="link-btn" data-action="record-payment" data-id="${esc(x.id)}">Catat pembayaran</button>`:esc(x.proof||'Lunas')}</td></tr>`});return `${heading('Tagihan & Pembayaran','Tagihan terbentuk dari rekonsiliasi penjualan yang sudah disetujui.',`<button class="btn btn-light" data-action="export">Ekspor</button>`)}${demoBanner()}<div class="section-grid"><article class="card mini-card"><small>Sisa tagihan ke Howell</small><strong>${money(due)}</strong><span>Sisa tagihan yang belum lunas</span></article><article class="card mini-card"><small>Invoice belum lunas</small><strong>${data.invoices.filter(x=>x.status!=='Paid').length}</strong><span>Termasuk pembayaran sebagian</span></article><article class="card mini-card"><small>Invoice lunas</small><strong>${data.invoices.filter(x=>x.status==='Paid').length}</strong><span>Sudah direkonsiliasi</span></article></div><article class="card table-card">${toolbar(`<select class="filter-select" id="statusFilter"><option>Semua status</option><option>Unpaid</option><option>Overdue</option><option>Partial</option><option>Paid</option></select>`)}${table(['Nomor tagihan','Cabang retail','Tanggal tagihan','Jatuh tempo','Penjualan bersih','Komisi retail','Pembayaran bersih ke Howell','Status','Pembayaran masuk','Validasi / tindakan'],rows)}</article>`}
   function returns(){const rows=data.returns.map(x=>`<tr><td><span class="sku">${esc(x.id)}</span></td><td>${date(x.date)}</td><td><strong>${esc(storeName(x.store))}</strong></td><td>${esc(prodName(x.sku))}<div class="panel-subtitle">${esc(x.sku)}</div></td><td>${Number(x.receivedQty||0)} / ${x.qty} unit</td><td>${pill(({'Slow Moving':'Pergerakan lambat','Damaged':'Barang rusak','Expired':'Kedaluwarsa','Store Closing':'Toko tutup'}[x.reason]||x.reason),({'Damaged':'red','Expired':'amber','Slow Moving':'blue','Store Closing':'gray'}[x.reason]||'gray'))}</td><td>${statusPill(({'Re-sellable':'Layak jual','Repairable':'Perlu perbaikan','Scrap/Musnah':'Rusak / dimusnahkan'}[x.condition]||x.condition))}</td><td>${statusPill(x.status)}</td><td>—</td></tr>`);const actions=portalRole==='warehouse'?'':'<button class="btn btn-light" data-action="export">Ekspor</button><button class="btn btn-primary" data-action="add-return">Catat retur</button>';const description=portalRole==='warehouse'?'Periksa retur yang dikirim cabang dan catat penerimaan barang di gudang.':'Retur mengurangi stok cabang setelah dikirim; stok pusat bertambah setelah barang diperiksa di gudang.';return `${heading('Retur & Penarikan',description,actions)}<article class="card table-card">${toolbar()}${table(['Nomor RMA','Tanggal','Cabang','SKU & produk','Diterima / diminta','Alasan retur','Kondisi rencana','Status','Tindakan'],rows)}</article>`}
-  function settings(){return `${heading('Pengaturan','Kelola data Howell Inventory dan status sinkronisasi server.','')}<article class="card panel" role="note" style="max-width:720px;margin-bottom:14px;border-left:4px solid #F4C63D!important"><div class="panel-title">Status kesiapan VPS</div><p class="panel-subtitle" style="line-height:1.8">${syncReady&&!syncBlocked?"API database bersama berhasil tersambung. Perubahan baru akan tersimpan di server setelah sinkronisasi selesai.":"API database belum tersambung. Perubahan hanya tersimpan lokal; jangan masukkan transaksi operasional sebelum status VPS aktif."}</p></article><article class="card panel" style="max-width:720px"><div class="panel-title">Data aplikasi</div><p class="panel-subtitle" style="line-height:1.8">${syncReady&&!syncBlocked?"Data utama dimuat dan disimpan di database VPS. Server memakai revisi data untuk menolak perubahan yang dibuat dari salinan lama.":"Aplikasi tetap menampilkan data lokal sampai API VPS tersambung. Jangan menganggap data tersinkron sebelum status server aktif."}</p><div class="activity" style="margin-top:12px"><div class="activity-main"><strong>Status data</strong><small>${syncReady&&!syncBlocked?"Database bersama aktif":"Database bersama belum tersambung"}. ${data.products.length} SKU · ${data.stores.length} cabang · ${data.shipments.length} PO.</small></div></div><div style="display:flex;gap:9px;margin-top:14px"><button class="btn btn-light" data-action="export">Cadangkan data JSON</button><label class="btn btn-light" for="backupImportInput">Pulihkan cadangan JSON</label><input id="backupImportInput" type="file" accept="application/json,.json" hidden>${localStorage.getItem(`${KEY}-recovery-latest`)?'<button class="btn btn-light" data-action="download-recovery">Unduh cadangan konflik lokal</button>':''}<button class="btn btn-danger" data-action="reset-demo">Pulihkan data sumber</button></div></article><article class="card panel" style="max-width:720px;margin-top:14px"><div class="panel-title">Skema stok cabang</div><p class="panel-subtitle" style="line-height:1.8">Saldo stok akhir dihitung per cabang dan SKU: stok awal + penerimaan barang − penjualan − retur/cacat. Opname membandingkan stok sistem dengan jumlah fisik untuk menampilkan selisih stok.</p></article>`}
+  function settings(){
+    const isOnline = syncReady && !syncBlocked;
+    const vpsBorderColor = isOnline ? '#10b981' : '#ef4444';
+    const vpsBadge = isOnline
+      ? `<span class="pill green" style="font-size:11px;padding:2px 8px;font-weight:600;margin-left:8px">${t('settings_vps_status_ok', 'Terhubung (Online)')}</span>`
+      : `<span class="pill red" style="font-size:11px;padding:2px 8px;font-weight:600;margin-left:8px">${t('settings_vps_status_err', 'Belum Terhubung')}</span>`;
+    const vpsDesc = isOnline
+      ? t('settings_vps_ok', 'API database bersama aktif dan tersambung. Seluruh perubahan transaksi (produk, PO, surat jalan, dan stok) tersimpan aman di server VPS.')
+      : t('settings_vps_err', 'API database VPS belum tersambung. Perubahan saat ini tersimpan sementara di browser lokal; periksa koneksi sebelum melanjutkan transaksi.');
+
+    const summaryCount = `${data.products.length} SKU · ${data.stores.length} ${t('col_branch', 'cabang')} · ${data.shipments.length} PO · ${data.sales.length} ${t('menu_history', 'Riwayat')}`;
+    const dbStatusText = isOnline ? t('settings_db_active', 'Database bersama aktif') : t('settings_db_local', 'Penyimpanan lokal');
+
+    const recoveryBtn = localStorage.getItem(`${KEY}-recovery-latest`)
+      ? `<button type="button" class="btn btn-light" data-action="download-recovery">${t('settings_btn_recovery', 'Unduh cadangan konflik lokal')}</button>`
+      : '';
+
+    return `${heading(t('settings_title', 'Pengaturan'), t('settings_sub', 'Kelola data Howell Inventory dan status sinkronisasi server.'), '')}` +
+      `<article class="card panel" role="note" style="max-width:760px;margin-bottom:14px;border-left:4px solid ${vpsBorderColor}!important">` +
+        `<div class="panel-title" style="display:flex;align-items:center">${t('settings_vps_title', 'Status Server & Database VPS')} ${vpsBadge}</div>` +
+        `<p class="panel-subtitle" style="line-height:1.7;margin-top:6px">${vpsDesc}</p>` +
+      `</article>` +
+      `<article class="card panel" style="max-width:760px;margin-bottom:14px">` +
+        `<div class="panel-title">${t('settings_backup_title', 'Cadangan & Pemulihan Data')}</div>` +
+        `<p class="panel-subtitle" style="line-height:1.7">${t('settings_backup_sub', 'Kelola salinan cadangan data operasional atau pulihkan data dari file cadangan JSON.')}</p>` +
+        `<div class="activity" style="margin-top:12px;padding:10px 14px;background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb">` +
+          `<div class="activity-main"><strong style="color:#111827">${dbStatusText}</strong><small style="color:#6b7280;display:block;margin-top:2px">${summaryCount}</small></div>` +
+        `</div>` +
+        `<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">` +
+          `<button type="button" class="btn btn-light" data-action="export"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>${t('settings_btn_backup', 'Cadangkan data JSON')}</button>` +
+          `<label class="btn btn-light" for="backupImportInput" style="cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>${t('settings_btn_restore', 'Pulihkan cadangan JSON')}</label>` +
+          `<input id="backupImportInput" type="file" accept="application/json,.json" hidden>` +
+          recoveryBtn +
+        `</div>` +
+      `</article>` +
+      `<article class="card panel" style="max-width:760px;margin-bottom:14px">` +
+        `<div class="panel-title">${t('settings_schema_title', 'Skema Persediaan Konsinyasi')}</div>` +
+        `<p class="panel-subtitle" style="line-height:1.7">${t('settings_schema_sub', 'Saldo persediaan retail konsinyasi dihitung per cabang dan SKU: <b>Stok Akhir = Stok Awal + Pengiriman Masuk (Surat Jalan) − Penjualan Selesai − Retur</b>. Opname fisik dilakukan periodik untuk mencocokkan stok sistem dengan stok fisik riil di cabang.')}</p>` +
+      `</article>`;
+  }
   function reports(){
     const categories=[...new Set(data.products.map(x=>x.category||'Lainnya'))].map(category=>{const rows=data.products.filter(x=>(x.category||'Lainnya')===category),known=rows.filter(hasStock),quantity=known.reduce((n,x)=>n+Number(x.stock),0),display=known.length===rows.length?quantity.toLocaleString('id-ID')+' unit':known.length?quantity.toLocaleString('id-ID')+' unit · '+(rows.length-known.length)+' SKU belum diopname':'Belum diopname';return '<tr><td><strong>'+esc(category)+'</strong></td><td>'+rows.length+'</td><td>'+display+'</td></tr>';});
     const branchRows=data.branchStock.map(x=>{const system=branchBalance(x),delta=x.lastShrinkage??(x.physical==null?null:Number(x.physical)-system);return '<tr><td>'+esc(storeName(x.store))+'</td><td>'+esc(x.sku)+'</td><td>'+system+'</td><td>'+(x.physical==null?'—':x.physical)+'</td><td>'+(delta==null?'—':(delta>0?'+':'')+delta)+'</td></tr>';});
@@ -1538,7 +1651,7 @@ function warehouse(){
     if(action==='count-branch'){let [store,sku]=id.split('|'),branch=data.branchStock.find(x=>x.store===store&&x.sku===sku);if(!branch){branch={store,sku,opening:0,incoming:0,sold:0,returns:0,physical:null};data.branchStock.push(branch)}let system=branchBalance(branch);openModal('Opname stok cabang',[number('physical','Jumlah fisik hasil hitung',{min:0}),text('note','Catatan opname',{required:false,full:true})],v=>{let delta=+v.physical-system;if(branch.physical==null&&Number(branch.incoming||0)===0&&Number(branch.sold||0)===0&&Number(branch.returns||0)===0){branch.opening=+v.physical;branch.openingDate=today;branch.adjustment=0;branch.adjustmentEvents ||= []}else{branch.adjustment=Number(branch.adjustment||0)+delta;branch.adjustmentEvents ||= [];branch.adjustmentEvents.push({delta,date:today,note:v.note||''})}branch.physical=+v.physical;branch.lastShrinkage=delta;branch.countDate=today;branch.note=v.note;data.demo=false;save();closeModal();render();toast(`Opname tersimpan · selisih ${delta>0?'+':''}${delta} unit`)});return}
     if(action==='count'){let target=p;openModal(target?'Perbarui stok · '+target.name:'Mulai opname stok',[...(target?[]:[select('sku',data.products.map(x=>({value:x.sku,label:x.sku+' · '+x.name})))]),number('physical',target&&hasStock(target)?'Jumlah stok baru (saat ini '+Number(target.stock)+' unit)':'Jumlah stok hasil hitung',{min:0}),text('actor','Nama petugas yang memperbarui stok',{placeholder:'Masukkan nama lengkap petugas'}),{name:'source',label:'Sumber',type:'select',items:[{value:'Bizgo',label:'Bizgo'},{value:'Gudang',label:'Gudang'}],required:true}],v=>{let pr=target||data.products.find(x=>x.sku===v.sku);const actor=String(v.actor||'').trim(),source=String(v.source||'').trim();if(!actor)return toast('Nama petugas wajib diisi agar perubahan dapat ditelusuri.');if(!['Bizgo','Gudang'].includes(source))return toast('Pilih sumber stok Bizgo atau Gudang.');const previous=hasStock(pr)?Number(pr.stock):null,physical=Number(v.physical),at=new Date().toISOString(),delta=previous==null?null:physical-previous;data.countHistory||=[];data.countHistory.unshift({level:'Gudang pusat',sku:pr.sku,previous,physical,delta,date:today,at,source,actor});const c={sku:pr.sku,physical,previous,date:today,source,actor,updatedAt:at};pr.stock=physical;pr.stockSource=source;data.counts=data.counts.filter(x=>x.sku!==pr.sku);data.counts.unshift(c);recordAudit('stock-update','warehouse',pr.sku,{previous,physical,delta,source},actor);data.demo=false;save();closeModal();render();toast(previous==null?'Saldo awal opname tersimpan':'Stok diperbarui · perubahan '+(delta>0?'+':'')+delta+' unit')},{physical:target&&hasStock(target)?Number(target.stock):'',source:target?.stockSource||data.counts.find(x=>x.sku===target?.sku)?.source||''});return}
     if(action==='retry-db-sync'){connectSharedDatabase();return}
-    if(action==='download-recovery')return downloadRecovery();if(action==='export')return exportData();if(action==='reset-demo'){if(confirm('Pulihkan data awal dari sumber? Semua transaksi lokal dan cabang tambahan akan dihapus.')){data=structuredClone(initial);save();go('dashboard');toast('Data sumber dipulihkan')}return}
+    if(action==='download-recovery')return downloadRecovery();if(action==='export')return exportData();
   }
   function go(next){
     if(next==='invoices'){next='sales';}
@@ -2412,8 +2525,27 @@ function warehouse(){
       renderStockHistoryPanel();
     }
     if(current==='settings'){
-      const rows=data.audit.slice(-12).reverse().map(x=>'<tr><td>'+esc(new Date(x.at).toLocaleString('id-ID',{timeZone:'Asia/Jakarta'}))+'</td><td>'+esc(x.actor)+'</td><td>'+esc(x.action)+'</td><td>'+esc(x.entity)+' · '+esc(x.entityId)+'</td><td>'+esc(JSON.stringify(x.details||{}))+'</td></tr>');
-      const panel=document.createElement('article');panel.className='card table-card';panel.style.marginTop='15px';panel.innerHTML='<div class="table-toolbar"><div><div class="panel-title">Riwayat perubahan lokal</div><div class="panel-subtitle">Catatan transaksi yang tersimpan di browser ini · '+data.audit.length+' entri</div></div></div>'+table(['Waktu','Aktor','Aksi','Objek','Rincian'],rows,'Belum ada catatan audit.');$('#pageContent').append(panel);
+      const formatDetails = (d) => {
+        if(!d || typeof d !== 'object' || Object.keys(d).length === 0) return '—';
+        if(d.previousStatus && d.status){
+          return '<span style="font-size:12px;font-weight:500">Status: <b>' + esc(d.previousStatus) + '</b> &rarr; <b style="color:#059669">' + esc(d.status) + '</b>' + (d.autoSalesRecorded ? ' <span class="pill green" style="font-size:10px;padding:1px 6px;margin-left:4px">Auto Sales</span>' : '') + '</span>';
+        }
+        return '<code style="font-size:11px;background:#f3f4f6;padding:2px 6px;border-radius:4px;color:#374151">' + esc(JSON.stringify(d)) + '</code>';
+      };
+      const rows = data.audit.slice(-12).reverse().map(x =>
+        '<tr>' +
+          '<td style="white-space:nowrap">' + esc(new Date(x.at).toLocaleString(currentLang === 'en' ? 'en-US' : (currentLang === 'zh' ? 'zh-CN' : 'id-ID'), {timeZone:'Asia/Jakarta'})) + '</td>' +
+          '<td><strong>' + esc(x.actor) + '</strong></td>' +
+          '<td><span class="pill blue" style="font-size:11px;padding:2px 6px">' + esc(x.action) + '</span></td>' +
+          '<td><strong>' + esc(x.entity) + '</strong> <small style="color:#6b7280">· ' + esc(x.entityId) + '</small></td>' +
+          '<td>' + formatDetails(x.details) + '</td>' +
+        '</tr>'
+      );
+      const panel = document.createElement('article');
+      panel.className = 'card table-card';
+      panel.style.marginTop = '15px';
+      panel.innerHTML = '<div class="table-toolbar"><div><div class="panel-title">' + t('settings_audit_title', 'Riwayat Aktivitas & Audit Perubahan') + '</div><div class="panel-subtitle">' + t('settings_audit_sub', 'Catatan transaksi dan perubahan status tersimpan di sistem') + ' · ' + data.audit.length + ' ' + t('audit_entries', 'entri') + '</div></div></div>' + table(['Waktu', 'Aktor', 'Aksi', 'Objek', 'Rincian'], rows, t('settings_audit_empty', 'Belum ada catatan aktivitas.'));
+      $('#pageContent').append(panel);
     }
     if(current==='returns'){
       const header=$('#pageContent thead tr');if(header&&!header.textContent.includes('Tindakan'))header.insertAdjacentHTML('beforeend','<th>Tindakan</th>');
