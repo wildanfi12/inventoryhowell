@@ -1,0 +1,127 @@
+'use strict';
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+const nginxConfig = `# Install after inventory.howellcable.site DNS points to this VPS and TLS cert exists.
+server {
+    listen 80;
+    listen [::]:80;
+    server_name inventory.howellcable.site;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+        auth_basic off;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# Warehouse portal uses a separate host and root. In temporary public mode, the
+# API maps each exact host to its role; the warehouse host receives only the
+# server-side allowlisted warehouse projection. Enable API public mode explicitly.
+server {
+    listen 80;
+    listen [::]:80;
+    server_name gudang.inventory.howellcable.site;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+        auth_basic off;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name gudang.inventory.howellcable.site;
+
+    root /var/www/howell-inventory/release/warehouse;
+    index index.html;
+    client_max_body_size 12m;
+
+    ssl_certificate /etc/letsencrypt/live/inventory.howellcable.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/inventory.howellcable.site/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy same-origin always;
+    add_header X-Frame-Options DENY always;
+    add_header Cache-Control "no-cache, no-store, must-revalidate" always;
+    add_header Pragma "no-cache" always;
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:3103/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Authorization "";
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_read_timeout 30s;
+        proxy_send_timeout 30s;
+        proxy_buffering off;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name inventory.howellcable.site;
+
+    root /var/www/howell-inventory/release;
+    index index.html;
+    client_max_body_size 12m;
+
+    ssl_certificate /etc/letsencrypt/live/inventory.howellcable.site/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/inventory.howellcable.site/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy same-origin always;
+    add_header X-Frame-Options DENY always;
+    add_header Cache-Control "no-cache, no-store, must-revalidate" always;
+    add_header Pragma "no-cache" always;
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:3103/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Authorization "";
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_read_timeout 30s;
+        proxy_send_timeout 30s;
+        proxy_buffering off;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+`;
+
+const tempFile = path.join(__dirname, 'howell-inventory.nginx.conf');
+fs.writeFileSync(tempFile, nginxConfig, 'utf8');
+
+const sshKey = 'C:\\Users\\USER\\.ssh\\howell-inventory-vps';
+const vps = 'howelladmin@103.150.227.170';
+
+console.log('Uploading nginx configuration to VPS...');
+execSync(`scp -i "${sshKey}" "${tempFile}" ${vps}:/tmp/howell-inventory.nginx.conf`, { stdio: 'inherit' });
+
+console.log('Applying nginx configuration and testing syntax...');
+const cmd = `ssh -i "${sshKey}" ${vps} "sudo cp /tmp/howell-inventory.nginx.conf /etc/nginx/sites-available/howell-inventory && sudo nginx -t && sudo systemctl reload nginx"`;
+execSync(cmd, { stdio: 'inherit' });
+
+fs.unlinkSync(tempFile);
+console.log('Nginx successfully updated with no-cache/no-store revalidation headers and reloaded!');
