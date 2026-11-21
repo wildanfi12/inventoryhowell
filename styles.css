@@ -446,3 +446,97 @@ input:focus,select:focus,textarea:focus{border-color:var(--border-active);outlin
   .stock-history-table{min-width:680px!important;table-layout:auto!important}
 }
 
+
+/* ==========================================================================
+   MODAL SCROLLABILITY & FIT OPTIMIZATION
+   Ensures modal dialogs (Edit Cabang, Edit Produk, etc.) never overflow
+   the screen viewport and action buttons (Simpan/Batal) are always accessible.
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1200 !important;
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: clamp(10px, 2.5vh, 24px) 16px !important;
+  background: rgba(18, 20, 23, 0.55) !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+}
+
+.modal-backdrop.open {
+  display: flex !important;
+}
+
+.modal {
+  width: min(680px, calc(100vw - 32px)) !important;
+  max-width: min(680px, calc(100vw - 32px)) !important;
+  max-height: min(92vh, 860px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  box-sizing: border-box !important;
+}
+
+.modal > header {
+  flex: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 16px 20px !important;
+  border-bottom: 1px solid #eceef0 !important;
+  background: #fff !important;
+}
+
+.modal form, #modalForm {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: 18px 20px !important;
+  box-sizing: border-box !important;
+}
+
+.modal-fields {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding-right: 6px !important;
+  margin-right: -4px !important;
+}
+
+.modal-actions {
+  flex: none !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  margin-top: 14px !important;
+  padding-top: 14px !important;
+  border-top: 1px solid #eceef0 !important;
+  background: #fff !important;
+}
+
+.field-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px 14px !important;
+}
+
+.field.full {
+  grid-column: 1 / -1 !important;
+}
+
+@media (max-width: 600px) {
+  .field-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .modal {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    max-height: calc(100dvh - 20px) !important;
+  }
+}

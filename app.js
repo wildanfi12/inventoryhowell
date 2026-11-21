@@ -167,6 +167,27 @@
       "field_retail_margin": "Margin retail (%)",
       "field_initial_stock_bal": "Saldo stok awal",
       "field_central_initial_stock": "Stok pusat awal",
+            "field_payment_terms": "Termin pembayaran",
+      "field_agreement_status": "Status perjanjian",
+      "field_uom": "Satuan unit (UOM)",
+      "field_status": "Status",
+      "field_store_type": "Tipe toko",
+      "field_paperclip_branch": "Cabang Paperclip",
+      "field_return_reason": "Alasan retur",
+      "field_item_condition": "Kondisi barang",
+      "field_other_store_name": "Nama toko / cabang lain",
+      "select_placeholder": "Pilih...",
+      "opt_monthly": "Bulanan",
+      "opt_14_days": "14 hari",
+      "opt_biweekly": "Bi-weekly (2 minggu)",
+      "opt_agreement_needed": "Perlu perjanjian",
+      "opt_active": "Aktif",
+      "opt_suspended": "Ditangguhkan",
+      "opt_terminated": "Berakhir",
+      "opt_pcs": "Pcs",
+      "opt_set": "Set",
+      "opt_box": "Box",
+      "opt_pack": "Pack",
       "field_branch_code": "Kode cabang",
       "field_branch_name": "Nama cabang",
       "field_retail_network": "Jaringan retail",
@@ -506,6 +527,27 @@
       "field_retail_margin": "Retail Margin (%)",
       "field_initial_stock_bal": "Initial Stock Balance",
       "field_central_initial_stock": "Central Initial Stock",
+            "field_payment_terms": "Payment Terms",
+      "field_agreement_status": "Agreement Status",
+      "field_uom": "Unit of Measure (UOM)",
+      "field_status": "Status",
+      "field_store_type": "Store Type",
+      "field_paperclip_branch": "Paperclip Branch",
+      "field_return_reason": "Return Reason",
+      "field_item_condition": "Item Condition",
+      "field_other_store_name": "Other Store Name",
+      "select_placeholder": "Select...",
+      "opt_monthly": "Monthly",
+      "opt_14_days": "14 Days",
+      "opt_biweekly": "Bi-weekly (14 days)",
+      "opt_agreement_needed": "Agreement Needed",
+      "opt_active": "Active",
+      "opt_suspended": "Suspended",
+      "opt_terminated": "Terminated",
+      "opt_pcs": "Pcs",
+      "opt_set": "Set",
+      "opt_box": "Box",
+      "opt_pack": "Pack",
       "field_branch_code": "Branch Code",
       "field_branch_name": "Branch Name",
       "field_retail_network": "Retail Network",
@@ -845,6 +887,27 @@
       "field_retail_margin": "零售利润率 (%)",
       "field_initial_stock_bal": "期初库存余额",
       "field_central_initial_stock": "总仓期初库存",
+      "field_payment_terms": "结算账期",
+      "field_agreement_status": "协议合作状态",
+      "field_uom": "计量单位 (UOM)",
+      "field_status": "状态",
+      "field_store_type": "门店类型",
+      "field_paperclip_branch": "Paperclip 网点",
+      "field_return_reason": "退货原因",
+      "field_item_condition": "商品状况",
+      "field_other_store_name": "其他门店名称",
+      "select_placeholder": "请选择...",
+      "opt_monthly": "按月结算",
+      "opt_14_days": "14天账期",
+      "opt_biweekly": "双周结算",
+      "opt_agreement_needed": "需签署协议",
+      "opt_active": "合作中 (正常)",
+      "opt_suspended": "已暂停",
+      "opt_terminated": "已终止",
+      "opt_pcs": "件 (Pcs)",
+      "opt_set": "套 (Set)",
+      "opt_box": "盒 (Box)",
+      "opt_pack": "包 (Pack)",
       "field_branch_code": "网点编码",
       "field_branch_name": "网点名称",
       "field_retail_network": "零售连锁体系",
@@ -2178,10 +2241,14 @@ function warehouse(){
       'no. telepon': 'field_phone_short',
       'telepon': 'field_phone_short',
       'email operasional': 'field_operational_email',
+      'termin pembayaran': 'field_payment_terms',
+      'term': 'field_payment_terms',
       'porsi howell (%)': 'field_howell_share',
       'porsi paperclip (%)': 'field_paperclip_share_pct',
       'porsi paperclip (rp)': 'field_paperclip_share_val',
       'tanggal mulai berlaku': 'field_effective_date',
+      'status perjanjian': 'field_agreement_status',
+      'agreementstatus': 'field_agreement_status',
       'kapasitas maksimal rak': 'field_max_shelf_cap',
       'nomor po konsinyasi': 'field_po_num',
       'kuantitas kirim': 'field_dispatch_qty',
@@ -2214,7 +2281,21 @@ function warehouse(){
       'jumlah benar-benar diterima': 'field_actual_received_qty',
       'petugas gudang': 'field_wh_officer',
       'catatan pemeriksaan': 'field_inspection_notes',
-      'ukuran kertas': 'field_paper_size'
+      'ukuran kertas': 'field_paper_size',
+      'satuan unit': 'field_uom',
+      'satuan unit (uom)': 'field_uom',
+      'uom': 'field_uom',
+      'status': 'field_status',
+      'tipe toko': 'field_store_type',
+      'storetype': 'field_store_type',
+      'cabang paperclip': 'field_paperclip_branch',
+      'storebranch': 'field_paperclip_branch',
+      'alasan retur': 'field_return_reason',
+      'reason': 'field_return_reason',
+      'kondisi barang': 'field_item_condition',
+      'condition': 'field_item_condition',
+      'nama toko / cabang lain': 'field_other_store_name',
+      'otherstore': 'field_other_store_name'
     };
 
     const hintMap = {
@@ -2235,32 +2316,73 @@ function warehouse(){
       if (!raw) return raw;
       if (raw.includes('Continuous Form')) return t('paper_continuous', 'Continuous Form · 9,5 × 5,5 inci');
       if (raw.includes('A4') || raw.includes('Faktur')) return t('paper_a4', 'A4 (210 × 297 mm)');
+      const optMap = {
+        'bulanan': 'opt_monthly',
+        '14 hari': 'opt_14_days',
+        'bi-weekly': 'opt_biweekly',
+        'perlu perjanjian': 'opt_agreement_needed',
+        'aktif': 'opt_active',
+        'ditangguhkan': 'opt_suspended',
+        'berakhir': 'opt_terminated',
+        'pcs': 'opt_pcs',
+        'set': 'opt_set',
+        'box': 'opt_box',
+        'pack': 'opt_pack'
+      };
+      const clean = String(raw).trim().toLowerCase();
+      if (optMap[clean]) return t(optMap[clean], raw);
       return translateStatus(raw);
     };
 
-    $('#modalFields').innerHTML = fields.map(f => {
-      const label = translateFieldLabel(f.label);
+    $('#modalFields').innerHTML = '<div class="field-grid">' + fields.map(f => {
+      const fieldName = f.name || '';
+      let rawLabel = f.label;
+      if (!rawLabel) {
+        const fn = String(fieldName).toLowerCase();
+        if (fn === 'term') rawLabel = 'Termin pembayaran';
+        else if (fn === 'agreementstatus') rawLabel = 'Status perjanjian';
+        else if (fn === 'uom') rawLabel = 'Satuan unit';
+        else if (fn === 'store') rawLabel = 'Cabang retail';
+        else if (fn === 'sku' || fn.startsWith('sku')) rawLabel = 'Produk / SKU';
+        else if (fn === 'status') rawLabel = 'Status';
+        else if (fn === 'storetype') rawLabel = 'Tipe toko';
+        else if (fn === 'storebranch') rawLabel = 'Cabang Paperclip';
+        else if (fn === 'reason') rawLabel = 'Alasan retur';
+        else if (fn === 'condition') rawLabel = 'Kondisi barang';
+        else if (fn === 'papersize') rawLabel = 'Ukuran kertas';
+        else if (fn === 'otherstore') rawLabel = 'Nama toko / cabang lain';
+        else rawLabel = fieldName;
+      }
+      const label = translateFieldLabel(rawLabel);
       const hint = f.hint ? (hintMap[String(f.hint).trim().toLowerCase()] ? t(hintMap[String(f.hint).trim().toLowerCase()], f.hint) : f.hint) : '';
       const required = f.required !== false;
+      const isFull = f.full || f.type === 'textarea';
       const val = initialValues[f.name] ?? f.value ?? '';
 
       if (f.type === 'select') {
-        const opts = (f.options || []).map(i => {
+        const items = f.items || f.options || [];
+        const opts = items.map(i => {
           const itemVal = typeof i === 'object' ? i.value : i;
           const itemLabel = typeof i === 'object' ? (i.label || i.value) : i;
           const trLabel = translateOptionLabel(itemVal, itemLabel);
           const sel = String(itemVal) === String(val) ? ' selected' : '';
-          return `<option value="${esc(itemVal)}"${sel}>${esc(trLabel)}</option>`;
+          return '<option value="' + esc(itemVal) + '"' + sel + '>' + esc(trLabel) + '</option>';
         }).join('');
-        return `<div class="field"><label for="f_${f.name}">${esc(label)}${required ? ' *' : ''}</label><select id="f_${f.name}" name="${f.name}" ${required ? 'required' : ''}>${opts}</select>${hint ? `<small>${esc(hint)}</small>` : ''}</div>`;
+        return '<div class="field ' + (isFull ? 'full' : '') + '"><label for="f-' + f.name + '">' + esc(label) + (required ? ' *' : '') + '</label><select id="f-' + f.name + '" name="' + f.name + '" ' + (required ? 'required' : '') + '>' + opts + '</select>' + (hint ? '<small class="hint">' + esc(hint) + '</small>' : '') + '</div>';
       }
       if (f.type === 'textarea') {
-        return `<div class="field"><label for="f_${f.name}">${esc(label)}${required ? ' *' : ''}</label><textarea id="f_${f.name}" name="${f.name}" rows="${f.rows || 3}" ${required ? 'required' : ''}>${esc(val)}</textarea>${hint ? `<small>${esc(hint)}</small>` : ''}</div>`;
+        return '<div class="field ' + (isFull ? 'full' : '') + '"><label for="f-' + f.name + '">' + esc(label) + (required ? ' *' : '') + '</label><textarea id="f-' + f.name + '" name="' + f.name + '" rows="' + (f.rows || 3) + '" placeholder="' + esc(f.placeholder || '') + '" ' + (required ? 'required' : '') + '>' + esc(val) + '</textarea>' + (hint ? '<small class="hint">' + esc(hint) + '</small>' : '') + '</div>';
       }
-      return `<div class="field"><label for="f_${f.name}">${esc(label)}${required ? ' *' : ''}</label><input type="${f.type || 'text'}" id="f_${f.name}" name="${f.name}" value="${esc(val)}" ${f.step ? `step="${f.step}"` : ''} ${required ? 'required' : ''} />${hint ? `<small>${esc(hint)}</small>` : ''}</div>`;
-    }).join('');
+      return '<div class="field ' + (isFull ? 'full' : '') + '"><label for="f-' + f.name + '">' + esc(label) + (required ? ' *' : '') + '</label><input type="' + (f.type || 'text') + '" id="f-' + f.name + '" name="' + f.name + '" value="' + esc(val) + '" placeholder="' + esc(f.placeholder || '') + '" ' + (f.step ? 'step="' + f.step + '"' : '') + ' ' + (f.min != null ? 'min="' + f.min + '"' : '') + ' ' + (f.max != null ? 'max="' + f.max + '"' : '') + ' ' + (required ? 'required' : '') + ' />' + (hint ? '<small class="hint">' + esc(hint) + '</small>' : '') + '</div>';
+    }).join('') + '</div>';
 
+    Object.entries(initialValues).forEach(([k, v]) => {
+      let el = $('#f-' + k) || document.getElementById('f-' + k);
+      if (el) el.value = v;
+    });
+    enhanceProductSelects($('#modalFields'));
     $('#modalBackdrop').classList.add('open');
+    setTimeout(() => $('#modalFields input:not([readonly]),#modalFields select')?.focus(), 40);
   }
   function closeModal(){document.querySelectorAll('.po-product-options[data-portaled],.searchable-product-options[data-portaled]').forEach(list=>list.remove());$('#modalBackdrop').classList.remove('open','po-editor-backdrop','dispatch-editor-backdrop','po-create-workspace');$('#modalClose').textContent='Tutup';$('#modalClose').setAttribute('aria-label','Tutup');modalMode=null;clearEditorRoute()}
   function closeSearchDropdowns(target=null){document.querySelectorAll('.po-product-options[data-portaled],.searchable-product-options[data-portaled]').forEach(list=>{const owner=list._searchOwner,wrapper=owner?.closest('.po-product-picker,.searchable-product-select');if(target&&((owner&&(owner===target||owner.contains(target)))||list.contains(target)))return;list.style.display='none';owner?.setAttribute('aria-expanded','false');if(wrapper&&list.parentElement===document.body){wrapper.append(list);list.removeAttribute('data-portaled')}})}
@@ -2355,7 +2477,7 @@ function warehouse(){
     if(action==='dismiss-demo'){data.demo=false;save();render();return}
     if(action==='go-sales')return go('sales');if(action==='go-shipments')return go('shipments');if(action==='go-inventory')return go('inventory');if(action==='view-low-stock'){go('inventory');$$('tbody tr').forEach(row=>{if(!row.querySelector('.qty-low'))row.style.display='none'});return}
     if(action==='add-product'||action==='edit-product'){let edit=action==='edit-product';openModal(edit?'Edit produk':'Tambah produk',[text('sku','Kode SKU',{hint:'ID unik produk di gudang pusat'}),text('barcode','Barcode retail / EAN',{required:false}),text('name','Nama produk'),text('spec','Spesifikasi / varian',{full:true}),text('category','Kategori'),text('brand','Brand'),select('uom',['Pcs','Set','Box','Pack'].map(x=>({value:x,label:x}))),number('hpp','HPP (Rp)'),number('srp','Harga SRP / HET (Rp)'),number('margin','Margin retail (%)',{step:'0.1'}),number('stock','Saldo stok awal')],v=>{let row={...(edit?p:{}),...v,hpp:+v.hpp,srp:+v.srp,margin:+v.margin,stock:edit?p.stock:+v.stock};if(edit){data.products[data.products.findIndex(x=>x.sku===id)]=row}else data.products.unshift(row);data.demo=false;save();closeModal();render();toast(edit?'Produk diperbarui':'Produk ditambahkan')},edit?{...p}:{});if(edit)$('#f-sku').readOnly=true;return}
-    if(action==='add-store'||action==='edit-store'){let edit=action==='edit-store';openModal(edit?'Edit cabang':'Tambah cabang',[text('code','Kode cabang / Kode cabang'),text('name','Nama cabang'),text('network','Jaringan retail'),text('region','Region / wilayah'),text('address','Alamat lengkap',{full:true,required:false}),text('contact','Narahubung',{required:false}),text('phone','Nomor telepon',{required:false}),text('email','Email operasional',{type:'email',required:false}),select('term',['Bulanan','14 hari','Bi-weekly'].map(x=>({value:x,label:x}))),number('supplierShare','Porsi Howell (%)',{min:0,max:100}),number('storeShare','Porsi Paperclip (%)',{min:0,max:100}),text('effectiveDate','Tanggal mulai berlaku',{type:'date',required:false}),select('agreementStatus',['Perlu perjanjian','Aktif','Ditangguhkan','Berakhir'].map(x=>({value:x,label:x}))),number('capacity','Kapasitas maksimal rak',{required:false})],v=>{let row={...v,capacity:v.capacity===''?null:+v.capacity,supplierShare:+v.supplierShare,storeShare:+v.storeShare};if(edit)data.stores[data.stores.findIndex(x=>x.code===id)]=row;else data.stores.unshift(row);data.demo=false;save();closeModal();render();toast(edit?'Cabang diperbarui':'Cabang ditambahkan')},edit?{...s}:{term:'Bulanan',supplierShare:65,storeShare:35,agreementStatus:'Perlu perjanjian'});if(edit)$('#f-code').readOnly=true;return}
+    if(action==='add-store'||action==='edit-store'){let edit=action==='edit-store';openModal(edit?'Edit cabang':'Tambah cabang',[text('code','Kode cabang'),text('name','Nama cabang'),text('network','Jaringan retail'),text('region','Region / wilayah'),text('address','Alamat lengkap',{full:true,required:false}),text('contact','Narahubung',{required:false}),text('phone','Nomor telepon',{required:false}),text('email','Email operasional',{type:'email',required:false}),select('term',['Bulanan','14 hari','Bi-weekly'].map(x=>({value:x,label:x}))),number('supplierShare','Porsi Howell (%)',{min:0,max:100}),number('storeShare','Porsi Paperclip (%)',{min:0,max:100}),text('effectiveDate','Tanggal mulai berlaku',{type:'date',required:false}),select('agreementStatus',['Perlu perjanjian','Aktif','Ditangguhkan','Berakhir'].map(x=>({value:x,label:x}))),number('capacity','Kapasitas maksimal rak',{required:false})],v=>{let row={...v,capacity:v.capacity===''?null:+v.capacity,supplierShare:+v.supplierShare,storeShare:+v.storeShare};if(edit)data.stores[data.stores.findIndex(x=>x.code===id)]=row;else data.stores.unshift(row);data.demo=false;save();closeModal();render();toast(edit?'Cabang diperbarui':'Cabang ditambahkan')},edit?{...s}:{term:'Bulanan',supplierShare:65,storeShare:35,agreementStatus:'Perlu perjanjian'});if(edit)$('#f-code').readOnly=true;return}
     if(action==='add-shipment'){openModal('Buat pengiriman konsinyasi',[text('id','Nomor PO konsinyasi'),datefield('date','Tanggal pengiriman'),datefield('eta','Estimasi tiba'),select('store',data.stores.map(x=>({value:x.code,label:x.name}))),select('sku',data.products.map(x=>({value:x.sku,label:`${x.sku} · ${x.name}`}))),number('qty','Kuantitas kirim',{min:1}),text('notes','Catatan pengiriman',{required:false,full:true})],v=>{let pr=data.products.find(x=>x.sku===v.sku);if(!pr){toast('SKU tidak ditemukan.');return}data.shipments.unshift({id:v.id,date:v.date,eta:v.eta,store:v.store,items:[{sku:v.sku,qty:+v.qty,receivedQty:0,srpSnapshot:pr?.priceReady?Number(pr.srp):null}],status:'Draft',recipient:'',grn:'',notes:v.notes});data.demo=false;save();closeModal();go('shipments');toast('PO tersimpan sebagai draft; stok belum berubah')});return}
     if(action==='receive-shipment'){let sh=data.shipments.find(x=>x.id===id);openModal('Konfirmasi penerimaan & GRN',[text('recipient','Nama penerima'),text('grn','Nomor / referensi bukti GRN'),select('status',['Received','Partial','Rejected'].map(x=>({value:x,label:x}))),number('receivedQty','Jumlah unit diterima (parsial)',{required:false,min:0,hint:'Untuk status Partial, masukkan unit yang diterima.'})],v=>{sh.recipient=v.recipient;sh.grn=v.grn;sh.status=v.status;if(v.status==='Rejected')sh.items.forEach(i=>{let pr=data.products.find(p=>p.sku===i.sku);if(pr)pr.stock+=i.qty});else sh.items.forEach(i=>{let qty=v.status==='Partial'?Math.min(i.qty,Number(v.receivedQty||0)):i.qty;if(qty){let row=data.branchStock.find(b=>b.store===sh.store&&b.sku===i.sku);if(!row){row={store:sh.store,sku:i.sku,opening:0,incoming:0,adjustment:0,sold:0,returns:0,physical:null};data.branchStock.push(row)}row.incoming+=qty}});data.demo=false;save();closeModal();render();toast('Status dan stok cabang diperbarui')});return}
     if(action==='add-sale'){openModal('Catat rekonsiliasi penjualan',[text('id','Nomor rekonsiliasi'),select('store',data.stores.map(x=>({value:x.code,label:x.name}))),datefield('start','Awal periode'),datefield('end','Akhir periode'),select('sku',data.products.filter(x=>x.priceReady&&!x.priceConflict).map(x=>({value:x.sku,label:`${x.sku} · ${x.name}`}))),number('opening','Stok awal periode',{min:0,hint:'Gunakan stok akhir periode sebelumnya atau hasil opname.'}),number('incoming','Stok masuk periode',{min:0,hint:'Jumlah unit yang sudah diterima cabang pada periode ini.'}),number('returnQty','Retur terkonfirmasi periode',{min:0}),number('physical','Stok fisik akhir',{min:0}),number('discount','Diskon retail (Rp)'),text('note','Catatan / referensi laporan cabang',{required:false,full:true})],v=>{let pr=data.products.find(x=>x.sku===v.sku),qty=Number(v.opening)+Number(v.incoming)-Number(v.physical)-Number(v.returnQty),gross=Number(pr.srp)*qty,net=gross-Number(v.discount),store=data.stores.find(x=>x.code===v.store);data.sales.unshift({id:v.id,store:v.store,start:v.start,end:v.end,sku:v.sku,openingSnapshot:Number(v.opening),incomingSnapshot:Number(v.incoming),returnSnapshot:Number(v.returnQty),physicalSnapshot:Number(v.physical),qty,discount:Number(v.discount),gross,net,srpSnapshot:Number(pr.srp),howellShareSnapshot:Number(store?.supplierShare??65),storeShareSnapshot:Number(store?.storeShare??35),status:'Menunggu persetujuan',note:v.note||''});data.demo=false;save();closeModal();go('sales');toast('Rekonsiliasi tersimpan untuk ditinjau; stok belum berubah')});return}
